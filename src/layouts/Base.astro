@@ -23,7 +23,7 @@ interface Props {
    * is two extra round trips and roughly a second of LCP. The bytes were
    * never the problem; the discovery time was.
    */
-  preloadImage?: { srcset: string; sizes: string };
+  preloadImage?: { srcset: string; sizes: string; media?: string };
 }
 
 const { title, description, schema = false, preloadImage } = Astro.props;
@@ -62,6 +62,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
           as="image"
           imagesrcset={preloadImage.srcset}
           imagesizes={preloadImage.sizes}
+          media={preloadImage.media}
           fetchpriority="high"
         />
       )

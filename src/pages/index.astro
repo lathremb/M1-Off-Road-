@@ -36,17 +36,42 @@ const heroSource = heroShot.file
   ? photoFiles[`../assets/photos/${heroShot.file}`]?.default
   : undefined;
 
+/* Two sources, art-directed.
+
+   The photograph is portrait (3:4). A hero box has a fixed-ish height and a
+   width that follows the window, so with `object-fit: cover` the visible slice
+   of a portrait source collapses as the window widens — measured at 60% of the
+   image at 800px down to 21% at 2560px. That is why it looked one way in a
+   narrow preview pane and another in a wide Firefox window: same code, very
+   different crop.
+
+   So: phones get the original portrait, which fills their screen with the whole
+   scene — fireworks, lit whip, machine. Wider screens get a 16:10 crop framed
+   on the machine, and the container carries a matching aspect-ratio so the
+   browser has almost nothing left to crop. */
 const HERO_WIDTHS = [640, 960, 1280, 1920, 2560];
-const heroVariants = heroSource
-  ? await Promise.all(
-      HERO_WIDTHS.map((width) =>
-        getImage({ src: heroSource, width, format: 'webp', quality: 70 })
+
+const heroWideSource = photoFiles['../assets/photos/hero-night-dune-66-wide.jpg']?.default;
+
+const buildSrcset = async (src: ImageMetadata | undefined) =>
+  src
+    ? (
+        await Promise.all(
+          HERO_WIDTHS.map((width) =>
+            getImage({ src, width, format: 'webp', quality: 70 })
+          )
+        )
       )
-    )
-  : [];
-const heroSrcset = heroVariants
-  .map((v, i) => `${v.src} ${HERO_WIDTHS[i]}w`)
-  .join(', ');
+        .map((v, i) => `${v.src} ${HERO_WIDTHS[i]}w`)
+        .join(', ')
+    : '';
+
+const heroSrcset = await buildSrcset(heroSource);
+const heroWideSrcset = await buildSrcset(heroWideSource);
+
+/* Matches the <source media> below, so the preload picks the same file the
+   browser will actually use. */
+const HERO_WIDE_MEDIA = '(min-width: 640px)';
 
 /* Six tiles for the teaser strip, taken one at a time across the platforms so
    the row is not six near-identical RZRs. */
@@ -64,7 +89,7 @@ const teaser = [
   title="M1 Off-Road — Custom UTV Roll Cages, Doors & Roofs in Tucson"
   description="Custom roll cages, doors and roofs for Polaris RZR, Can-Am and other UTVs. MIG welded in Tucson by Mike Sulger. Full cages start at $2,500. Call (520) 403-3366."
   schema
-  preloadImage={heroSrcset ? { srcset: heroSrcset, sizes: '100vw' } : undefined}
+  preloadImage={heroWideSrcset ? { srcset: heroWideSrcset, sizes: '100vw', media: HERO_WIDE_MEDIA } : undefined}
 >
   <!-- ==========================================================
        HERO — the one place on this site that raises its voice.
@@ -83,19 +108,32 @@ const teaser = [
     <div class="absolute inset-0">
       {
         heroSource ? (
-          <img
-            src={heroVariants[1]?.src}
-            srcset={heroSrcset}
-            sizes="100vw"
-            alt={heroShot.alt}
-            width={heroSource.width}
-            height={heroSource.height}
-            loading="eager"
-            fetchpriority="high"
-            decoding="sync"
-            class="h-full w-full object-cover"
-            style={`object-position:${heroShot.position ?? '50% 50%'}`}
-          />
+          <picture>
+            {heroWideSrcset && (
+              <source
+                media={HERO_WIDE_MEDIA}
+                srcset={heroWideSrcset}
+                sizes="100vw"
+                width="1536"
+                height="960"
+              />
+            )}
+            <img
+              srcset={heroSrcset}
+              sizes="100vw"
+              alt={heroShot.alt}
+              width={heroSource.width}
+              height={heroSource.height}
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+              class="h-full w-full object-cover"
+              /* Biased to the top of the frame: when a very wide window still
+                 has to trim, it gives up foreground sand before it gives up
+                 the top of the cage. */
+              style="object-position:50% 35%"
+            />
+          </picture>
         ) : (
           <Shot shot="hero-build" fill eager sizes="100vw" />
         )
@@ -110,9 +148,21 @@ const teaser = [
       </div>
     </div>
 
+    <!-- A FULL-WIDTH sizer sets the hero height from the VIEWPORT width, so the
+         box stays close to the photograph's own ratio instead of holding one
+         height while the width runs away. Putting this on the max-w-6xl content
+         block instead froze the height at 1152/1.6 = 720px and let the crop
+         creep back in on wide monitors.
+
+         min-height rather than aspect-ratio, because aspect-ratio is a fixed
+         height: when the headline, price and two stacked buttons are taller
+         than it on a phone, the text overflows the hero onto the section below.
+         133vw is 3:4 and 62.5vw is 16:10 — the same proportions, but the box
+         can grow when the content needs it to. -->
     <div
-      class="relative mx-auto flex min-h-[34rem] max-w-6xl flex-col justify-end px-5 py-14 sm:min-h-[40rem] sm:px-8 sm:py-16 lg:min-h-[44rem]"
+      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(26rem,min(62.5vw,86vh,50rem))] lg:min-h-[max(26rem,min(62.5vw,90vh,58rem))]"
     >
+      <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
       <h1
         class="max-w-[15ch] text-[clamp(2.375rem,7.5vw,4.5rem)] font-extrabold tracking-[-0.03em]"
       >
@@ -146,6 +196,7 @@ const teaser = [
         >
           Get a quote
         </a>
+        </div>
       </div>
     </div>
   </section>
