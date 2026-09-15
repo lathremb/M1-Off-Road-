@@ -11,11 +11,11 @@ import { business, phone, pricing, terms } from '../config/site';
   description="M1 Off-Road is Mike Sulger's fabrication shop in Tucson, Arizona. Over ten years building roll cages, doors and roofs for UTVs. MIG welding done in house."
 >
   <section class="bg-shop text-bone">
+    <!-- Text first, shop second. There is deliberately no portrait on this
+         page: the work is the subject. -->
     <div
-      class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16"
+      class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-2 lg:gap-16"
     >
-      <Shot shot="mike-portrait" class="w-full" />
-
       <div>
         <BendRule dark class="mb-8 max-w-[8rem]" />
         <h1 class="max-w-[18ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
@@ -26,8 +26,9 @@ import { business, phone, pricing, terms } from '../config/site';
           {business.stateCode}, geared to off-road vehicles. Cages, doors and
           roofs, mostly for UTVs.
         </p>
-        <p class="mt-6"><NeedsInput key="mike-photo" dark /></p>
       </div>
+
+      <Shot shot="shop-wide" class="w-full" />
     </div>
   </section>
 
@@ -77,7 +78,9 @@ import { business, phone, pricing, terms } from '../config/site';
         </div>
 
         <aside class="space-y-4">
-          <Shot shot="shop-wide" light class="w-full" />
+          <!-- A closer frame than the masthead shot, not a second view of the
+               same thing: the nodes where the tubes actually meet. -->
+          <Shot shot="cage-joint" light class="w-full" />
 
           <figure>
             <Shot shot="badge" light class="w-full" />

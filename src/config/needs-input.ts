@@ -68,11 +68,6 @@ export const gaps = {
     why: 'Linked from the footer and listed in sameAs on the LocalBusiness schema. It is currently the only place the business exists online, so the link matters — and a guessed handle would send customers to someone else.',
     severity: 'launch',
   },
-  'mike-photo': {
-    label: 'a photo of Mike',
-    why: "The about page has a portrait slot and there is nothing to put in it. Every other slot on the site now has a real photograph, so this is the last visibly empty one — and it is the page where it matters most, because people hire the person. See SHOT-LIST.md for the remaining shots.",
-    severity: 'launch',
-  },
 
   /* ---- site works without these, pages are just thinner ---- */
   process: {

@@ -7,7 +7,7 @@ Nothing on this site was invented to fill a gap. Every item below is a fact
 that was not in the brief, and every one of them renders on the page as a
 visible `[ needs input — … ]` marker until it is answered.
 
-**9 blocking launch · 4 would improve the site**
+**8 blocking launch · 4 would improve the site**
 
 ---
 
@@ -60,12 +60,6 @@ Appears in: `src/components/Logo.astro`
 Linked from the footer and listed in sameAs on the LocalBusiness schema. It is currently the only place the business exists online, so the link matters — and a guessed handle would send customers to someone else.
 
 Appears in: `src/components/Footer.astro`, `src/components/Schema.astro`, `src/config/site.ts`
-
-### a photo of Mike
-
-The about page has a portrait slot and there is nothing to put in it. Every other slot on the site now has a real photograph, so this is the last visibly empty one — and it is the page where it matters most, because people hire the person. See SHOT-LIST.md for the remaining shots.
-
-Appears in: `src/pages/about.astro`
 
 ---
 

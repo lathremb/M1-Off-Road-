@@ -138,13 +138,6 @@ export const shots = {
       'Bent tube sections laid out or in the bender, bare steel, before anything is welded. Reads as craft immediately.',
     priority: 'should',
   },
-  'mike-portrait': {
-    label: 'Mike Sulger — at work, not posed',
-    aspect: '4 / 5',
-    direction:
-      'Mike in the shop, working or standing next to a build. Hood up or off, no staged arms-crossed shot. Vertical. People hire the person, and right now there is no photo of him anywhere on the site.',
-    priority: 'must',
-  },
 
   'badge': {
     file: 'detail-badge-white-cage.jpg',

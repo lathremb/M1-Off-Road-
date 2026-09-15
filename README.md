@@ -75,8 +75,9 @@ Run `npm run build` and read `NEEDS-INPUT.md` — it is generated and current.
 The short version:
 
 1. **Photography.** Mostly done — 33 photos are in `src/assets/photos/`.
-   Four slots remain, listed in `SHOT-LIST.md`. The one that matters is a
-   photo of Mike; the about page has an empty portrait slot.
+   Three slots remain, listed in `SHOT-LIST.md`: a macro weld bead, a door
+   latch, and a share card. There is deliberately no photo of Mike anywhere
+   on the site, and no slot reserved for one.
 2. **Resend.** Set `RESEND_API_KEY` and `CONTACT_EMAIL` in Vercel (see
    `.env.example`). Until then the form returns "The form isn't hooked up yet"
    rather than failing silently.

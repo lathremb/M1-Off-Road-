@@ -338,8 +338,12 @@ const teaser = [
        ========================================================== -->
   <section class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-      <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
-        <Shot shot="mike-portrait" light class="w-full" />
+      <!-- No portrait here on purpose. The section is about who does the work,
+           and bare tube on the stands says that more plainly than a photo of
+           someone standing next to it would. Landscape, so the column split is
+           even rather than the narrow portrait slot this used to be. -->
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <Shot shot="bend-bare" light class="w-full" />
 
         <div>
           <BendRule class="mb-8 max-w-[10rem]" />

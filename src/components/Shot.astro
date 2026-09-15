@@ -78,7 +78,12 @@ const src = s.file ? photos[`../assets/photos/${s.file}`]?.default : undefined;
       decoding={eager ? 'sync' : 'async'}
       class:list={[
         'object-cover',
-        fill ? 'absolute inset-0 h-full w-full' : 'h-full w-full',
+        /* Only the `fill` variant takes its height from the parent. A normal
+           slot must NOT carry h-full: as a stretched grid or flex child it
+           would take the column's height and blow past its own aspect-ratio —
+           which silently turned a 3:2 shop photo into a 384×1366 sliver in the
+           about-page sidebar. Width plus aspect-ratio sets the height here. */
+        fill ? 'absolute inset-0 h-full w-full' : 'w-full self-start',
         className,
       ]}
       style={`${fill ? '' : `aspect-ratio:${ratio};`}object-position:${s.position ?? '50% 50%'}`}
