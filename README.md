@@ -84,13 +84,76 @@ The short version:
 6. **The logo.** `src/components/Logo.astro` is a hand trace from a photo of
    the badge on a door. Mike needs to approve it or supply the original art.
 
-## Deploying
+## Picking this back up — GitHub and Vercel
 
-Vercel auto-detects Astro. The root `api/` directory is picked up as a
-serverless function with no adapter and no extra configuration — which is why
-`output` stays `'static'` and every page is still prerendered HTML.
+The repo is initialised and the first commit is made. Nothing is pushed
+anywhere yet, because creating a GitHub repo needs your GitHub login and
+that is not something to hand off.
 
-Set the environment variables in the Vercel dashboard, not in a file.
+Git is a portable install at `%LOCALAPPDATA%\git-portable`, already on your
+user PATH. Open a **new** terminal in this folder so it picks that up.
+
+### 1. Check the commit is what you expect
+
+```bash
+git log --stat -1
+```
+
+The local identity is set to `Ben Lathrem <lathremben@gmail.com>` — I inferred
+the name, so change it if it is wrong:
+
+```bash
+git config user.name "Your Name"
+```
+
+### 2. Make the GitHub repo
+
+Create an **empty private** repo at https://github.com/new — no README, no
+.gitignore, no licence, or the first push will conflict. Call it
+`m1-off-road`. Then:
+
+```bash
+git remote add origin https://github.com/YOUR-USERNAME/m1-off-road.git
+git push -u origin main
+```
+
+Private is the right call for now: the site is full of placeholders and the
+logo is an unapproved trace.
+
+### 3. Link it to Vercel
+
+In the Vercel dashboard: **Add New → Project → Import** the repo. Vercel
+auto-detects Astro; accept the defaults. The root `api/` directory is picked
+up as a serverless function with no adapter and no extra configuration —
+which is why `output` stays `'static'` and every page is still prerendered.
+
+### 4. Add the environment variables
+
+In **Project → Settings → Environment Variables**, from `.env.example`:
+
+| Name | Value |
+|---|---|
+| `RESEND_API_KEY` | from resend.com/api-keys |
+| `CONTACT_EMAIL` | where Mike wants quote requests |
+| `CONTACT_FROM` | optional, leave unset at first |
+
+Redeploy after adding them — Vercel does not apply new variables to an
+existing build. Until they exist the form answers "The form isn't hooked up
+yet" instead of failing silently.
+
+### 5. Test the form on the deployed URL
+
+It cannot be tested locally with `npm run dev` — `/api/quote` is a Vercel
+function, not an Astro route. Submit it once on the deployed site and confirm
+the email lands, with and without a photo.
+
+### Nothing will be indexed
+
+`SITE_LIVE` in `src/config/site.ts` is `false`, so every page emits
+`noindex, nofollow` and `robots.txt` disallows everything — on preview **and**
+production. Flip it to `true` only when the photos are in and the
+needs-input list is clear. Staying out of the index is much easier than
+getting removed from it later.
 
 ## Lighthouse
 
