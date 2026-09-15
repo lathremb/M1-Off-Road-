@@ -6,7 +6,7 @@
  * like the same page with the nouns swapped.
  */
 import Base from './Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import Shot from '../components/Shot.astro';
 import BendRule from '../components/BendRule.astro';
 import { phone, services, pricing } from '../config/site';
 import type { ShotKey } from '../config/shots';
@@ -67,7 +67,7 @@ const others = services.filter((s) => s.slug !== slug);
         </div>
       </div>
 
-      <Placeholder shot={heroShot} class="w-full" />
+      <Shot shot={heroShot} class="w-full" />
     </div>
   </section>
 

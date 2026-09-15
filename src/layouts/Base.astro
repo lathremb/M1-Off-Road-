@@ -15,9 +15,18 @@ interface Props {
   description: string;
   /** Only the home page needs the LocalBusiness block. */
   schema?: boolean;
+  /**
+   * srcset for the page's LCP image, so it can be preloaded.
+   *
+   * Without this the browser cannot discover the hero until the stylesheet
+   * has resolved and layout has run — which on a throttled mobile connection
+   * is two extra round trips and roughly a second of LCP. The bytes were
+   * never the problem; the discovery time was.
+   */
+  preloadImage?: { srcset: string; sizes: string };
 }
 
-const { title, description, schema = false } = Astro.props;
+const { title, description, schema = false, preloadImage } = Astro.props;
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -45,6 +54,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
       type="font/woff2"
       crossorigin
     />
+
+    {
+      preloadImage && (
+        <link
+          rel="preload"
+          as="image"
+          imagesrcset={preloadImage.srcset}
+          imagesizes={preloadImage.sizes}
+          fetchpriority="high"
+        />
+      )
+    }
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <meta name="theme-color" content="#111111" />

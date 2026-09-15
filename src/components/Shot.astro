@@ -1,0 +1,96 @@
+---
+/**
+ * One photo slot. Renders the real photograph if the shot has been taken,
+ * and the labeled placeholder if it has not.
+ *
+ * Both branches reserve the identical aspect ratio, so a slot does not move
+ * when its photo arrives — which is why CLS stays at zero through a photo
+ * shoot rather than only after one.
+ *
+ * Photos resolve through import.meta.glob rather than a static import,
+ * because src/config/shots.ts names them as strings. Astro still processes
+ * every match at build time, so AVIF/WebP and srcset all work normally.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import Placeholder from './Placeholder.astro';
+import { shots, type ShotKey } from '../config/shots';
+
+interface Props {
+  shot: ShotKey;
+  light?: boolean;
+  aspect?: string;
+  align?: 'bottom' | 'top';
+  /** Fills a positioned parent instead of reserving its own ratio. */
+  fill?: boolean;
+  /** Above the fold: skips lazy loading and raises fetch priority. */
+  eager?: boolean;
+  /**
+   * Widths to generate. Keep this tight for small slots — a gallery thumbnail
+   * does not need a 2560px variant, and every extra width is build time and
+   * disk for a file nobody requests.
+   */
+  widths?: number[];
+  sizes?: string;
+  /**
+   * WebP quality. Astro's default (~80) is generous for photographs that are
+   * displayed at a few hundred CSS pixels on a phone. 68 roughly halves the
+   * bytes with no difference visible at this size, and these images are what
+   * the hero is competing against for bandwidth on first load.
+   */
+  quality?: number;
+  class?: string;
+}
+
+const {
+  shot,
+  light = false,
+  aspect,
+  align = 'bottom',
+  fill = false,
+  eager = false,
+  widths = [480, 768, 1024, 1536],
+  sizes = '(min-width: 1024px) 50vw, 100vw',
+  quality = 68,
+  class: className = '',
+} = Astro.props;
+
+const s = shots[shot];
+const ratio = aspect ?? s.aspect;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+const src = s.file ? photos[`../assets/photos/${s.file}`]?.default : undefined;
+---
+
+{
+  src ? (
+    <Image
+      src={src}
+      alt={s.alt ?? s.label}
+      widths={widths}
+      sizes={sizes}
+      quality={quality}
+      loading={eager ? 'eager' : 'lazy'}
+      fetchpriority={eager ? 'high' : 'auto'}
+      decoding={eager ? 'sync' : 'async'}
+      class:list={[
+        'object-cover',
+        fill ? 'absolute inset-0 h-full w-full' : 'h-full w-full',
+        className,
+      ]}
+      style={`${fill ? '' : `aspect-ratio:${ratio};`}object-position:${s.position ?? '50% 50%'}`}
+    />
+  ) : (
+    <Placeholder
+      shot={shot}
+      light={light}
+      aspect={aspect}
+      align={align}
+      fill={fill}
+      class={className}
+    />
+  )
+}

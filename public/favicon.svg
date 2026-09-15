@@ -1,5 +1,10 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" fill="#111111"/>
-  <path d="M50 12 L58.6 37.5 L85.5 37.8 L63.9 53.8 L71.9 79.5 L50 64 L28.1 79.5 L36.1 53.8 L14.5 37.8 L41.4 37.5 Z"
-        fill="none" stroke="#F4F4F4" stroke-width="6" stroke-linejoin="miter"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Wordmark initials, not the real badge. The actual mark is a star with a
+       flag-styled M1 in it; see src/components/Logo.astro. Swap this for a
+       crop of the real artwork once it exists. -->
+  <rect width="64" height="64" fill="#111111"/>
+  <text x="32" y="44" text-anchor="middle"
+        font-family="Arial Black, Arial, Helvetica, sans-serif"
+        font-size="34" font-weight="900" letter-spacing="-1.5"
+        fill="#F4F4F4">M1</text>
 </svg>

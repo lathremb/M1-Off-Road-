@@ -20,11 +20,28 @@ export interface Shot {
   /** Plain-language direction for whoever holds the camera. */
   direction: string;
   priority: Priority;
+  /**
+   * Filename in src/assets/photos/. When present the slot renders the real
+   * photograph; when absent it renders the labeled placeholder. Setting this
+   * also drops the shot out of the "still to shoot" section of SHOT-LIST.md,
+   * so the brief shrinks as photos arrive instead of going stale.
+   */
+  file?: string;
+  /**
+   * object-position for the slot, when the photo's subject is not centred or
+   * the crop is tight. Only set where it was actually needed.
+   */
+  position?: string;
+  /** Alt text. Required alongside `file` — a decorative default would be worse. */
+  alt?: string;
 }
 
 export const shots = {
   /* ---- the one that carries the whole site ---- */
   'hero-build': {
+    file: 'hero-night-dune-66.jpg',
+    position: '50% 58%',
+    alt: 'A four-seat machine built by M1 Off-Road parked on a dune at night, a lit whip and American flag alongside, fireworks overhead, and an M1 OFF-ROAD number panel on the door.',
     label: 'Hero — finished build, three-quarter front',
     aspect: '16 / 9',
     direction:
@@ -34,6 +51,8 @@ export const shots = {
 
   /* ---- services, home page and service page tops ---- */
   'svc-cage': {
+    file: 'cage-rzr-white-3q.jpg',
+    alt: 'A black Polaris RZR Pro R with a white powder-coated M1 Off-Road cage, shot from the front three-quarter.',
     label: 'Roll cage — profile, machine outdoors',
     aspect: '4 / 3',
     direction:
@@ -41,6 +60,8 @@ export const shots = {
     priority: 'must',
   },
   'svc-doors': {
+    file: 'doors-rzr-white-side.jpg',
+    alt: 'A white Polaris RZR with full custom doors, shot square from the side so the panel gaps read.',
     label: 'Doors — closed, latch side',
     aspect: '4 / 3',
     direction:
@@ -48,6 +69,8 @@ export const shots = {
     priority: 'must',
   },
   'svc-roofs': {
+    file: 'roof-rzr-blue-above.jpg',
+    alt: 'A pale blue Polaris RZR Pro R seen from above the front corner, showing the roof and how it joins the cage.',
     label: 'Roof — from above front corner',
     aspect: '4 / 3',
     direction:
@@ -55,6 +78,8 @@ export const shots = {
     priority: 'must',
   },
   'svc-fab': {
+    file: 'fab-bumper-front.jpg',
+    alt: 'A custom tube front bumper on a Polaris RZR with auxiliary lights mounted inside it.',
     label: 'Custom fab — bumper or mount detail',
     aspect: '4 / 3',
     direction:
@@ -71,6 +96,8 @@ export const shots = {
     priority: 'must',
   },
   'cage-joint': {
+    file: 'shop-bare-cage-jig.jpg',
+    alt: 'A bare steel cage on a jig cart in the shop, showing the welded nodes where the tubes meet.',
     label: 'Cage detail — node where tubes meet',
     aspect: '3 / 2',
     direction:
@@ -84,6 +111,8 @@ export const shots = {
     priority: 'should',
   },
   'roof-edge': {
+    file: 'roof-canam-edge.jpg',
+    alt: 'The edge of a roof on a Can-Am Maverick X3 where it meets the cage tube.',
     label: 'Roof detail — edge and mount',
     aspect: '3 / 2',
     direction: 'Where the roof edge meets the cage tube. Shows it was built to fit, not bolted over.',
@@ -92,6 +121,8 @@ export const shots = {
 
   /* ---- in progress: the shop, the work, the person ---- */
   'shop-wide': {
+    file: 'shop-bare-cage-cart.jpg',
+    alt: 'A bare steel cage mid-build on a rolling jig in the M1 Off-Road shop, tube stock racked on the wall behind it.',
     label: 'Shop — machine on the table, work in progress',
     aspect: '3 / 2',
     direction:
@@ -99,6 +130,8 @@ export const shots = {
     priority: 'should',
   },
   'bend-bare': {
+    file: 'shop-bare-cage-stands.jpg',
+    alt: 'A bare, unpainted cage on stands in the shop with a chop saw and welder behind it.',
     label: 'Bare tube — bent sections before assembly',
     aspect: '3 / 2',
     direction:
@@ -106,22 +139,23 @@ export const shots = {
     priority: 'should',
   },
   'mike-portrait': {
-    label: 'Mike Solger — at work, not posed',
+    label: 'Mike Sulger — at work, not posed',
     aspect: '4 / 5',
     direction:
       'Mike in the shop, working or standing next to a build. Hood up or off, no staged arms-crossed shot. Vertical. People hire the person, and right now there is no photo of him anywhere on the site.',
     priority: 'must',
   },
 
-  /* ---- gallery ---- */
-  'gallery-tile': {
-    label: 'Gallery — finished build',
-    aspect: '1 / 1',
+  'badge': {
+    file: 'detail-badge-white-cage.jpg',
+    position: '50% 45%',
+    alt: 'The M1 Off-Road badge bolted to a white cage tube — a star with a stylised M1 in it, the 1 drawn as a waving flag, and OFF-ROAD on the diagonal.',
+    label: 'Badge — the mark on a finished cage',
+    aspect: '4 / 3',
     direction:
-      'Square crops of finished builds, grouped by platform. Aim for at least six per platform. Consistent distance and angle across a group reads far better than variety — shoot them the same way every time and the grid does the work.',
-    priority: 'must',
+      'The badge plate on a coated cage, square on and close. Worth a proper frame of its own: it is the only place the real mark appears anywhere on the site.',
+    priority: 'should',
   },
-
   /* ---- social ---- */
   'og-share': {
     label: 'Share card — build, wide crop',

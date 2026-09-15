@@ -1,0 +1,42 @@
+---
+/**
+ * One square tile in the contact-sheet grid.
+ *
+ * Deliberately narrow width ladder: these render at roughly 200–340 px even
+ * on a large screen, so generating 1536 px variants would be build time and
+ * disk spent on files nobody downloads.
+ */
+import { Image } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import type { GalleryPhoto } from '../config/gallery';
+
+interface Props {
+  photo: GalleryPhoto;
+  /** The first row on a page can skip lazy loading. */
+  eager?: boolean;
+}
+
+const { photo, eager = false } = Astro.props;
+
+const photos = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+const src = photos[`../assets/photos/${photo.file}`]?.default;
+---
+
+{
+  src && (
+    <Image
+      src={src}
+      alt={photo.alt}
+      widths={[240, 360, 480, 720]}
+      quality={66}
+      sizes="(min-width: 1024px) 17vw, (min-width: 640px) 33vw, 50vw"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+      class="aspect-square h-full w-full object-cover"
+      style={`object-position:${photo.position ?? '50% 50%'}`}
+    />
+  )
+}

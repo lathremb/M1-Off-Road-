@@ -1,6 +1,6 @@
 # M1 Off-Road
 
-Marketing site for M1 Off-Road, Mike Solger's custom UTV fabrication shop in
+Marketing site for M1 Off-Road, Mike Sulger's custom UTV fabrication shop in
 Tucson, Arizona. Astro + Tailwind, static output, deploying to Vercel.
 
 **Not deployed yet.** See "Before launch" below.
@@ -30,7 +30,9 @@ npm run preview # serve the built site on :4322
 | `src/pages/` | One file per page. |
 | `api/quote.js` | The quote form's serverless function. Resend, same as Lathrem Homebuilders. |
 | `scripts/needs-input.mjs` | Generates `NEEDS-INPUT.md` and `SHOT-LIST.md` at build time. |
-| `_reference/` | The 64 Facebook thumbnails. Git-ignored, not deployed, not usable. |
+| `src/config/gallery.ts` | The gallery, grouped by platform. |
+| `src/assets/photos/` | The photography. Processed by `astro:assets`. |
+| `_reference/` | Source images as supplied. Git-ignored, not deployed. |
 
 ### Changing the phone number
 
@@ -60,7 +62,7 @@ That extends to structured data. `Schema.astro` carries locality only, no
 `priceRange` band, and no `aggregateRating`. The one price claim — $2,500 for a
 typical full cage — is confirmed, and appears as a real `Offer`.
 
-Facts that ARE confirmed and used throughout: Tucson AZ; Mike Solger; (520)
+Facts that ARE confirmed and used throughout: Tucson AZ; Mike Sulger; (520)
 403-3366; over ten years; roll cages, doors, roofs; all MIG welding in house;
 powder coating sent out; $2,500 typical full cage; mostly Polaris RZR and
 Can-Am but a wide range of machines.
@@ -72,8 +74,9 @@ Can-Am but a wide range of machines.
 Run `npm run build` and read `NEEDS-INPUT.md` — it is generated and current.
 The short version:
 
-1. **Photography.** Everything is a placeholder. `SHOT-LIST.md` says what to
-   shoot and at what ratio.
+1. **Photography.** Mostly done — 33 photos are in `src/assets/photos/`.
+   Four slots remain, listed in `SHOT-LIST.md`. The one that matters is a
+   photo of Mike; the about page has an empty portrait slot.
 2. **Resend.** Set `RESEND_API_KEY` and `CONTACT_EMAIL` in Vercel (see
    `.env.example`). Until then the form returns "The form isn't hooked up yet"
    rather than failing silently.
@@ -81,8 +84,9 @@ The short version:
    blank, no analytics script is emitted at all.
 4. **Domain.** Set it in `astro.config.mjs` and in `public/robots.txt`.
 5. **Address, hours, Facebook URL.** Footer, contact page and schema.
-6. **The logo.** `src/components/Logo.astro` is a hand trace from a photo of
-   the badge on a door. Mike needs to approve it or supply the original art.
+6. **The logo.** The header is a wordmark only. The real badge — a star with a
+   flag-styled M1 in it — is too intricate to redraw honestly from a photo.
+   Get the vector from Mike or from whoever cut the badge plates.
 
 ## Picking this back up — GitHub and Vercel
 
@@ -157,15 +161,35 @@ getting removed from it later.
 
 ## Lighthouse
 
-Mobile, against the production build, on 2026-09-15:
+Mobile, against the production build, with the real photography in place:
 
-| Page | Performance | Accessibility | Best Practices | SEO |
-|---|---|---|---|---|
-| Home | 100 | 100 | 100 | 66 \* |
-| Contact | 100 | 100 | 100 | 66 \* |
-| Gallery | 100 | 100 | 100 | 66 \* |
+| Page | Performance | Accessibility | Best Practices | SEO | LCP |
+|---|---|---|---|---|---|
+| Home | 99 | 100 | 100 | 69 \* | 2.3 s |
+| Roll Cages | 100 | 100 | 100 | 69 \* | 1.4 s |
+| Doors | 100 | 100 | 100 | 69 \* | 1.3 s |
+| Gallery | 98 | 100 | 100 | 69 \* | 2.4 s |
+| About | 100 | 100 | 100 | 69 \* | 1.4 s |
+| Contact | 100 | 100 | 100 | 66 \* | 1.2 s |
 
-FCP 0.8 s · LCP 1.2 s · TBT 0 ms · CLS 0.
+FCP 0.8 s · TBT 0 ms · **CLS 0 on every page.**
+
+CLS stayed at zero through the whole photo drop, which was the point of every
+slot reserving its exact aspect ratio from the start — adding thirty-three
+photographs moved nothing.
+
+The home page LCP went 1.2 s → 2.6 s when the photos landed, and came back to
+2.3 s (inside the "good" Core Web Vitals band) by two changes worth keeping:
+
+- **The hero is preloaded.** `Base.astro` takes a `preloadImage` prop and the
+  home page builds its variants once with `getImage()`, using the same list
+  for the preload link and the `<img>`. They have to match exactly — a
+  preload that misses by one URL downloads the image twice and is worse than
+  no preload.
+- **WebP quality is tuned down** (68 for content, 66 for gallery tiles, 70 for
+  the hero) rather than left at Astro's default. The measurement that mattered
+  was not the hero's size — it was 450 KB of service-block images starting
+  0.8 s in and eating the bandwidth the hero needed.
 
 \* **The SEO score is 66 on purpose.** Exactly one audit fails —
 `is-crawlable`, "Page is blocked from indexing" — which is the `SITE_LIVE`

@@ -11,7 +11,7 @@
 
 export const business = {
   name: 'M1 Off-Road',
-  owner: 'Mike Solger',
+  owner: 'Mike Sulger',
   city: 'Tucson',
   state: 'Arizona',
   stateCode: 'AZ',
@@ -136,21 +136,29 @@ export const services = [
 /* ---------------------------------------------------------
    Gallery grouping. Platforms confirmed from the shop's own photos.
    --------------------------------------------------------- */
+/* Groups and notes are taken from the badging visible in the shop's own
+   photographs, not from an assumption about what a Tucson shop probably
+   sees. Kawasaki earned its own group because four KRX builds are on file. */
 export const platforms = [
   {
     slug: 'polaris-rzr',
     name: 'Polaris RZR',
-    note: 'Turbo R, Pro R, XP — two seat and four seat.',
+    note: 'Pro R, Turbo S, XP 1000 — and a RZR 200. Two seat and four seat.',
   },
   {
     slug: 'can-am',
     name: 'Can-Am',
-    note: 'Maverick X3, two seat and four seat.',
+    note: 'Maverick X3, including the Turbo RR.',
   },
   {
-    slug: 'other',
-    name: 'Other Machines',
-    note: 'Yamaha YXZ and everything else that has come through the shop.',
+    slug: 'kawasaki',
+    name: 'Kawasaki',
+    note: 'Teryx KRX4 — cages, doors, roofs and racks.',
+  },
+  {
+    slug: 'in-the-shop',
+    name: 'In the Shop',
+    note: 'Bare tube, before any of it goes out for coating.',
   },
 ] as const;
 

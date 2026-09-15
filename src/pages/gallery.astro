@@ -1,19 +1,18 @@
 ---
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
-import NeedsInput from '../components/NeedsInput.astro';
+import GalleryTile from '../components/GalleryTile.astro';
 import BendRule from '../components/BendRule.astro';
 import { phone, platforms } from '../config/site';
+import { gallery, galleryCount } from '../config/gallery';
 
 /* Grouped by platform, as briefed. The jump links below are anchors rather
    than a JavaScript filter: every build stays in the document, which is
    better for search and costs nothing to render. */
-const tilesPerPlatform = 9;
 ---
 
 <Base
   title="Gallery — UTV Builds by Platform | M1 Off-Road Tucson"
-  description="Roll cages, doors and roofs built by M1 Off-Road in Tucson, grouped by machine. Polaris RZR, Can-Am Maverick X3, Yamaha YXZ and other UTVs."
+  description="Roll cages, doors and roofs built by M1 Off-Road in Tucson, grouped by machine. Polaris RZR, Can-Am Maverick X3 and Kawasaki Teryx KRX builds, plus bare tube in the shop."
 >
   <section class="bg-shop text-bone">
     <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
@@ -21,9 +20,13 @@ const tilesPerPlatform = 9;
       <h1 class="max-w-[16ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
         Machines that have been through the shop
       </h1>
+      <!-- "photos" not "builds": some of these are detail shots of the same
+           machine, and a count of builds would be a number we cannot stand
+           behind. -->
       <p class="text-steel mt-6 max-w-[52ch] text-lg sm:text-xl">
-        Grouped by platform, because the first thing anyone wants to know is
-        whether a machine like theirs has been done before.
+        {galleryCount} photos, grouped by platform — because the first thing
+        anyone wants to know is whether a machine like theirs has been done
+        before.
       </p>
 
       <nav class="mt-9 flex flex-wrap gap-2" aria-label="Jump to platform">
@@ -34,6 +37,9 @@ const tilesPerPlatform = 9;
               class="border-shop-line bend hover:border-bone hover:text-bone border px-4 py-2 text-[0.9375rem] transition-colors"
             >
               {p.name}
+              <span class="text-steel ml-1.5 text-sm">
+                {gallery[p.slug]?.length ?? 0}
+              </span>
             </a>
           ))
         }
@@ -42,29 +48,33 @@ const tilesPerPlatform = 9;
   </section>
 
   {
-    platforms.map((p, i) => (
-      <section id={p.slug} class={i % 2 === 0 ? 'bg-bone' : 'bg-shop text-bone'}>
-        <div class="mx-auto max-w-6xl px-5 pt-14 sm:px-8 sm:pt-20">
-          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <h2 class="text-[clamp(1.75rem,4.5vw,2.75rem)]">{p.name}</h2>
-            <p class={i % 2 === 0 ? 'text-slate' : 'text-steel'}>{p.note}</p>
+    platforms.map((p, i) => {
+      const photos = gallery[p.slug] ?? [];
+      const dark = i % 2 !== 0;
+      return (
+        <section id={p.slug} class={dark ? 'bg-shop text-bone' : 'bg-bone'}>
+          <div class="mx-auto max-w-6xl px-5 pt-14 sm:px-8 sm:pt-20">
+            <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+              <h2 class="text-[clamp(1.75rem,4.5vw,2.75rem)]">{p.name}</h2>
+              <p class={dark ? 'text-steel' : 'text-slate'}>{p.note}</p>
+            </div>
           </div>
-        </div>
 
-        {/* Full bleed, no gutters, strict squares — the contact-sheet grid. */}
-        <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-          {Array.from({ length: tilesPerPlatform }).map(() => (
-            <Placeholder shot="gallery-tile" class="w-full border-0" />
-          ))}
-        </div>
+          {/* Full bleed, no gutters, strict squares — the contact-sheet grid. */}
+          <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+            {photos.map((photo, j) => (
+              <GalleryTile photo={photo} eager={i === 0 && j < 6} />
+            ))}
+          </div>
 
-        <div class="mx-auto max-w-6xl px-5 pt-8 pb-14 sm:px-8 sm:pb-20">
-          <p class={i % 2 === 0 ? 'text-slate' : 'text-steel'}>
-            <NeedsInput key="photos" dark={i % 2 !== 0} />
-          </p>
-        </div>
-      </section>
-    ))
+          <div class="mx-auto max-w-6xl px-5 pt-8 pb-14 sm:px-8 sm:pb-20">
+            <p class={dark ? 'text-steel' : 'text-slate'}>
+              {photos.length} {photos.length === 1 ? 'photo' : 'photos'}.
+            </p>
+          </div>
+        </section>
+      );
+    })
   }
 
   <section class="bg-bone">
@@ -84,7 +94,7 @@ const tilesPerPlatform = 9;
         <a
           href={phone.tel}
           data-analytics="call-gallery"
-          class="font-display bg-shop bend border border-shop shrink-0 px-6 py-3.5 text-center font-bold text-bone transition-colors hover:bg-transparent hover:text-shop"
+          class="font-display bg-shop bend border-shop text-bone hover:text-shop shrink-0 border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
         >
           Call {phone.display}
         </a>

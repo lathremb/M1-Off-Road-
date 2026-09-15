@@ -59,8 +59,8 @@ export const gaps = {
     severity: 'launch',
   },
   'logo-art': {
-    label: 'logo approval',
-    why: 'The star mark in src/components/Logo.astro was traced by hand from a photo of the badge on a door. Mike needs to approve it, or supply the original vector file.',
+    label: 'the real logo artwork',
+    why: "The site currently shows a plain 'M1 OFF-ROAD' wordmark and no mark at all. The real badge — clearly visible in detail-badge-white-cage.jpg and detail-badge-bronze-cage.jpg — is a star with a stylised M1 locked into it, the 1 drawn as a waving American flag, and OFF-ROAD set small on the diagonal. Redrawing that from a photograph would read as a poor copy of Mike's logo rather than his logo. Ask him for the vector file, or for whoever cut the badge plates — they will have it.",
     severity: 'launch',
   },
   facebook: {
@@ -68,9 +68,9 @@ export const gaps = {
     why: 'Linked from the footer and listed in sameAs on the LocalBusiness schema. It is currently the only place the business exists online, so the link matters — and a guessed handle would send customers to someone else.',
     severity: 'launch',
   },
-  photos: {
-    label: 'photography',
-    why: 'Every image on the site is a labeled placeholder. See SHOT-LIST.md. The 64 files in _reference/ are 206px Facebook thumbnails and are not usable.',
+  'mike-photo': {
+    label: 'a photo of Mike',
+    why: "The about page has a portrait slot and there is nothing to put in it. Every other slot on the site now has a real photograph, so this is the last visibly empty one — and it is the page where it matters most, because people hire the person. See SHOT-LIST.md for the remaining shots.",
     severity: 'launch',
   },
 

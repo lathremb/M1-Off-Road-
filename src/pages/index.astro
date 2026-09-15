@@ -1,7 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
-import HeroImage from '../components/HeroImage.astro';
+import Shot from '../components/Shot.astro';
+import GalleryTile from '../components/GalleryTile.astro';
 import NeedsInput from '../components/NeedsInput.astro';
 import BendRule from '../components/BendRule.astro';
 import {
@@ -12,15 +12,59 @@ import {
   platforms,
   terms,
 } from '../config/site';
+import { gallery } from '../config/gallery';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+import { shots } from '../config/shots';
 
 /* Home is the only page carrying the LocalBusiness block, so the markup
    describes one business rather than eight. */
+
+/* ---------------------------------------------------------
+   The hero is generated here rather than through <Shot>, because it is the
+   LCP element and has to be preloaded. Building the variants once and using
+   the same list for BOTH the preload link and the <img> guarantees they
+   match — a preload that misses by one URL downloads the image twice and is
+   worse than no preload at all.
+   --------------------------------------------------------- */
+const heroShot = shots['hero-build'];
+const photoFiles = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+const heroSource = heroShot.file
+  ? photoFiles[`../assets/photos/${heroShot.file}`]?.default
+  : undefined;
+
+const HERO_WIDTHS = [640, 960, 1280, 1920, 2560];
+const heroVariants = heroSource
+  ? await Promise.all(
+      HERO_WIDTHS.map((width) =>
+        getImage({ src: heroSource, width, format: 'webp', quality: 70 })
+      )
+    )
+  : [];
+const heroSrcset = heroVariants
+  .map((v, i) => `${v.src} ${HERO_WIDTHS[i]}w`)
+  .join(', ');
+
+/* Six tiles for the teaser strip, taken one at a time across the platforms so
+   the row is not six near-identical RZRs. */
+const teaser = [
+  gallery['polaris-rzr'][0],
+  gallery['can-am'][0],
+  gallery['kawasaki'][0],
+  gallery['polaris-rzr'][10],
+  gallery['in-the-shop'][0],
+  gallery['polaris-rzr'][4],
+];
 ---
 
 <Base
   title="M1 Off-Road — Custom UTV Roll Cages, Doors & Roofs in Tucson"
-  description="Custom roll cages, doors and roofs for Polaris RZR, Can-Am and other UTVs. MIG welded in Tucson by Mike Solger. Full cages start at $2,500. Call (520) 403-3366."
+  description="Custom roll cages, doors and roofs for Polaris RZR, Can-Am and other UTVs. MIG welded in Tucson by Mike Sulger. Full cages start at $2,500. Call (520) 403-3366."
   schema
+  preloadImage={heroSrcset ? { srcset: heroSrcset, sizes: '100vw' } : undefined}
 >
   <!-- ==========================================================
        HERO — the one place on this site that raises its voice.
@@ -31,7 +75,26 @@ import {
          portrait, and height is what stops a landscape frame from reducing it
          to a letterbox slice. -->
     <div class="relative min-h-[34rem] sm:min-h-[40rem] lg:min-h-[46rem]">
-      <HeroImage />
+      <!-- The LCP element. Preloaded from the head with this exact srcset. -->
+      {
+        heroSource ? (
+          <img
+            src={heroVariants[1]?.src}
+            srcset={heroSrcset}
+            sizes="100vw"
+            alt={heroShot.alt}
+            width={heroSource.width}
+            height={heroSource.height}
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            class="absolute inset-0 h-full w-full object-cover"
+            style={`object-position:${heroShot.position ?? '50% 50%'}`}
+          />
+        ) : (
+          <Shot shot="hero-build" fill eager sizes="100vw" />
+        )
+      }
 
       <!-- Scrim. Heavier at the base so the type has something solid to sit on
            without washing the whole photograph out. -->
@@ -107,7 +170,7 @@ import {
           <!-- Stretches to the row height, the way object-cover will once the
                real photograph replaces it. -->
           <div class="relative min-h-[15rem] w-full lg:w-1/2 lg:shrink-0">
-            <Placeholder shot="svc-cage" light fill />
+            <Shot shot="svc-cage" light fill />
           </div>
           <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
             <h3 class="text-[clamp(1.5rem,3vw,2rem)]">
@@ -132,7 +195,7 @@ import {
         </article>
 
         <article class="border-bone-line bend flex flex-col border">
-          <Placeholder shot="svc-doors" light class="w-full" />
+          <Shot shot="svc-doors" light class="w-full" />
           <div class="flex flex-1 flex-col p-6">
             <h3 class="text-2xl">
               <a href="/doors/" class="hover:text-slate transition-colors">Doors</a>
@@ -145,7 +208,7 @@ import {
         </article>
 
         <article class="border-bone-line bend flex flex-col border">
-          <Placeholder shot="svc-roofs" light class="w-full" />
+          <Shot shot="svc-roofs" light class="w-full" />
           <div class="flex flex-1 flex-col p-6">
             <h3 class="text-2xl">
               <a href="/roofs/" class="hover:text-slate transition-colors">Roofs</a>
@@ -162,7 +225,7 @@ import {
           class="border-bone-line bend flex flex-col border sm:col-span-2 lg:flex-row"
         >
           <div class="relative min-h-[12rem] w-full lg:w-2/5 lg:shrink-0">
-            <Placeholder shot="svc-fab" light fill />
+            <Shot shot="svc-fab" light fill />
           </div>
           <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
             <h3 class="text-2xl">
@@ -266,11 +329,7 @@ import {
     <!-- Full-bleed, gutterless, square. This is the one dense thing on the
          page and it is meant to read as a wall of work. -->
     <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-      {
-        Array.from({ length: 6 }).map(() => (
-          <Placeholder shot="gallery-tile" class="w-full border-0" />
-        ))
-      }
+      {teaser.map((photo) => <GalleryTile photo={photo} />)}
     </div>
   </section>
 
@@ -280,7 +339,7 @@ import {
   <section class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
-        <Placeholder shot="mike-portrait" light class="w-full" />
+        <Shot shot="mike-portrait" light class="w-full" />
 
         <div>
           <BendRule class="mb-8 max-w-[10rem]" />

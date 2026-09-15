@@ -1,20 +1,20 @@
 ---
 import Base from '../layouts/Base.astro';
-import Placeholder from '../components/Placeholder.astro';
+import Shot from '../components/Shot.astro';
 import NeedsInput from '../components/NeedsInput.astro';
 import BendRule from '../components/BendRule.astro';
 import { business, phone, pricing, terms } from '../config/site';
 ---
 
 <Base
-  title="About M1 Off-Road — Mike Solger, Tucson Fabricator"
-  description="M1 Off-Road is Mike Solger's fabrication shop in Tucson, Arizona. Over ten years building roll cages, doors and roofs for UTVs. MIG welding done in house."
+  title="About M1 Off-Road — Mike Sulger, Tucson Fabricator"
+  description="M1 Off-Road is Mike Sulger's fabrication shop in Tucson, Arizona. Over ten years building roll cages, doors and roofs for UTVs. MIG welding done in house."
 >
   <section class="bg-shop text-bone">
     <div
       class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16"
     >
-      <Placeholder shot="mike-portrait" class="w-full" />
+      <Shot shot="mike-portrait" class="w-full" />
 
       <div>
         <BendRule dark class="mb-8 max-w-[8rem]" />
@@ -26,6 +26,7 @@ import { business, phone, pricing, terms } from '../config/site';
           {business.stateCode}, geared to off-road vehicles. Cages, doors and
           roofs, mostly for UTVs.
         </p>
+        <p class="mt-6"><NeedsInput key="mike-photo" dark /></p>
       </div>
     </div>
   </section>
@@ -76,7 +77,14 @@ import { business, phone, pricing, terms } from '../config/site';
         </div>
 
         <aside class="space-y-4">
-          <Placeholder shot="shop-wide" light class="w-full" />
+          <Shot shot="shop-wide" light class="w-full" />
+
+          <figure>
+            <Shot shot="badge" light class="w-full" />
+            <figcaption class="text-slate mt-2 text-[0.9375rem]">
+              The badge goes on the cage, not on a sticker.
+            </figcaption>
+          </figure>
 
           <div class="border-bone-line bend border p-6">
             <h2 class="text-xl">The short version</h2>
