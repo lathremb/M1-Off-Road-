@@ -1,0 +1,18 @@
+# Vercel installs dependencies and builds from source, so only source needs
+# uploading. Keeping this tight matters: _reference/ alone is ~20 MB of
+# original photographs that the site never serves.
+
+node_modules
+dist
+.astro
+.git
+
+# Source images as supplied. src/assets/photos/ holds the ones the site
+# actually uses; this is the untouched drop folder.
+_reference
+
+# Local notes and generated authoring docs — not part of the site.
+NEEDS-INPUT.md
+SHOT-LIST.md
+README.md
+.claude

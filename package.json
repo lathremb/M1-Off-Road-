@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build && node scripts/needs-input.mjs",
+    "build": "astro build",
+    "build:docs": "astro build && node scripts/needs-input.mjs",
     "preview": "astro preview",
     "needs-input": "node scripts/needs-input.mjs",
     "lighthouse": "lighthouse http://localhost:4322/ --form-factor=mobile --screenEmulation.mobile --only-categories=performance,accessibility,best-practices,seo --view"
+  },
+  "engines": {
+    "node": ">=22.18"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.4",
@@ -18,6 +22,7 @@
     "tailwindcss": "^4.3.3"
   },
   "devDependencies": {
-    "lighthouse": "^13.4.1"
+    "lighthouse": "^13.4.1",
+    "vercel": "^59.17.0"
   }
 }

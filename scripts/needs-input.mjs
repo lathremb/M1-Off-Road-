@@ -8,6 +8,12 @@
    build reports the orphan. Neither is fatal — a warning is enough, because
    the state of the site during a photo shoot is legitimately in flux.
 
+   This is an AUTHORING aid, not part of the production build, which is why
+   `npm run build` does not call it — use `npm run build:docs` locally. It
+   imports the registries as TypeScript directly, which relies on Node's type
+   stripping (default from 22.18 / 24). Vercel picks its own Node version, and
+   a deploy should never fail because a markdown file could not be regenerated.
+
    Run on its own with:  npm run needs-input
    ========================================================= */
 
