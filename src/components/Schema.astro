@@ -24,14 +24,16 @@ const schema = {
     'Custom off-road fabrication in Tucson, Arizona. Roll cages, doors and roofs for UTVs, MIG welded in house.',
   telephone: phone.e164,
 
-  /* Locality only. streetAddress is deliberately absent until confirmed —
-     [needs-input: address] */
   address: {
     '@type': 'PostalAddress',
-    addressLocality: business.city,
-    addressRegion: business.stateCode,
-    addressCountry: 'US',
+    streetAddress: business.address.street,
+    addressLocality: business.address.locality,
+    addressRegion: business.address.region,
+    postalCode: business.address.postalCode,
+    addressCountry: business.address.country,
   },
+
+  openingHours: business.hours.schema,
 
   areaServed: {
     '@type': 'AdministrativeArea',
@@ -72,8 +74,7 @@ const schema = {
       : {}),
   })),
 
-  /* Populated once the Facebook URL is confirmed — [needs-input: facebook] */
-  ...(business.facebook ? { sameAs: [business.facebook] } : {}),
+  sameAs: [business.facebook],
 };
 ---
 

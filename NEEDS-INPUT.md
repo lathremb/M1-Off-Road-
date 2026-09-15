@@ -7,7 +7,7 @@ Nothing on this site was invented to fill a gap. Every item below is a fact
 that was not in the brief, and every one of them renders on the page as a
 visible `[ needs input — … ]` marker until it is answered.
 
-**8 blocking launch · 4 would improve the site**
+**5 blocking launch · 4 would improve the site**
 
 ---
 
@@ -18,18 +18,6 @@ visible `[ needs input — … ]` marker until it is answered.
 Set in astro.config.mjs. Canonical URLs, Open Graph and the sitemap all resolve against it.
 
 Appears in: `astro.config.mjs`
-
-### shop address
-
-Contact page and LocalBusiness schema. If the shop does not take walk-ins, say so and we publish the service area only — that is a valid answer, not a missing one.
-
-Appears in: `src/components/Footer.astro`, `src/components/Schema.astro`, `src/pages/about.astro`, `src/pages/contact.astro`
-
-### hours
-
-Contact page and LocalBusiness schema. Google shows these directly in local results.
-
-Appears in: `src/components/Footer.astro`, `src/pages/about.astro`, `src/pages/contact.astro`
 
 ### inbox for quote requests
 
@@ -54,12 +42,6 @@ Appears in: `src/components/Analytics.astro`, `src/config/site.ts`
 The site currently shows a plain 'M1 OFF-ROAD' wordmark and no mark at all. The real badge — clearly visible in detail-badge-white-cage.jpg and detail-badge-bronze-cage.jpg — is a star with a stylised M1 locked into it, the 1 drawn as a waving American flag, and OFF-ROAD set small on the diagonal. Redrawing that from a photograph would read as a poor copy of Mike's logo rather than his logo. Ask him for the vector file, or for whoever cut the badge plates — they will have it.
 
 Appears in: `src/components/Logo.astro`
-
-### Facebook page URL
-
-Linked from the footer and listed in sameAs on the LocalBusiness schema. It is currently the only place the business exists online, so the link matters — and a guessed handle would send customers to someone else.
-
-Appears in: `src/components/Footer.astro`, `src/components/Schema.astro`, `src/config/site.ts`
 
 ---
 

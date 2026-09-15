@@ -3,7 +3,29 @@ import Base from '../layouts/Base.astro';
 import GalleryTile from '../components/GalleryTile.astro';
 import BendRule from '../components/BendRule.astro';
 import { phone, platforms } from '../config/site';
+import Lightbox from '../components/Lightbox.astro';
 import { gallery, galleryCount } from '../config/gallery';
+import { getImage } from 'astro:assets';
+import type { ImageMetadata } from 'astro';
+
+/* One enlarged variant per photo for the lightbox. Generated at build time so
+   opening a tile is a single cached request, and capped at 1600px — past that
+   is more pixels than a phone or a laptop will show. */
+const sources = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+
+const flat = platforms.flatMap((p) => gallery[p.slug] ?? []);
+const fullUrls = new Map<string, string>();
+for (const photo of flat) {
+  const src = sources[`../assets/photos/${photo.file}`]?.default;
+  if (!src) continue;
+  const big = await getImage({ src, width: 1600, format: 'webp', quality: 74 });
+  fullUrls.set(photo.file, big.src);
+}
+/** Position in the flat list, so the lightbox can page through every photo. */
+const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 
 /* Grouped by platform, as briefed. The jump links below are anchors rather
    than a JavaScript filter: every build stays in the document, which is
@@ -61,9 +83,14 @@ import { gallery, galleryCount } from '../config/gallery';
           </div>
 
           {/* Full bleed, no gutters, strict squares — the contact-sheet grid. */}
-          <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+          <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
             {photos.map((photo, j) => (
-              <GalleryTile photo={photo} eager={i === 0 && j < 6} />
+              <GalleryTile
+                photo={photo}
+                eager={i === 0 && j < 5}
+                full={fullUrls.get(photo.file)}
+                index={indexOf.get(photo.file)}
+              />
             ))}
           </div>
 
@@ -101,4 +128,6 @@ import { gallery, galleryCount } from '../config/gallery';
       </div>
     </div>
   </section>
+
+  <Lightbox />
 </Base>

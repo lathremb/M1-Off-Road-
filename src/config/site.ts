@@ -18,10 +18,32 @@ export const business = {
   /* "in business over ten years" — kept as a relative phrase on purpose.
      A founding year would be a fact we do not have. */
   yearsInBusiness: 'over ten years',
-  /* The shop has a Facebook page, but the URL was never supplied and a handle
-     is not something to guess at — a wrong one sends customers to a stranger.
-     [needs-input: facebook] */
-  facebook: null as string | null,
+
+  /* Confirmed 2026-09-15. The `&sk=photos` tab was trimmed off the URL that
+     was supplied: it deep-links into the photo grid, and a visitor arriving
+     from here should land on the page itself. */
+  facebook: 'https://www.facebook.com/profile.php?id=100063613838116',
+
+  address: {
+    street: '7590 N Sunshine Hills Trl',
+    locality: 'Tucson',
+    region: 'AZ',
+    postalCode: '85743',
+    country: 'US',
+    /** One line, for places that cannot take a multi-line block. */
+    oneLine: '7590 N Sunshine Hills Trl, Tucson, AZ 85743',
+    /** Opens the address in whatever map app the visitor has. */
+    mapUrl:
+      'https://www.google.com/maps/search/?api=1&query=' +
+      encodeURIComponent('7590 N Sunshine Hills Trl, Tucson, AZ 85743'),
+  },
+
+  hours: {
+    display: 'Monday to Friday, 9am to 5pm',
+    short: 'Mon–Fri, 9–5',
+    /* schema.org openingHours format. */
+    schema: 'Mo-Fr 09:00-17:00',
+  },
 } as const;
 
 /* ---------------------------------------------------------

@@ -33,16 +33,6 @@ export const gaps = {
     why: 'Set in astro.config.mjs. Canonical URLs, Open Graph and the sitemap all resolve against it.',
     severity: 'launch',
   },
-  address: {
-    label: 'shop address',
-    why: 'Contact page and LocalBusiness schema. If the shop does not take walk-ins, say so and we publish the service area only — that is a valid answer, not a missing one.',
-    severity: 'launch',
-  },
-  hours: {
-    label: 'hours',
-    why: 'Contact page and LocalBusiness schema. Google shows these directly in local results.',
-    severity: 'launch',
-  },
   'contact-email': {
     label: 'inbox for quote requests',
     why: 'Set as CONTACT_EMAIL in Vercel. The quote form returns a friendly error until this exists.',
@@ -61,11 +51,6 @@ export const gaps = {
   'logo-art': {
     label: 'the real logo artwork',
     why: "The site currently shows a plain 'M1 OFF-ROAD' wordmark and no mark at all. The real badge — clearly visible in detail-badge-white-cage.jpg and detail-badge-bronze-cage.jpg — is a star with a stylised M1 locked into it, the 1 drawn as a waving American flag, and OFF-ROAD set small on the diagonal. Redrawing that from a photograph would read as a poor copy of Mike's logo rather than his logo. Ask him for the vector file, or for whoever cut the badge plates — they will have it.",
-    severity: 'launch',
-  },
-  facebook: {
-    label: 'Facebook page URL',
-    why: 'Linked from the footer and listed in sameAs on the LocalBusiness schema. It is currently the only place the business exists online, so the link matters — and a guessed handle would send customers to someone else.',
     severity: 'launch',
   },
 

@@ -1,7 +1,6 @@
 ---
 import Base from '../layouts/Base.astro';
 import QuoteForm from '../components/QuoteForm.astro';
-import NeedsInput from '../components/NeedsInput.astro';
 import BendRule from '../components/BendRule.astro';
 import { business, phone, pricing, terms } from '../config/site';
 ---
@@ -90,11 +89,21 @@ import { business, phone, pricing, terms } from '../config/site';
               </div>
               <div>
                 <dt class="text-slate">Address</dt>
-                <dd class="mt-0.5"><NeedsInput key="address" /></dd>
+                <dd class="mt-0.5 font-semibold">
+                  <a
+                    href={business.address.mapUrl}
+                    rel="noopener"
+                    class="hover:text-slate underline decoration-1 underline-offset-4 transition-colors"
+                  >
+                    {business.address.street}<br />
+                    {business.address.locality}, {business.address.region}{' '}
+                    {business.address.postalCode}
+                  </a>
+                </dd>
               </div>
               <div>
                 <dt class="text-slate">Hours</dt>
-                <dd class="mt-0.5"><NeedsInput key="hours" /></dd>
+                <dd class="mt-0.5 font-semibold">{business.hours.display}</dd>
               </div>
             </dl>
           </div>

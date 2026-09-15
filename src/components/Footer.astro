@@ -1,6 +1,5 @@
 ---
 import Logo from './Logo.astro';
-import NeedsInput from './NeedsInput.astro';
 import { business, phone, services, pricing } from '../config/site';
 
 const year = new Date().getFullYear();
@@ -56,26 +55,27 @@ const year = new Date().getFullYear();
           <li><a href="/about/" class="hover:text-bone transition-colors">About</a></li>
           <li><a href="/contact/" class="hover:text-bone transition-colors">Contact</a></li>
           <li>
-            {
-              business.facebook ? (
-                <a
-                  href={business.facebook}
-                  rel="noopener"
-                  class="hover:text-bone transition-colors"
-                >
-                  Facebook
-                </a>
-              ) : (
-                <NeedsInput key="facebook" dark />
-              )
-            }
+            <a
+              href={business.facebook}
+              rel="noopener"
+              class="hover:text-bone transition-colors">Facebook</a
+            >
           </li>
         </ul>
 
         <h2 class="text-bone mt-6 text-sm font-semibold">Find us</h2>
-        <p class="mt-3 text-[0.9375rem]">{business.city}, {business.stateCode}</p>
-        <p class="mt-2"><NeedsInput key="address" dark /></p>
-        <p class="mt-2"><NeedsInput key="hours" dark /></p>
+        <p class="mt-3 text-[0.9375rem]">
+          <a
+            href={business.address.mapUrl}
+            rel="noopener"
+            class="hover:text-bone transition-colors"
+          >
+            {business.address.street}<br />
+            {business.address.locality}, {business.address.region}{' '}
+            {business.address.postalCode}
+          </a>
+        </p>
+        <p class="mt-3 text-[0.9375rem]">{business.hours.display}</p>
       </div>
     </div>
 

@@ -70,12 +70,17 @@ const teaser = [
        HERO — the one place on this site that raises its voice.
        Everything below it is deliberately quiet.
        ========================================================== -->
-  <section class="bg-shop text-bone relative">
-    <!-- Taller than a typical hero on purpose: the current photograph is
-         portrait, and height is what stops a landscape frame from reducing it
-         to a letterbox slice. -->
-    <div class="relative min-h-[34rem] sm:min-h-[40rem] lg:min-h-[46rem]">
-      <!-- The LCP element. Preloaded from the head with this exact srcset. -->
+  <section class="bg-shop text-bone relative overflow-hidden">
+    <!-- The photograph lives in its own absolutely positioned wrapper rather
+         than being stretched directly against this section.
+
+         An <img> sized with height:100% needs a containing block with a
+         DEFINITE height. This container gets its height from min-height plus
+         content, which Firefox resolves to auto — so the image fell back to
+         its intrinsic height and left the bottom of the hero uncovered. The
+         wrapper takes a definite height from inset-0, so the image fills it
+         in every engine. -->
+    <div class="absolute inset-0">
       {
         heroSource ? (
           <img
@@ -88,7 +93,7 @@ const teaser = [
             loading="eager"
             fetchpriority="high"
             decoding="sync"
-            class="absolute inset-0 h-full w-full object-cover"
+            class="h-full w-full object-cover"
             style={`object-position:${heroShot.position ?? '50% 50%'}`}
           />
         ) : (
@@ -96,47 +101,51 @@ const teaser = [
         )
       }
 
-      <!-- Scrim. Heavier at the base so the type has something solid to sit on
-           without washing the whole photograph out. -->
+      <!-- Scrim, weighted to the lower left where the type sits. -->
       <div
         class="absolute inset-0"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .94) 0%, rgb(17 17 17 / .78) 38%, rgb(17 17 17 / .30) 72%, rgb(17 17 17 / .10) 100%)"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .92) 0%, rgb(17 17 17 / .74) 34%, rgb(17 17 17 / .26) 68%, rgb(17 17 17 / .06) 100%)"
         aria-hidden="true"
       >
       </div>
+    </div>
 
-      <div
-        class="relative mx-auto flex min-h-[34rem] max-w-6xl flex-col justify-end px-5 py-12 sm:min-h-[40rem] sm:px-8 sm:py-16 lg:min-h-[46rem]"
+    <div
+      class="relative mx-auto flex min-h-[34rem] max-w-6xl flex-col justify-end px-5 py-14 sm:min-h-[40rem] sm:px-8 sm:py-16 lg:min-h-[44rem]"
+    >
+      <h1
+        class="max-w-[15ch] text-[clamp(2.375rem,7.5vw,4.5rem)] font-extrabold tracking-[-0.03em]"
       >
-        <h1
-          class="max-w-[19ch] text-[clamp(2.5rem,9vw,5rem)] font-extrabold tracking-[-0.03em]"
+        Custom roll cages, doors and roofs.
+      </h1>
+
+      <p class="text-steel mt-5 max-w-[42ch] text-lg sm:text-xl">
+        Built for UTVs in {business.city}. MIG welded by {business.owner}.
+      </p>
+
+      <!-- The price sits on its own rule rather than inside the paragraph.
+           Most shops make you call to find it out; putting it here is the
+           single most useful thing on the page. -->
+      <p
+        class="border-steel/40 font-display mt-7 border-t pt-5 text-xl font-bold sm:text-2xl"
+      >
+        Full cages from {pricing.cageStartingAtDisplay}
+      </p>
+
+      <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <a
+          href={phone.tel}
+          data-analytics="call-hero"
+          class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
         >
-          Roll cages, doors and roofs, built to your machine.
-        </h1>
-
-        <p class="text-steel mt-6 max-w-[46ch] text-lg sm:text-xl">
-          MIG welded in {business.city} by {business.owner}, who has been doing
-          this {business.yearsInBusiness}. Full cages start at{' '}
-          <strong class="text-bone font-semibold"
-            >{pricing.cageStartingAtDisplay}</strong
-          >.
-        </p>
-
-        <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
-          <a
-            href={phone.tel}
-            data-analytics="call-hero"
-            class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
-          >
-            Call {phone.display}
-          </a>
-          <a
-            href="/contact/"
-            class="font-display border-steel/50 text-bone bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
-          >
-            Get a quote
-          </a>
-        </div>
+          Call {phone.display}
+        </a>
+        <a
+          href="/contact/"
+          class="font-display border-steel/50 text-bone bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
+        >
+          Get a quote
+        </a>
       </div>
     </div>
   </section>
@@ -149,15 +158,9 @@ const teaser = [
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <BendRule class="mb-8 max-w-xs" />
 
-      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-        <h2 class="max-w-[16ch] text-[clamp(2rem,5vw,3.25rem)]">
-          What comes out of the shop
-        </h2>
-        <p class="text-slate max-w-[42ch] text-lg">
-          Everything is cut, bent and welded for the machine it is going on.
-          Nothing here is a kit that gets forced to fit.
-        </p>
-      </div>
+      <h2 class="max-w-[16ch] text-[clamp(2rem,5vw,3.25rem)]">
+        What comes out of the shop
+      </h2>
 
       <!-- One photo and a list, not four photo cards. Each service keeps its
            own heading and anchor on /services/; repeating all four here as
@@ -195,11 +198,9 @@ const teaser = [
           </a>
         </div>
       </div>
-      <!-- The honesty that does more work than any claim would. -->
       <p class="text-slate mt-10 max-w-[62ch] text-lg">
-        All the welding is MIG, and all of it happens here. Powder coating goes
-        out to a coater — M1 does not do it in house, and you should be
-        suspicious of a small shop that says it does everything.
+        All welding is MIG and done in house. Powder coating is sent out to a
+        coater.
       </p>
     </div>
   </section>
@@ -223,14 +224,12 @@ const teaser = [
 
         <div class="max-w-[52ch] space-y-5 text-lg">
           <p>
-            That is the real number for a typical full cage, not a teaser. What
-            moves it is the machine, the seat count, and what else you want
-            built into it while it is apart — doors, a roof, mounts.
+            The price depends on the machine, the seat count, and what else gets
+            built while it is apart: doors, a roof, mounts.
           </p>
           <p class="text-steel">
-            Call with your year, make and model and you will get a straight
-            answer on the phone. No appointment needed to ask what something
-            costs.
+            Call with the year, make and model and you will get a number on the
+            phone. You do not need an appointment to ask what something costs.
           </p>
           <p class="text-steel">
             Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
@@ -240,8 +239,7 @@ const teaser = [
             Deposit terms: <NeedsInput key="deposit" dark />
           </p>
           <p>
-            You talk to the person doing the welding. That is the whole
-            arrangement — <a
+            Mike quotes the job and Mike welds it — <a
               href="/about/"
               class="font-semibold underline decoration-1 underline-offset-4"
               >more about the shop</a
@@ -291,7 +289,7 @@ const teaser = [
     <!-- Full-bleed, gutterless, square. This is the one dense thing on the
          page and it is meant to read as a wall of work. -->
     <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-      {teaser.map((photo) => <GalleryTile photo={photo} />)}
+      {teaser.map((photo) => <GalleryTile photo={photo} href="/gallery/" />)}
     </div>
   </section>
 

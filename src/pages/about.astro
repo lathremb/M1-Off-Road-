@@ -40,30 +40,23 @@ import { business, phone, pricing, terms } from '../config/site';
 
           <div class="text-slate mt-6 space-y-5 text-lg">
             <p>
-              You are dealing with the person who does the work. Mike quotes it,
-              Mike builds it, Mike welds it. There is no service writer in the
-              middle translating what you said into something else.
+              Mike quotes the job, builds it and welds it. You deal with him
+              directly.
             </p>
             <p>
-              Most of what comes through is a Polaris RZR or a Can-Am. That is
-              simply what people in southern Arizona are riding, and it means
-              the fit-up on those platforms is well practised. A wide range of
-              other machines has been built for too — the answer to "will this
-              work on mine" is usually yes, and always worth asking.
+              Most of what comes through is a Polaris RZR or a Can-Am, so the
+              fit-up on those is well practised. Kawasaki Teryx and other
+              machines have been built for too.
             </p>
 
             <h3 class="text-shop pt-4 text-2xl">What is done here, and what is not</h3>
             <p>
-              All the welding is MIG and all of it happens in this shop.
-              Powder coating does not. It goes out to a coater, and it is worth
-              saying so plainly — a one-man shop that claims to do every process
-              under one roof is usually stretching the truth about at least one
-              of them.
+              All welding is MIG and done in this shop. Powder coating is not
+              done here; it goes out to a coater.
             </p>
             <p>
-              Being straight about that is the same reason the cage price is on
-              the front page. {pricing.cageStartingAtDisplay} is the number.
-              Nobody has to call to find out whether they can afford to call.
+              A typical full cage is {pricing.cageStartingAtDisplay}. The price
+              is on the front page so you do not have to call to find it out.
             </p>
 
             <h3 class="text-shop pt-4 text-2xl">Getting a job booked</h3>
@@ -71,8 +64,7 @@ import { business, phone, pricing, terms } from '../config/site';
               <NeedsInput key="process" />
             </p>
             <p>
-              Until that is written down properly, the honest version is: pick
-              up the phone. Year, make, model, and what you want done.
+              For now: call with the year, make, model, and what you want done.
             </p>
           </div>
         </div>
@@ -130,11 +122,11 @@ import { business, phone, pricing, terms } from '../config/site';
               </div>
               <div>
                 <dt class="text-slate">Address</dt>
-                <dd><NeedsInput key="address" /></dd>
+                <dd class="font-semibold">{business.address.oneLine}</dd>
               </div>
               <div>
                 <dt class="text-slate">Hours</dt>
-                <dd><NeedsInput key="hours" /></dd>
+                <dd class="font-semibold">{business.hours.short}</dd>
               </div>
             </dl>
             <a

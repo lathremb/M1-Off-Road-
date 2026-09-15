@@ -2,9 +2,13 @@
 /**
  * One square tile in the contact-sheet grid.
  *
- * Deliberately narrow width ladder: these render at roughly 200–340 px even
- * on a large screen, so generating 1536 px variants would be build time and
- * disk spent on files nobody downloads.
+ * Two modes:
+ *  - `full` set   → a button that opens the lightbox on the gallery page.
+ *  - `href` set   → a link, used by the teaser strip on the home page.
+ *
+ * The tile itself stays deliberately small in bytes. The big version is only
+ * fetched when somebody actually opens one, which is why `full` is a URL
+ * rather than a second <Image> hidden behind CSS.
  */
 import { Image } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
@@ -14,29 +18,75 @@ interface Props {
   photo: GalleryPhoto;
   /** The first row on a page can skip lazy loading. */
   eager?: boolean;
+  /** Enlarged source. Turns the tile into a lightbox trigger. */
+  full?: string;
+  /** Position in the flat, page-wide list, for prev/next in the lightbox. */
+  index?: number;
+  /** Makes the tile a plain link instead (home page teaser). */
+  href?: string;
 }
 
-const { photo, eager = false } = Astro.props;
+const { photo, eager = false, full, index, href } = Astro.props;
 
 const photos = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
   { eager: true }
 );
 const src = photos[`../assets/photos/${photo.file}`]?.default;
+
+const imgClass =
+  'aspect-square h-full w-full object-cover transition duration-200 ' +
+  'group-hover:brightness-110 group-focus-visible:brightness-110';
 ---
 
 {
-  src && (
-    <Image
-      src={src}
-      alt={photo.alt}
-      widths={[240, 360, 480, 720]}
-      quality={66}
-      sizes="(min-width: 1024px) 17vw, (min-width: 640px) 33vw, 50vw"
-      loading={eager ? 'eager' : 'lazy'}
-      decoding="async"
-      class="aspect-square h-full w-full object-cover"
-      style={`object-position:${photo.position ?? '50% 50%'}`}
-    />
-  )
+  src &&
+    (full ? (
+      <button
+        type="button"
+        class="group bg-shop-lift relative block cursor-zoom-in overflow-hidden"
+        data-lightbox
+        data-full={full}
+        data-alt={photo.alt}
+        data-index={index}
+      >
+        <Image
+          src={src}
+          alt={photo.alt}
+          widths={[240, 360, 480, 720]}
+          quality={66}
+          sizes="(min-width: 1024px) 20vw, (min-width: 640px) 33vw, 50vw"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class={imgClass}
+          style={`object-position:${photo.position ?? '50% 50%'}`}
+        />
+      </button>
+    ) : href ? (
+      <a href={href} class="group bg-shop-lift block overflow-hidden">
+        <Image
+          src={src}
+          alt={photo.alt}
+          widths={[240, 360, 480, 720]}
+          quality={66}
+          sizes="(min-width: 1024px) 17vw, (min-width: 640px) 33vw, 50vw"
+          loading={eager ? 'eager' : 'lazy'}
+          decoding="async"
+          class={imgClass}
+          style={`object-position:${photo.position ?? '50% 50%'}`}
+        />
+      </a>
+    ) : (
+      <Image
+        src={src}
+        alt={photo.alt}
+        widths={[240, 360, 480, 720]}
+        quality={66}
+        sizes="(min-width: 1024px) 17vw, (min-width: 640px) 33vw, 50vw"
+        loading={eager ? 'eager' : 'lazy'}
+        decoding="async"
+        class="aspect-square h-full w-full object-cover"
+        style={`object-position:${photo.position ?? '50% 50%'}`}
+      />
+    ))
 }
