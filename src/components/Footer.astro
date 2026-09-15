@@ -37,7 +37,10 @@ const year = new Date().getFullYear();
           {
             services.map((s) => (
               <li>
-                <a href={`/${s.slug}/`} class="hover:text-bone transition-colors">
+                <a
+                  href={`/services/#${s.slug}`}
+                  class="hover:text-bone transition-colors"
+                >
                   {s.title}
                 </a>
               </li>

@@ -27,7 +27,7 @@ npm run preview # serve the built site on :4322
 | `src/config/site.ts` | **Every swappable fact.** Phone number, GA ID, services, platforms, price. |
 | `src/config/needs-input.ts` | Every fact nobody has confirmed yet. |
 | `src/config/shots.ts` | The photo brief, as data. |
-| `src/pages/` | One file per page. |
+| `src/pages/` | Five pages: home, services, gallery, about, contact. |
 | `api/quote.js` | The quote form's serverless function. Resend, same as Lathrem Homebuilders. |
 | `scripts/needs-input.mjs` | Generates `NEEDS-INPUT.md` and `SHOT-LIST.md` at build time. |
 | `src/config/gallery.ts` | The gallery, grouped by platform. |
@@ -48,6 +48,23 @@ them — edit the registries in `src/config/` and rebuild. The build also warns
 if a registry entry is no longer referenced by any page, or if a page
 references something that was deleted, so the documents cannot drift out of
 step with the site.
+
+---
+
+## Why one services page
+
+The brief asked for a page each for roll cages, doors, roofs and custom fab.
+That shipped first and was then collapsed into a single `/services/` page with
+four anchored sections, because four pages for a one-man shop meant a
+seven-item nav and four copies of the same masthead, closing block and
+"also out of this shop" list.
+
+The headings and the `#roll-cages` / `#doors` / `#roofs` /
+`#custom-fabrication` anchors all survive, so deep links and the schema
+`makesOffer` entries still point at the right content. The trade is search: four
+pages could each rank for their own phrase. If "roll cages tucson" turns out to
+matter more than the tidier nav, splitting `services.astro` back apart is
+mechanical — the sections are already self-contained.
 
 ---
 
@@ -167,8 +184,7 @@ Mobile, against the production build, with the real photography in place:
 | Page | Performance | Accessibility | Best Practices | SEO | LCP |
 |---|---|---|---|---|---|
 | Home | 99 | 100 | 100 | 69 \* | 2.3 s |
-| Roll Cages | 100 | 100 | 100 | 69 \* | 1.4 s |
-| Doors | 100 | 100 | 100 | 69 \* | 1.3 s |
+| What We Build | 100 | 100 | 100 | 69 \* | 1.1 s |
 | Gallery | 98 | 100 | 100 | 69 \* | 2.4 s |
 | About | 100 | 100 | 100 | 69 \* | 1.4 s |
 | Contact | 100 | 100 | 100 | 66 \* | 1.2 s |

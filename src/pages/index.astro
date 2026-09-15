@@ -143,8 +143,7 @@ const teaser = [
 
   <!-- ==========================================================
        WHAT HE BUILDS
-       Four blocks at three different sizes. No repeated card shape,
-       no shadow, one bend corner each.
+       One photo and a plain list. The detail lives on /services/.
        ========================================================== -->
   <section class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
@@ -160,87 +159,42 @@ const teaser = [
         </p>
       </div>
 
-      <!-- Four blocks, three shapes, no repeated card. The grid is laid out so
-           every row fills completely — a row-span here leaves a hole. -->
-      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- Roll cages: the lead service. Wide and horizontal. -->
-        <article
-          class="border-bone-line bend flex flex-col border sm:col-span-2 lg:flex-row"
-        >
-          <!-- Stretches to the row height, the way object-cover will once the
-               real photograph replaces it. -->
-          <div class="relative min-h-[15rem] w-full lg:w-1/2 lg:shrink-0">
-            <Shot shot="svc-cage" light fill />
-          </div>
-          <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
-            <h3 class="text-[clamp(1.5rem,3vw,2rem)]">
-              <a href="/roll-cages/" class="hover:text-slate transition-colors">
-                Roll Cages
-              </a>
-            </h3>
-            <p class="text-slate mt-3 max-w-[44ch]">
-              A full replacement cage built around your machine and your seating
-              position. Bent, fitted, tacked, then welded out.
-            </p>
-            <p class="font-display mt-5 text-lg font-bold">
-              From {pricing.cageStartingAtDisplay}
-            </p>
-            <a
-              href="/roll-cages/"
-              class="text-shop mt-5 inline-block self-start font-semibold underline decoration-1 underline-offset-4"
-            >
-              What goes into a cage
-            </a>
-          </div>
-        </article>
+      <!-- One photo and a list, not four photo cards. Each service keeps its
+           own heading and anchor on /services/; repeating all four here as
+           cards was the single busiest thing on the page. -->
+      <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <Shot shot="bend-bare" light class="w-full" />
 
-        <article class="border-bone-line bend flex flex-col border">
-          <Shot shot="svc-doors" light class="w-full" />
-          <div class="flex flex-1 flex-col p-6">
-            <h3 class="text-2xl">
-              <a href="/doors/" class="hover:text-slate transition-colors">Doors</a>
-            </h3>
-            <p class="text-slate mt-3">
-              Doors that close against the dust and latch the same way every
-              time.
-            </p>
-          </div>
-        </article>
+        <div>
+          <ul class="border-bone-line border-t">
+            {services.map((s) => (
+              <li class="border-bone-line border-b">
+                <a
+                  href={`/services/#${s.slug}`}
+                  class="hover:text-slate flex flex-col gap-1.5 py-5 transition-colors"
+                >
+                  <span class="flex items-baseline justify-between gap-4">
+                    <span class="font-display text-xl font-bold">{s.title}</span>
+                    {s.startingAt && (
+                      <span class="font-display shrink-0 text-lg font-bold">
+                        From {s.startingAt}
+                      </span>
+                    )}
+                  </span>
+                  <span class="text-slate max-w-[44ch]">{s.blurb}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
 
-        <article class="border-bone-line bend flex flex-col border">
-          <Shot shot="svc-roofs" light class="w-full" />
-          <div class="flex flex-1 flex-col p-6">
-            <h3 class="text-2xl">
-              <a href="/roofs/" class="hover:text-slate transition-colors">Roofs</a>
-            </h3>
-            <p class="text-slate mt-3">
-              Built to the cage it sits on, not bolted over the top of it.
-            </p>
-          </div>
-        </article>
-
-        <!-- Custom fab: horizontal again, but half the weight of the cage
-             block. Completes row two rather than starting a third. -->
-        <article
-          class="border-bone-line bend flex flex-col border sm:col-span-2 lg:flex-row"
-        >
-          <div class="relative min-h-[12rem] w-full lg:w-2/5 lg:shrink-0">
-            <Shot shot="svc-fab" light fill />
-          </div>
-          <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
-            <h3 class="text-2xl">
-              <a href="/custom-fabrication/" class="hover:text-slate transition-colors"
-                >Custom Fabrication</a
-              >
-            </h3>
-            <p class="text-slate mt-3 max-w-[56ch]">
-              Bumpers, mounts, brackets, repairs. If it is steel and it goes on
-              an off-road machine, bring it in and talk it through.
-            </p>
-          </div>
-        </article>
+          <a
+            href="/services/"
+            class="text-shop mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
+          >
+            What goes into each of these
+          </a>
+        </div>
       </div>
-
       <!-- The honesty that does more work than any claim would. -->
       <p class="text-slate mt-10 max-w-[62ch] text-lg">
         All the welding is MIG, and all of it happens here. Powder coating goes
@@ -284,6 +238,14 @@ const teaser = [
           </p>
           <p class="text-steel">
             Deposit terms: <NeedsInput key="deposit" dark />
+          </p>
+          <p>
+            You talk to the person doing the welding. That is the whole
+            arrangement — <a
+              href="/about/"
+              class="font-semibold underline decoration-1 underline-offset-4"
+              >more about the shop</a
+            >.
           </p>
           <div class="flex flex-col gap-3 pt-2 sm:flex-row">
             <a
@@ -330,46 +292,6 @@ const teaser = [
          page and it is meant to read as a wall of work. -->
     <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
       {teaser.map((photo) => <GalleryTile photo={photo} />)}
-    </div>
-  </section>
-
-  <!-- ==========================================================
-       WHO IS ACTUALLY DOING THE WORK
-       ========================================================== -->
-  <section class="bg-bone">
-    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-      <!-- No portrait here on purpose. The section is about who does the work,
-           and bare tube on the stands says that more plainly than a photo of
-           someone standing next to it would. Landscape, so the column split is
-           even rather than the narrow portrait slot this used to be. -->
-      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <Shot shot="bend-bare" light class="w-full" />
-
-        <div>
-          <BendRule class="mb-8 max-w-[10rem]" />
-          <h2 class="max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)]">
-            One person builds it, and that person is {business.owner}
-          </h2>
-          <div class="text-slate mt-6 max-w-[54ch] space-y-4 text-lg">
-            <p>
-              M1 Off-Road has been fabricating for off-road machines {business.yearsInBusiness}.
-              Most of what comes through is a Polaris RZR or a Can-Am, but the
-              shop has built for a wide range of machines and the answer to
-              "will it work on mine" is usually yes.
-            </p>
-            <p>
-              You talk to the person doing the welding. That is the whole
-              arrangement.
-            </p>
-          </div>
-          <a
-            href="/about/"
-            class="text-shop mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
-          >
-            More about the shop
-          </a>
-        </div>
-      </div>
     </div>
   </section>
 

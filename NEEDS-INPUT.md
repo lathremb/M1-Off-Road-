@@ -75,7 +75,7 @@ Appears in: `src/pages/about.astro`
 
 Material and wall thickness. Competitors lead with this. Cannot be stated without Mike confirming it.
 
-Appears in: `src/pages/roll-cages.astro`
+Appears in: `src/pages/services.astro`
 
 ### deposit terms
 
@@ -87,7 +87,7 @@ Appears in: `src/pages/index.astro`
 
 Any guarantee on the welds or the finish. Omitted entirely rather than implied.
 
-Appears in: `src/pages/roll-cages.astro`
+Appears in: `src/pages/services.astro`
 
 ---
 

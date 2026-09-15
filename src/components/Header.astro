@@ -8,8 +8,11 @@ import { phone, services } from '../config/site';
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
+/* Four items, not seven. The four services used to each have a page and a nav
+   slot; they are now anchored sections on one /services/ page, which is the
+   whole reason this nav fits comfortably on a phone. */
 const nav = [
-  ...services.map((s) => ({ href: `/${s.slug}/`, label: s.nav })),
+  { href: '/services/', label: 'What We Build' },
   { href: '/gallery/', label: 'Gallery' },
   { href: '/about/', label: 'About' },
   { href: '/contact/', label: 'Contact' },

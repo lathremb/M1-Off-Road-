@@ -58,7 +58,7 @@ const schema = {
       serviceType: s.title,
       provider: { '@id': `${siteUrl}/#business` },
     },
-    url: `${siteUrl}/${s.slug}/`,
+    url: `${siteUrl}/services/#${s.slug}`,
     ...(s.startingAt
       ? {
           priceSpecification: {

@@ -21,7 +21,7 @@ to 16:9 loses most of the machine.
 
 Tight macro on a finished joint BEFORE powder coat, while the bead and heat tint still show. Side light — a work lamp raking across the joint, not a flash straight on. This is the most persuasive photo on the site after the hero and there is currently nothing like it in the archive.
 
-Used on: `src/pages/roll-cages.astro`
+Used on: `src/pages/services.astro`
 
 ### Worth having
 
@@ -31,7 +31,7 @@ Used on: `src/pages/roll-cages.astro`
 
 Latch engaged, close enough to see how the door meets the frame.
 
-Used on: `src/pages/doors.astro`
+Used on: `src/pages/services.astro`
 
 ### Share card — build, wide crop
 

@@ -1,0 +1,286 @@
+---
+/**
+ * Everything the shop builds, on one page.
+ *
+ * This replaced four separate service pages. Four pages for a one-man shop
+ * meant a seven-item nav and a lot of repeated furniture — the same masthead,
+ * the same closing block, the same "also out of this shop" list — for four
+ * topics a customer reads in one sitting anyway.
+ *
+ * The four still have their own headings and their own #anchors, so the
+ * detail and the deep links both survive; there is just one page holding them.
+ */
+import Base from '../layouts/Base.astro';
+import Shot from '../components/Shot.astro';
+import NeedsInput from '../components/NeedsInput.astro';
+import BendRule from '../components/BendRule.astro';
+import { phone, pricing, terms, platforms } from '../config/site';
+---
+
+<Base
+  title="Roll Cages, Doors, Roofs & Custom Fab — M1 Off-Road Tucson"
+  description="Custom roll cages from $2,500, plus doors, roofs and one-off fabrication for Polaris RZR, Can-Am and Kawasaki UTVs. MIG welded in Tucson by Mike Sulger."
+>
+  <!-- ---------- masthead ---------- -->
+  <section class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+      <BendRule dark class="mb-8 max-w-[8rem]" />
+      <h1 class="max-w-[18ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
+        What comes out of the shop
+      </h1>
+      <p class="text-steel mt-6 max-w-[48ch] text-lg sm:text-xl">
+        Four things, all of them cut, bent and welded for the machine they are
+        going on. Full cages start at{' '}
+        <strong class="text-bone font-semibold"
+          >{pricing.cageStartingAtDisplay}</strong
+        >.
+      </p>
+
+      <nav class="mt-9 flex flex-wrap gap-2" aria-label="Jump to a service">
+        <a
+          href="#roll-cages"
+          class="border-shop-line bend hover:border-bone hover:text-bone border px-4 py-2 text-[0.9375rem] transition-colors"
+          >Roll Cages</a
+        >
+        <a
+          href="#doors"
+          class="border-shop-line bend hover:border-bone hover:text-bone border px-4 py-2 text-[0.9375rem] transition-colors"
+          >Doors</a
+        >
+        <a
+          href="#roofs"
+          class="border-shop-line bend hover:border-bone hover:text-bone border px-4 py-2 text-[0.9375rem] transition-colors"
+          >Roofs</a
+        >
+        <a
+          href="#custom-fabrication"
+          class="border-shop-line bend hover:border-bone hover:text-bone border px-4 py-2 text-[0.9375rem] transition-colors"
+          >Custom Fab</a
+        >
+      </nav>
+    </div>
+  </section>
+
+  <!-- ---------- roll cages ---------- -->
+  <section id="roll-cages" class="bg-bone scroll-mt-4">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h2 class="max-w-[16ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            Roll Cages
+          </h2>
+          <p class="font-display mt-4 text-2xl font-bold">
+            From {pricing.cageStartingAtDisplay}
+          </p>
+          <div class="text-slate mt-6 max-w-[54ch] space-y-4 text-lg">
+            <p>
+              A full replacement cage built around your machine and your seating
+              position — measured, bent, fitted, tacked in place, then welded
+              out.
+            </p>
+            <p>
+              What moves the number is the machine, whether it is a two seat or
+              a four seat, and what else gets built in while it is apart. A
+              cage, doors and a roof done together is less work than the same
+              three jobs on three separate visits, and the quote reflects that.
+            </p>
+            <p class="text-shop">
+              You are not without the machine long either — {terms.leadTime.toLowerCase()}.
+            </p>
+          </div>
+
+          <dl class="border-bone-line mt-8 grid gap-px border-t">
+            <div
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Welding</dt>
+              <dd class="text-slate">MIG, start to finish, in house.</dd>
+            </div>
+            <div
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Finish</dt>
+              <dd class="text-slate">Powder coating is sent out to a coater.</dd>
+            </div>
+            <div
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Tubing</dt>
+              <dd><NeedsInput key="tubing" /></dd>
+            </div>
+            <div
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Warranty</dt>
+              <dd><NeedsInput key="warranty" /></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="space-y-4">
+          <Shot shot="svc-cage" light class="w-full" />
+          <Shot shot="cage-joint" light class="w-full" />
+          <!-- A macro of a bare joint belongs here, third in this stack — it is
+               the most persuasive photo on the site after the hero. Kept on the
+               brief rather than rendered as an empty box, because a placeholder
+               would be clutter on a page whose whole point is to have less of
+               it. Add the slot when the photo exists.
+               reserved-shot: weld-bead -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- doors ---------- -->
+  <section id="doors" class="bg-shop text-bone scroll-mt-4">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <!-- A close frame of the latch would pair with this one.
+             reserved-shot: door-latch -->
+        <Shot shot="svc-doors" class="w-full" />
+
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Doors</h2>
+          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              Factory half doors leave your arm and most of the dust on the
+              wrong side of the line. A built door closes the opening properly,
+              which on a Tucson trail is the difference between arriving dusty
+              and arriving coated.
+            </p>
+            <p>
+              Doors are built to the cage, so the hinge side and the latch side
+              are set against the actual tube on your machine rather than a
+              drawing of where that tube is supposed to be.
+            </p>
+            <p class="text-bone">
+              Cheaper done at the same time as a cage, since the machine is
+              already apart and the frame is already in hand. {
+                terms.servicePricing
+              }.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- roofs ---------- -->
+  <section id="roofs" class="bg-bone scroll-mt-4">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Roofs</h2>
+          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              In Tucson a roof is not an accessory. A bolt-on sits on top of
+              whatever it can reach and drums the whole way home; one built to
+              the cage picks up the tube where the tube actually runs, which is
+              why it does not buzz and does not work its fasteners loose over a
+              season.
+            </p>
+            <p>
+              Roofs go on with a cage or onto a cage already built. If the cage
+              came from here, the fit is already known. {terms.servicePricing}.
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <Shot shot="svc-roofs" light class="w-full" />
+          <Shot shot="roof-edge" light class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- custom fabrication ---------- -->
+  <section id="custom-fabrication" class="bg-shop text-bone scroll-mt-4">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <Shot shot="svc-fab" class="w-full" />
+
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            Custom Fabrication
+          </h2>
+          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              Cages, doors and roofs are the bulk of the work, not the whole of
+              it. A bumper that has to clear a winch. A mount for something the
+              machine was never designed to carry. A bracket that broke on a
+              rock and needs to come back stronger than it left.
+            </p>
+            <p>
+              Quoted per job — nobody can price a part they have not seen. If it
+              cannot be done here you will be told that on the phone, not after
+              the machine is already apart.
+            </p>
+            <p class="text-bone">
+              <a
+                href={phone.sms}
+                data-analytics="text-fab-inline"
+                class="font-semibold underline decoration-1 underline-offset-4"
+                >Text a photo to {phone.display}</a
+              > — usually the fastest way.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- platforms + close ---------- -->
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <h2 class="max-w-[22ch] text-[clamp(1.75rem,4vw,2.5rem)]">
+        Most of them are RZRs and Can-Ams. Not all of them.
+      </h2>
+      <p class="text-slate mt-5 max-w-[54ch] text-lg">
+        Those are what roll through the door most often, so the fit-up is well
+        practised. Plenty of other machines have been built for too — if yours
+        is not on this list, it is still worth the call.
+      </p>
+
+      <ul class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {
+          platforms.map((p) => (
+            <li class="border-bone-line bend border p-5">
+              <h3 class="text-lg">{p.name}</h3>
+              <p class="text-slate mt-2 text-[0.9375rem]">{p.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div
+        class="border-bone-line bend mt-12 flex flex-col gap-6 border p-6 sm:p-10 lg:flex-row lg:items-center lg:justify-between"
+      >
+        <div>
+          <h2 class="text-[clamp(1.75rem,4vw,2.5rem)]">
+            Call with the year, make and model
+          </h2>
+          <p class="text-slate mt-3 max-w-[48ch] text-lg">
+            That is enough to get a straight number on the phone.
+          </p>
+        </div>
+        <div class="flex shrink-0 flex-col gap-3 sm:flex-row">
+          <a
+            href={phone.tel}
+            data-analytics="call-services"
+            class="font-display bg-shop bend border-shop text-bone hover:text-shop border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
+          >
+            {phone.display}
+          </a>
+          <a
+            href={phone.sms}
+            data-analytics="text-services"
+            class="font-display border-bone-line bend hover:border-shop border px-6 py-3.5 text-center font-bold transition-colors"
+          >
+            Send a text
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
