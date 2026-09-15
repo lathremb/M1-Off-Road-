@@ -1,0 +1,109 @@
+---
+import Logo from './Logo.astro';
+import { phone, services } from '../config/site';
+
+/* Static, not sticky. The sticky element on this site is the call/text bar at
+   the bottom of the mobile viewport, and two fixed bars would leave very
+   little screen left on a phone. */
+
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+
+const nav = [
+  ...services.map((s) => ({ href: `/${s.slug}/`, label: s.nav })),
+  { href: '/gallery/', label: 'Gallery' },
+  { href: '/about/', label: 'About' },
+  { href: '/contact/', label: 'Contact' },
+];
+
+const isCurrent = (href: string) => path === href.replace(/\/$/, '');
+---
+
+<header class="bg-shop text-bone">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
+    <a
+      href="/"
+      class="text-bone transition-colors hover:text-flare"
+      aria-label="M1 Off-Road — home"
+    >
+      <Logo />
+    </a>
+
+    <!-- Desktop navigation -->
+    <nav class="hidden md:block" aria-label="Main">
+      <ul class="flex items-center gap-6 lg:gap-7">
+        {
+          nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+                class:list={[
+                  'text-[0.9375rem] transition-colors hover:text-flare',
+                  isCurrent(item.href) ? 'text-flare' : 'text-steel',
+                ]}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))
+        }
+        <li>
+          <a
+            href={phone.tel}
+            data-analytics="call-header"
+            class="font-display bg-flare text-shop hover:bg-bone bend px-4 py-2 text-[0.9375rem] font-bold transition-colors"
+          >
+            {phone.display}
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Mobile menu toggle. Call and text live in the sticky bar below, so
+         this button only has to open navigation. -->
+    <button
+      type="button"
+      id="nav-toggle"
+      class="border-shop-line text-bone hover:border-flare -mr-1 border p-2.5 transition-colors md:hidden"
+      aria-expanded="false"
+      aria-controls="nav-mobile"
+    >
+      <span class="sr-only">Menu</span>
+      <svg width="20" height="14" viewBox="0 0 20 14" fill="none" aria-hidden="true">
+        <path d="M0 1h20M0 7h20M0 13h20" stroke="currentColor" stroke-width="1.5"></path>
+      </svg>
+    </button>
+  </div>
+
+  <nav id="nav-mobile" class="border-shop-line hidden border-t md:hidden" aria-label="Main">
+    <ul class="mx-auto max-w-6xl px-5 py-2 sm:px-8">
+      {
+        nav.map((item) => (
+          <li class="border-shop-line/60 border-b last:border-0">
+            <a
+              href={item.href}
+              aria-current={isCurrent(item.href) ? 'page' : undefined}
+              class:list={[
+                'block py-3.5 text-[0.9375rem]',
+                isCurrent(item.href) ? 'text-flare' : 'text-bone',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const toggle = document.getElementById('nav-toggle');
+  const menu = document.getElementById('nav-mobile');
+
+  toggle?.addEventListener('click', () => {
+    const open = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!open));
+    menu?.classList.toggle('hidden', open);
+  });
+</script>

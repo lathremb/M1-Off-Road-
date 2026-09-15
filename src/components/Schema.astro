@@ -1,0 +1,84 @@
+---
+/**
+ * LocalBusiness structured data.
+ *
+ * Only confirmed facts go in here. Google penalises structured data that
+ * disagrees with the page, and inventing an address or an aggregateRating is
+ * both a lie and a manual-action risk — so `address` carries the locality
+ * only, there is no `priceRange` rating, and there are no reviews.
+ *
+ * The one price claim is the roll-cage starting figure, which is confirmed,
+ * expressed as an Offer rather than as a vague price band.
+ */
+import { business, phone, pricing, services } from '../config/site';
+
+const siteUrl = Astro.site?.href.replace(/\/$/, '') ?? '';
+
+const schema = {
+  '@context': 'https://schema.org',
+  '@type': ['LocalBusiness', 'AutomotiveBusiness'],
+  '@id': `${siteUrl}/#business`,
+  name: business.name,
+  url: `${siteUrl}/`,
+  description:
+    'Custom off-road fabrication in Tucson, Arizona. Roll cages, doors and roofs for UTVs, MIG welded in house.',
+  telephone: phone.e164,
+
+  /* Locality only. streetAddress is deliberately absent until confirmed —
+     [needs-input: address] */
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: business.city,
+    addressRegion: business.stateCode,
+    addressCountry: 'US',
+  },
+
+  areaServed: {
+    '@type': 'AdministrativeArea',
+    name: 'Tucson and Southern Arizona',
+  },
+
+  founder: {
+    '@type': 'Person',
+    name: business.owner,
+  },
+
+  knowsAbout: [
+    'UTV roll cages',
+    'MIG welding',
+    'Polaris RZR fabrication',
+    'Can-Am Maverick fabrication',
+  ],
+
+  makesOffer: services.map((s) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: s.title,
+      serviceType: s.title,
+      provider: { '@id': `${siteUrl}/#business` },
+    },
+    url: `${siteUrl}/${s.slug}/`,
+    ...(s.startingAt
+      ? {
+          priceSpecification: {
+            '@type': 'PriceSpecification',
+            price: pricing.cageStartingAt,
+            priceCurrency: 'USD',
+            valueAddedTaxIncluded: false,
+            description: 'Starting price. Final cost depends on the machine and the build.',
+          },
+        }
+      : {}),
+  })),
+
+  /* Populated once the Facebook URL is confirmed — [needs-input: facebook] */
+  ...(business.facebook ? { sameAs: [business.facebook] } : {}),
+};
+---
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(schema)}
+/>

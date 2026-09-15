@@ -1,0 +1,23 @@
+# build output
+dist/
+.vercel/
+.astro/
+
+# dependencies
+node_modules/
+
+# secrets — never commit these
+.env
+.env.local
+.env.*.local
+
+# reference material, not part of the site
+# 206px Facebook thumbnails kept only so the shot list has something to
+# point at. They are not deployable and should not be in the repo.
+_reference/
+
+# editor / OS
+.DS_Store
+Thumbs.db
+*.log
+npm-debug.log*

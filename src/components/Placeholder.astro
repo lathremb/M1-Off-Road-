@@ -1,0 +1,70 @@
+---
+/**
+ * A reserved photo slot at the exact ratio the real image will occupy.
+ *
+ * Every slot names a shot from src/config/shots.ts, which is the same list
+ * SHOT-LIST.md is generated from. Swapping in a real photo means replacing
+ * this component with <Image> at the identical ratio — the layout will not
+ * move when the photography lands.
+ */
+import { shots, type ShotKey } from '../config/shots';
+
+interface Props {
+  shot: ShotKey;
+  /** Use on light sections so the block does not punch a hole in the page. */
+  light?: boolean;
+  /** Overrides the ratio for a slot that crops the same shot differently. */
+  aspect?: string;
+  /** Moves the caption out of the way when content is laid over the slot. */
+  align?: 'bottom' | 'top';
+  /** Fills its positioned parent instead of reserving its own ratio. */
+  fill?: boolean;
+  class?: string;
+}
+
+const {
+  shot,
+  light = false,
+  aspect,
+  align = 'bottom',
+  fill = false,
+  class: className = '',
+} = Astro.props;
+const s = shots[shot];
+const ratio = aspect ?? s.aspect;
+---
+
+<div
+  class:list={[
+    'shot',
+    light && 'shot--light',
+    align === 'top' ? 'items-start' : 'items-end',
+    fill && 'absolute inset-0 h-full w-full',
+    className,
+  ]}
+  style={fill ? undefined : `aspect-ratio:${ratio}`}
+  role="img"
+  aria-label={`Photograph to come: ${s.label}`}
+>
+  <div class="w-full p-3 sm:p-4">
+    <div
+      class:list={[
+        'flex flex-wrap items-baseline gap-x-3 gap-y-1 border-l-2 pl-3',
+        light ? 'border-oxide' : 'border-flare',
+      ]}
+    >
+      <span
+        class:list={[
+          'font-display text-[0.8125rem] leading-snug font-semibold sm:text-sm',
+          light ? 'text-shop' : 'text-bone',
+        ]}>{s.label}</span
+      >
+      <span
+        class:list={[
+          'font-mono text-[0.6875rem] tracking-wider tabular-nums',
+          light ? 'text-slate' : 'text-steel',
+        ]}>{ratio.replace(/\s+/g, '')}</span
+      >
+    </div>
+  </div>
+</div>

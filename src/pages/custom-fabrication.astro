@@ -1,0 +1,81 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import Placeholder from '../components/Placeholder.astro';
+import BendRule from '../components/BendRule.astro';
+import { phone, business, terms } from '../config/site';
+---
+
+<ServiceLayout
+  slug="custom-fabrication"
+  title="Custom Off-Road Fabrication in Tucson | M1 Off-Road"
+  description="Bumpers, mounts, brackets and repairs for off-road machines. Custom steel fabrication and MIG welding in Tucson by Mike Solger. Bring the machine and the idea."
+  headline="The work that does not come in a box"
+  lede="Bumpers, mounts, brackets, repairs, and the one-off that nobody makes a part for. If it is steel and it goes on an off-road machine, it is worth asking about."
+  heroShot="svc-fab"
+>
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule class="mb-8 max-w-xs" />
+      <div class="grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] lg:gap-16">
+        <div>
+          <h2 class="max-w-[20ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            Bring the machine and the idea
+          </h2>
+          <div class="text-slate mt-6 max-w-[56ch] space-y-4 text-lg">
+            <p>
+              Cages, doors and roofs are the bulk of the work, but they are not
+              the whole of it. A bumper that has to clear a winch. A mount for
+              something the machine was never designed to carry. A bracket that
+              broke on a rock and needs to come back stronger than it left.
+            </p>
+            <p>
+              Custom work is easier to talk through than to describe on a page.
+              A photo and a sentence about what you want it to do is usually
+              enough to know whether it is a job.
+            </p>
+            <p class="text-shop">
+              If it cannot be done here, you will be told that on the phone
+              rather than after the machine is already apart.
+            </p>
+          </div>
+
+          <dl class="border-bone-line mt-10 grid gap-px border-t">
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Welding</dt>
+              <dd class="text-slate">
+                MIG. {business.yearsInBusiness.replace(/^over /, 'Over ')} of it.
+              </dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Finish</dt>
+              <dd class="text-slate">Powder coating is sent out to a coater.</dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Price</dt>
+              <dd class="text-slate">
+                {terms.servicePricing}. One-offs have to be — nobody can price
+                a part they have not seen.
+              </dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Time in the shop</dt>
+              <dd class="text-slate">{terms.leadTime}.</dd>
+            </div>
+          </dl>
+
+          <p class="mt-8 text-lg">
+            <a
+              href={phone.sms}
+              data-analytics="text-fab-inline"
+              class="text-oxide font-semibold underline decoration-1 underline-offset-4"
+              >Text a photo to {phone.display}</a
+            >
+            <span class="text-slate"> — that is usually the fastest way.</span>
+          </p>
+        </div>
+
+        <Placeholder shot="bend-bare" light class="w-full" />
+      </div>
+    </div>
+  </section>
+</ServiceLayout>

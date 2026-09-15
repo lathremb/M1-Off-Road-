@@ -1,0 +1,68 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import Placeholder from '../components/Placeholder.astro';
+import BendRule from '../components/BendRule.astro';
+import { terms } from '../config/site';
+---
+
+<ServiceLayout
+  slug="doors"
+  title="Custom UTV Doors — Tucson Fabrication | M1 Off-Road"
+  description="Custom doors for Polaris RZR, Can-Am and other UTVs. Built and MIG welded in Tucson to seal against the dust and latch the same way every time."
+  headline="Doors that shut properly, every time"
+  lede="Built to the machine and the cage it hangs on, so the gaps are even and the latch lines up on the first try instead of the fifth."
+  heroShot="svc-doors"
+>
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule class="mb-8 max-w-xs" />
+      <div class="grid gap-10 lg:grid-cols-[1fr_minmax(0,24rem)] lg:gap-16">
+        <div>
+          <h2 class="max-w-[20ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            The part nobody thinks about until it rattles
+          </h2>
+          <div class="text-slate mt-6 max-w-[56ch] space-y-4 text-lg">
+            <p>
+              Factory half doors leave your arm and most of the dust on the
+              wrong side of the line. A built door closes the opening properly,
+              which on a Tucson trail is the difference between arriving dusty
+              and arriving coated.
+            </p>
+            <p>
+              Doors get built to the cage, so the hinge side and the latch side
+              are set against the actual tube on your machine rather than a
+              drawing of where that tube is supposed to be.
+            </p>
+            <p class="text-shop">
+              Doors are usually cheaper done at the same time as a cage, since
+              the machine is already apart and the frame is already in hand.
+            </p>
+          </div>
+
+          <dl class="border-bone-line mt-10 grid gap-px border-t">
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Welding</dt>
+              <dd class="text-slate">MIG, done in house.</dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Finish</dt>
+              <dd class="text-slate">Powder coating is sent out to a coater.</dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Price</dt>
+              <dd class="text-slate">
+                {terms.servicePricing} — doors vary too much for one figure.
+              </dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Time in the shop</dt>
+              <dd class="text-slate">{terms.leadTime}.</dd>
+            </div>
+          </dl>
+        </div>
+
+        <Placeholder shot="door-latch" light class="w-full" />
+      </div>
+    </div>
+  </section>
+</ServiceLayout>

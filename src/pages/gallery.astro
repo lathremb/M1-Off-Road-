@@ -1,0 +1,94 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+import NeedsInput from '../components/NeedsInput.astro';
+import BendRule from '../components/BendRule.astro';
+import { phone, platforms } from '../config/site';
+
+/* Grouped by platform, as briefed. The jump links below are anchors rather
+   than a JavaScript filter: every build stays in the document, which is
+   better for search and costs nothing to render. */
+const tilesPerPlatform = 9;
+---
+
+<Base
+  title="Gallery — UTV Builds by Platform | M1 Off-Road Tucson"
+  description="Roll cages, doors and roofs built by M1 Off-Road in Tucson, grouped by machine. Polaris RZR, Can-Am Maverick X3, Yamaha YXZ and other UTVs."
+>
+  <section class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-14 sm:px-8 sm:py-20">
+      <BendRule dark class="mb-8 max-w-[8rem]" />
+      <h1 class="max-w-[16ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
+        Machines that have been through the shop
+      </h1>
+      <p class="text-steel mt-6 max-w-[52ch] text-lg sm:text-xl">
+        Grouped by platform, because the first thing anyone wants to know is
+        whether a machine like theirs has been done before.
+      </p>
+
+      <nav class="mt-9 flex flex-wrap gap-2" aria-label="Jump to platform">
+        {
+          platforms.map((p) => (
+            <a
+              href={`#${p.slug}`}
+              class="border-shop-line bend hover:border-flare hover:text-flare border px-4 py-2 text-[0.9375rem] transition-colors"
+            >
+              {p.name}
+            </a>
+          ))
+        }
+      </nav>
+    </div>
+  </section>
+
+  {
+    platforms.map((p, i) => (
+      <section id={p.slug} class={i % 2 === 0 ? 'bg-bone' : 'bg-shop text-bone'}>
+        <div class="mx-auto max-w-6xl px-5 pt-14 sm:px-8 sm:pt-20">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <h2 class="text-[clamp(1.75rem,4.5vw,2.75rem)]">{p.name}</h2>
+            <p class={i % 2 === 0 ? 'text-slate' : 'text-steel'}>{p.note}</p>
+          </div>
+        </div>
+
+        {/* Full bleed, no gutters, strict squares — the contact-sheet grid. */}
+        <div class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+          {Array.from({ length: tilesPerPlatform }).map(() => (
+            <Placeholder shot="gallery-tile" class="w-full border-0" />
+          ))}
+        </div>
+
+        <div class="mx-auto max-w-6xl px-5 pt-8 pb-14 sm:px-8 sm:pb-20">
+          <p class={i % 2 === 0 ? 'text-slate' : 'text-steel'}>
+            <NeedsInput key="photos" dark={i % 2 !== 0} />
+          </p>
+        </div>
+      </section>
+    ))
+  }
+
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <div
+        class="border-bone-line bend flex flex-col gap-6 border p-6 sm:p-10 lg:flex-row lg:items-center lg:justify-between"
+      >
+        <div>
+          <h2 class="max-w-[20ch] text-[clamp(1.75rem,4vw,2.5rem)]">
+            Not sure yours fits any of these?
+          </h2>
+          <p class="text-slate mt-3 max-w-[48ch] text-lg">
+            A wide range of machines has come through here. Call with the year,
+            make and model and you will get a straight answer.
+          </p>
+        </div>
+        <a
+          href={phone.tel}
+          data-analytics="call-gallery"
+          class="font-display bg-oxide bend shrink-0 px-6 py-3.5 text-center font-bold text-white transition-opacity hover:opacity-90"
+        >
+          Call {phone.display}
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

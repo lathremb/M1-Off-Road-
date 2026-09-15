@@ -1,0 +1,69 @@
+---
+/**
+ * Google Analytics 4, loaded late on purpose.
+ *
+ * gtag.js is roughly 100 KB of third-party JavaScript. Dropped in the head it
+ * costs real points on the mobile Lighthouse score for a site whose entire job
+ * is to get somebody to tap a phone number. So it loads on whichever comes
+ * first: the visitor's first interaction, or the browser going idle after
+ * load. Sessions are still counted; the number just arrives a beat later.
+ *
+ * Nothing renders at all while GA_MEASUREMENT_ID is blank, so no third-party
+ * request exists on the site until there is a property to send it to.
+ * [needs-input: ga-id]
+ *
+ * Call and text taps are tracked as events, since on this site those ARE the
+ * conversions — a form submit is the minority case.
+ */
+import { GA_MEASUREMENT_ID } from '../config/site';
+---
+
+{
+  GA_MEASUREMENT_ID && (
+    <script is:inline define:vars={{ id: GA_MEASUREMENT_ID }}>
+      {`
+      (function () {
+        var started = false;
+        var EVENTS = ['pointerdown', 'keydown', 'touchstart', 'scroll'];
+
+        function start() {
+          if (started) return;
+          started = true;
+          EVENTS.forEach(function (e) {
+            window.removeEventListener(e, start, { passive: true });
+          });
+
+          var s = document.createElement('script');
+          s.async = true;
+          s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+          document.head.appendChild(s);
+
+          window.dataLayer = window.dataLayer || [];
+          window.gtag = function () { window.dataLayer.push(arguments); };
+          window.gtag('js', new Date());
+          window.gtag('config', id);
+
+          // Tap-to-call and tap-to-text are the conversions on a shop site.
+          document.addEventListener('click', function (ev) {
+            var el = ev.target && ev.target.closest && ev.target.closest('[data-analytics]');
+            if (!el) return;
+            window.gtag('event', 'contact_tap', {
+              method: el.getAttribute('data-analytics')
+            });
+          });
+        }
+
+        EVENTS.forEach(function (e) {
+          window.addEventListener(e, start, { passive: true, once: true });
+        });
+
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(start, { timeout: 6000 });
+        } else {
+          window.addEventListener('load', function () { setTimeout(start, 2500); });
+        }
+      })();
+      `}
+    </script>
+  )
+}

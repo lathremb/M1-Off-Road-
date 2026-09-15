@@ -1,0 +1,141 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+import NeedsInput from '../components/NeedsInput.astro';
+import BendRule from '../components/BendRule.astro';
+import { business, phone, pricing, terms } from '../config/site';
+---
+
+<Base
+  title="About M1 Off-Road — Mike Solger, Tucson Fabricator"
+  description="M1 Off-Road is Mike Solger's fabrication shop in Tucson, Arizona. Over ten years building roll cages, doors and roofs for UTVs. MIG welding done in house."
+>
+  <section class="bg-shop text-bone">
+    <div
+      class="mx-auto grid max-w-6xl items-center gap-10 px-5 py-14 sm:px-8 sm:py-20 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16"
+    >
+      <Placeholder shot="mike-portrait" class="w-full" />
+
+      <div>
+        <BendRule dark class="mb-8 max-w-[8rem]" />
+        <h1 class="max-w-[18ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
+          {business.owner} has been doing this {business.yearsInBusiness}
+        </h1>
+        <p class="text-steel mt-6 max-w-[48ch] text-lg sm:text-xl">
+          M1 Off-Road is a custom fabrication shop in {business.city},{' '}
+          {business.stateCode}, geared to off-road vehicles. Cages, doors and
+          roofs, mostly for UTVs.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid gap-12 lg:grid-cols-[1fr_minmax(0,24rem)] lg:gap-16">
+        <div class="max-w-[58ch]">
+          <h2 class="text-[clamp(1.875rem,4.5vw,3rem)]">How the shop works</h2>
+
+          <div class="text-slate mt-6 space-y-5 text-lg">
+            <p>
+              You are dealing with the person who does the work. Mike quotes it,
+              Mike builds it, Mike welds it. There is no service writer in the
+              middle translating what you said into something else.
+            </p>
+            <p>
+              Most of what comes through is a Polaris RZR or a Can-Am. That is
+              simply what people in southern Arizona are riding, and it means
+              the fit-up on those platforms is well practised. A wide range of
+              other machines has been built for too — the answer to "will this
+              work on mine" is usually yes, and always worth asking.
+            </p>
+
+            <h3 class="text-shop pt-4 text-2xl">What is done here, and what is not</h3>
+            <p>
+              All the welding is MIG and all of it happens in this shop.
+              Powder coating does not. It goes out to a coater, and it is worth
+              saying so plainly — a one-man shop that claims to do every process
+              under one roof is usually stretching the truth about at least one
+              of them.
+            </p>
+            <p>
+              Being straight about that is the same reason the cage price is on
+              the front page. {pricing.cageStartingAtDisplay} is the number.
+              Nobody has to call to find out whether they can afford to call.
+            </p>
+
+            <h3 class="text-shop pt-4 text-2xl">Getting a job booked</h3>
+            <p class="text-slate">
+              <NeedsInput key="process" />
+            </p>
+            <p>
+              Until that is written down properly, the honest version is: pick
+              up the phone. Year, make, model, and what you want done.
+            </p>
+          </div>
+        </div>
+
+        <aside class="space-y-4">
+          <Placeholder shot="shop-wide" light class="w-full" />
+
+          <div class="border-bone-line bend border p-6">
+            <h2 class="text-xl">The short version</h2>
+            <dl class="mt-4 space-y-3 text-[0.9375rem]">
+              <div>
+                <dt class="text-slate">Owner</dt>
+                <dd class="font-semibold">{business.owner}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Shop</dt>
+                <dd class="font-semibold">
+                  {business.city}, {business.stateCode}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-slate">In business</dt>
+                <dd class="font-semibold">
+                  {business.yearsInBusiness.replace(/^over/, 'Over')}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-slate">Welding</dt>
+                <dd class="font-semibold">MIG, in house</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Powder coating</dt>
+                <dd class="font-semibold">Sent out</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Full cage from</dt>
+                <dd class="font-semibold">{pricing.cageStartingAtDisplay}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Everything else</dt>
+                <dd class="font-semibold">{terms.servicePricing}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Time in the shop</dt>
+                <dd class="font-semibold">{terms.leadTime}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Address</dt>
+                <dd><NeedsInput key="address" /></dd>
+              </div>
+              <div>
+                <dt class="text-slate">Hours</dt>
+                <dd><NeedsInput key="hours" /></dd>
+              </div>
+            </dl>
+            <a
+              href={phone.tel}
+              data-analytics="call-about"
+              class="font-display bg-oxide bend mt-6 block px-5 py-3 text-center font-bold text-white transition-opacity hover:opacity-90"
+            >
+              {phone.display}
+            </a>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+</Base>

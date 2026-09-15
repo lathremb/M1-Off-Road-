@@ -1,0 +1,303 @@
+---
+/**
+ * Quote form. Five fields, one of them optional.
+ *
+ * The field list is deliberately short — name, phone, machine, what you want,
+ * and a photo if you have one. Every extra field on a form like this costs
+ * submissions, and the whole point is to get Mike a phone number and enough
+ * context to call back.
+ *
+ * There is no email field: the reply channel is the phone. That means the
+ * email Mike receives has no reply-to, which is noted in api/quote.js.
+ *
+ * Photos are downscaled in the browser before upload. A modern phone camera
+ * produces 3–6 MB files and Vercel caps a serverless request body at 4.5 MB,
+ * so sending the original would fail exactly when someone tries hardest to be
+ * helpful. 1600px at quality 0.82 lands around 300–600 KB and is far more
+ * detail than is needed to see a cracked bracket.
+ */
+import { phone } from '../config/site';
+
+const MAX_EDGE = 1600;
+const JPEG_QUALITY = 0.82;
+---
+
+<form id="quote-form" class="mt-8" novalidate>
+  <!-- Bot traps. Both are accepted silently by the API so a bot learns nothing. -->
+  <div class="absolute h-px w-px overflow-hidden" aria-hidden="true">
+    <label for="q-gotcha">Leave this empty</label>
+    <input id="q-gotcha" name="_gotcha" type="text" tabindex="-1" autocomplete="off" />
+  </div>
+  <input type="hidden" name="_t" id="q-t" />
+
+  <div class="grid gap-5 sm:grid-cols-2">
+    <div>
+      <label for="q-name" class="font-display block font-semibold">Your name</label>
+      <input
+        id="q-name"
+        name="name"
+        type="text"
+        required
+        autocomplete="name"
+        class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+      />
+    </div>
+
+    <div>
+      <label for="q-phone" class="font-display block font-semibold">
+        Phone number
+      </label>
+      <input
+        id="q-phone"
+        name="phone"
+        type="tel"
+        required
+        inputmode="tel"
+        autocomplete="tel"
+        class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+      />
+    </div>
+  </div>
+
+  <div class="mt-5">
+    <label for="q-machine" class="font-display block font-semibold">
+      Year, make and model
+    </label>
+    <p id="q-machine-hint" class="text-slate mt-1 text-[0.9375rem]">
+      For example: 2023 Polaris RZR Turbo R 4.
+    </p>
+    <input
+      id="q-machine"
+      name="machine"
+      type="text"
+      required
+      aria-describedby="q-machine-hint"
+      class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+    />
+  </div>
+
+  <div class="mt-5">
+    <label for="q-work" class="font-display block font-semibold">
+      What do you want done?
+    </label>
+    <textarea
+      id="q-work"
+      name="work"
+      rows="5"
+      required
+      class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+    ></textarea>
+  </div>
+
+  <div class="mt-5">
+    <label for="q-photo" class="font-display block font-semibold">
+      Photo <span class="text-slate font-normal">(optional)</span>
+    </label>
+    <p id="q-photo-hint" class="text-slate mt-1 text-[0.9375rem]">
+      One photo of the machine or the part. Resized in your browser before it
+      sends, so a big camera file is fine.
+    </p>
+    <input
+      id="q-photo"
+      name="photo"
+      type="file"
+      accept="image/*"
+      aria-describedby="q-photo-hint"
+      class="border-bone-line file:bg-shop file:text-bone mt-2 w-full border px-4 py-3 text-base file:mr-4 file:cursor-pointer file:border-0 file:px-4 file:py-2 file:text-sm file:font-semibold"
+    />
+    <p id="q-photo-status" class="text-slate mt-2 text-[0.9375rem]" aria-live="polite"></p>
+  </div>
+
+  <button
+    type="submit"
+    id="q-submit"
+    class="font-display bg-oxide bend mt-8 w-full px-8 py-4 text-lg font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
+  >
+    Send it
+  </button>
+
+  <p class="text-slate mt-4 text-[0.9375rem]">
+    Would rather talk? <a
+      href={phone.tel}
+      data-analytics="call-form"
+      class="text-oxide font-semibold underline decoration-1 underline-offset-4"
+      >Call {phone.display}</a
+    >.
+  </p>
+
+  <!-- Single status region for both success and failure. -->
+  <div
+    id="q-status"
+    role="status"
+    aria-live="polite"
+    class="mt-6 hidden border-l-2 px-4 py-3"
+  >
+  </div>
+</form>
+
+<script is:inline define:vars={{ MAX_EDGE, JPEG_QUALITY, telHref: phone.tel, telDisplay: phone.display }}>
+  (function () {
+    var form = document.getElementById('quote-form');
+    if (!form) return;
+
+    var submit = document.getElementById('q-submit');
+    var status = document.getElementById('q-status');
+    var photoInput = document.getElementById('q-photo');
+    var photoStatus = document.getElementById('q-photo-status');
+
+    // Stamps load time. The API rejects anything submitted within 3 seconds.
+    document.getElementById('q-t').value = String(Date.now());
+
+    var encoded = null; // { name, type, data } once a photo is processed
+
+    function show(kind, html) {
+      status.className =
+        'mt-6 border-l-2 px-4 py-3 ' +
+        (kind === 'ok'
+          ? 'border-oxide bg-bone-lift'
+          : 'border-oxide bg-bone-lift text-shop');
+      status.innerHTML = html;
+      status.hidden = false;
+      status.classList.remove('hidden');
+    }
+
+    /* --- photo: downscale in the browser ------------------------------- */
+    function downscale(file) {
+      return new Promise(function (resolve, reject) {
+        var url = URL.createObjectURL(file);
+        var img = new Image();
+        img.onload = function () {
+          URL.revokeObjectURL(url);
+          var w = img.naturalWidth;
+          var h = img.naturalHeight;
+          var scale = Math.min(1, MAX_EDGE / Math.max(w, h));
+          var canvas = document.createElement('canvas');
+          canvas.width = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          var ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+          // Step the quality down if the first pass is still heavy.
+          var q = JPEG_QUALITY;
+          var out = canvas.toDataURL('image/jpeg', q);
+          while (out.length > 2400000 && q > 0.4) {
+            q -= 0.12;
+            out = canvas.toDataURL('image/jpeg', q);
+          }
+          resolve(out);
+        };
+        img.onerror = function () {
+          URL.revokeObjectURL(url);
+          reject(new Error('unreadable'));
+        };
+        img.src = url;
+      });
+    }
+
+    photoInput.addEventListener('change', function () {
+      encoded = null;
+      var file = photoInput.files && photoInput.files[0];
+      if (!file) {
+        photoStatus.textContent = '';
+        return;
+      }
+      if (!/^image\//.test(file.type)) {
+        photoStatus.textContent = 'That does not look like an image. Skip it and describe the part instead.';
+        photoInput.value = '';
+        return;
+      }
+      photoStatus.textContent = 'Resizing…';
+      downscale(file)
+        .then(function (dataUrl) {
+          encoded = {
+            name: (file.name || 'photo').replace(/[^\w.\-]+/g, '_').slice(0, 80),
+            data: dataUrl.split(',')[1],
+          };
+          var kb = Math.round((encoded.data.length * 0.75) / 1024);
+          photoStatus.textContent = 'Ready to send (' + kb + ' KB).';
+        })
+        .catch(function () {
+          photoStatus.textContent = 'Could not read that image. It will be skipped.';
+          photoInput.value = '';
+        });
+    });
+
+    /* --- submit --------------------------------------------------------- */
+    form.addEventListener('submit', function (ev) {
+      ev.preventDefault();
+
+      var data = {
+        name: form.name.value,
+        phone: form.phone.value,
+        machine: form.machine.value,
+        work: form.work.value,
+        _gotcha: form._gotcha.value,
+        _t: form._t.value,
+      };
+
+      var missing = ['name', 'phone', 'machine', 'work'].filter(function (k) {
+        return !String(data[k] || '').trim();
+      });
+      if (missing.length) {
+        show('err', 'Please fill in every field except the photo.');
+        var first = document.getElementById('q-' + missing[0]);
+        if (first) first.focus();
+        return;
+      }
+
+      if (encoded) {
+        data.photoName = encoded.name;
+        data.photoData = encoded.data;
+      }
+
+      submit.disabled = true;
+      submit.textContent = 'Sending…';
+
+      fetch('/api/quote', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+      })
+        .then(function (res) {
+          return res.json().then(function (body) {
+            return { ok: res.ok, body: body };
+          });
+        })
+        .then(function (r) {
+          if (!r.ok) throw new Error((r.body && r.body.error) || 'failed');
+          form.reset();
+          encoded = null;
+          photoStatus.textContent = '';
+          form.querySelectorAll('input,textarea,button').forEach(function (el) {
+            el.disabled = true;
+          });
+          show(
+            'ok',
+            '<p class="font-display font-bold text-lg">Got it.</p>' +
+              '<p class="mt-1">Mike will call you back on the number you gave. ' +
+              'If you need an answer sooner, call <a class="text-oxide font-semibold underline underline-offset-4" href="' +
+              telHref +
+              '">' +
+              telDisplay +
+              '</a>.</p>'
+          );
+        })
+        .catch(function (err) {
+          submit.disabled = false;
+          submit.textContent = 'Send it';
+          show(
+            'err',
+            '<p>' +
+              (err.message && err.message !== 'failed'
+                ? String(err.message)
+                : 'That did not send.') +
+              ' Call <a class="text-oxide font-semibold underline underline-offset-4" href="' +
+              telHref +
+              '">' +
+              telDisplay +
+              '</a> and it will get sorted in one go.</p>'
+          );
+        });
+    });
+  })();
+</script>

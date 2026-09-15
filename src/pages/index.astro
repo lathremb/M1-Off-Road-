@@ -1,0 +1,338 @@
+---
+import Base from '../layouts/Base.astro';
+import Placeholder from '../components/Placeholder.astro';
+import NeedsInput from '../components/NeedsInput.astro';
+import BendRule from '../components/BendRule.astro';
+import {
+  business,
+  phone,
+  pricing,
+  services,
+  platforms,
+  terms,
+} from '../config/site';
+
+/* Home is the only page carrying the LocalBusiness block, so the markup
+   describes one business rather than eight. */
+---
+
+<Base
+  title="M1 Off-Road — Custom UTV Roll Cages, Doors & Roofs in Tucson"
+  description="Custom roll cages, doors and roofs for Polaris RZR, Can-Am and other UTVs. MIG welded in Tucson by Mike Solger. Full cages start at $2,500. Call (520) 403-3366."
+  schema
+>
+  <!-- ==========================================================
+       HERO — the one place on this site that raises its voice.
+       Everything below it is deliberately quiet.
+       ========================================================== -->
+  <section class="bg-shop text-bone relative">
+    <div class="relative min-h-[32rem] sm:min-h-[36rem] lg:min-h-[40rem]">
+      <Placeholder shot="hero-build" fill align="top" />
+
+      <!-- Scrim. Heavier at the base so the type has something solid to sit on
+           without washing the whole photograph out. -->
+      <div
+        class="absolute inset-0"
+        style="background:linear-gradient(to top, rgb(17 17 19 / .96) 0%, rgb(17 17 19 / .82) 38%, rgb(17 17 19 / .35) 72%, rgb(17 17 19 / .15) 100%)"
+        aria-hidden="true"
+      >
+      </div>
+
+      <div
+        class="relative mx-auto flex min-h-[32rem] max-w-6xl flex-col justify-end px-5 py-12 sm:min-h-[36rem] sm:px-8 sm:py-16 lg:min-h-[40rem]"
+      >
+        <h1
+          class="max-w-[19ch] text-[clamp(2.5rem,9vw,5rem)] font-extrabold tracking-[-0.03em]"
+        >
+          Roll cages, doors and roofs, built to your machine.
+        </h1>
+
+        <p class="text-steel mt-6 max-w-[46ch] text-lg sm:text-xl">
+          MIG welded in {business.city} by {business.owner}, who has been doing
+          this {business.yearsInBusiness}. Full cages start at{' '}
+          <strong class="text-flare font-semibold"
+            >{pricing.cageStartingAtDisplay}</strong
+          >.
+        </p>
+
+        <div class="mt-9 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a
+            href={phone.tel}
+            data-analytics="call-hero"
+            class="font-display bg-flare text-shop bend hover:bg-bone px-7 py-4 text-center text-lg font-bold transition-colors"
+          >
+            Call {phone.display}
+          </a>
+          <a
+            href="/contact/"
+            class="font-display border-steel/50 text-bone bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
+          >
+            Get a quote
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       WHAT HE BUILDS
+       Four blocks at three different sizes. No repeated card shape,
+       no shadow, one bend corner each.
+       ========================================================== -->
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule class="mb-8 max-w-xs" />
+
+      <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+        <h2 class="max-w-[16ch] text-[clamp(2rem,5vw,3.25rem)]">
+          What comes out of the shop
+        </h2>
+        <p class="text-slate max-w-[42ch] text-lg">
+          Everything is cut, bent and welded for the machine it is going on.
+          Nothing here is a kit that gets forced to fit.
+        </p>
+      </div>
+
+      <!-- Four blocks, three shapes, no repeated card. The grid is laid out so
+           every row fills completely — a row-span here leaves a hole. -->
+      <div class="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- Roll cages: the lead service. Wide and horizontal. -->
+        <article
+          class="border-bone-line bend flex flex-col border sm:col-span-2 lg:flex-row"
+        >
+          <!-- Stretches to the row height, the way object-cover will once the
+               real photograph replaces it. -->
+          <div class="relative min-h-[15rem] w-full lg:w-1/2 lg:shrink-0">
+            <Placeholder shot="svc-cage" light fill />
+          </div>
+          <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
+            <h3 class="text-[clamp(1.5rem,3vw,2rem)]">
+              <a href="/roll-cages/" class="hover:text-oxide transition-colors">
+                Roll Cages
+              </a>
+            </h3>
+            <p class="text-slate mt-3 max-w-[44ch]">
+              A full replacement cage built around your machine and your seating
+              position. Bent, fitted, tacked, then welded out.
+            </p>
+            <p class="font-display mt-5 text-lg font-bold">
+              From {pricing.cageStartingAtDisplay}
+            </p>
+            <a
+              href="/roll-cages/"
+              class="text-oxide mt-5 inline-block self-start font-semibold underline decoration-1 underline-offset-4"
+            >
+              What goes into a cage
+            </a>
+          </div>
+        </article>
+
+        <article class="border-bone-line bend flex flex-col border">
+          <Placeholder shot="svc-doors" light class="w-full" />
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="text-2xl">
+              <a href="/doors/" class="hover:text-oxide transition-colors">Doors</a>
+            </h3>
+            <p class="text-slate mt-3">
+              Doors that close against the dust and latch the same way every
+              time.
+            </p>
+          </div>
+        </article>
+
+        <article class="border-bone-line bend flex flex-col border">
+          <Placeholder shot="svc-roofs" light class="w-full" />
+          <div class="flex flex-1 flex-col p-6">
+            <h3 class="text-2xl">
+              <a href="/roofs/" class="hover:text-oxide transition-colors">Roofs</a>
+            </h3>
+            <p class="text-slate mt-3">
+              Built to the cage it sits on, not bolted over the top of it.
+            </p>
+          </div>
+        </article>
+
+        <!-- Custom fab: horizontal again, but half the weight of the cage
+             block. Completes row two rather than starting a third. -->
+        <article
+          class="border-bone-line bend flex flex-col border sm:col-span-2 lg:flex-row"
+        >
+          <div class="relative min-h-[12rem] w-full lg:w-2/5 lg:shrink-0">
+            <Placeholder shot="svc-fab" light fill />
+          </div>
+          <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
+            <h3 class="text-2xl">
+              <a href="/custom-fabrication/" class="hover:text-oxide transition-colors"
+                >Custom Fabrication</a
+              >
+            </h3>
+            <p class="text-slate mt-3 max-w-[56ch]">
+              Bumpers, mounts, brackets, repairs. If it is steel and it goes on
+              an off-road machine, bring it in and talk it through.
+            </p>
+          </div>
+        </article>
+      </div>
+
+      <!-- The honesty that does more work than any claim would. -->
+      <p class="text-slate mt-10 max-w-[62ch] text-lg">
+        All the welding is MIG, and all of it happens here. Powder coating goes
+        out to a coater — M1 does not do it in house, and you should be
+        suspicious of a small shop that says it does everything.
+      </p>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       PRICE
+       Not knowing what a cage costs is what stops people calling,
+       so the number gets a section to itself.
+       ========================================================== -->
+  <section class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
+        <div>
+          <p class="text-steel text-lg">A typical full cage runs</p>
+          <p
+            class="font-display text-flare mt-1 text-[clamp(4rem,14vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.04em]"
+          >
+            {pricing.cageStartingAtDisplay}
+          </p>
+        </div>
+
+        <div class="max-w-[52ch] space-y-5 text-lg">
+          <p>
+            That is the real number for a typical full cage, not a teaser. What
+            moves it is the machine, the seat count, and what else you want
+            built into it while it is apart — doors, a roof, mounts.
+          </p>
+          <p class="text-steel">
+            Call with your year, make and model and you will get a straight
+            answer on the phone. No appointment needed to ask what something
+            costs.
+          </p>
+          <p class="text-steel">
+            Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
+            Either way you are not without the machine long — {terms.leadTime.toLowerCase()}.
+          </p>
+          <p class="text-steel">
+            Deposit terms: <NeedsInput key="deposit" dark />
+          </p>
+          <div class="flex flex-col gap-3 pt-2 sm:flex-row">
+            <a
+              href={phone.tel}
+              data-analytics="call-price"
+              class="font-display bg-flare text-shop bend hover:bg-bone px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Call {phone.display}
+            </a>
+            <a
+              href="/contact/"
+              class="font-display border-steel/50 bend hover:border-bone border px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Send the details
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       GALLERY TEASER — dense, square, no gaps. The camera-roll grid.
+       ========================================================== -->
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-24">
+      <BendRule class="mb-8 max-w-xs" />
+      <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <h2 class="text-[clamp(2rem,5vw,3.25rem)]">Machines that have been through</h2>
+        <a
+          href="/gallery/"
+          class="text-oxide font-semibold underline decoration-1 underline-offset-4"
+        >
+          See the full gallery
+        </a>
+      </div>
+      <p class="text-slate mt-4 max-w-[52ch] text-lg">
+        {platforms.map((p) => p.name).join(', ')} — and plenty that do not fit a
+        category.
+      </p>
+    </div>
+
+    <!-- Full-bleed, gutterless, square. This is the one dense thing on the
+         page and it is meant to read as a wall of work. -->
+    <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+      {
+        Array.from({ length: 6 }).map(() => (
+          <Placeholder shot="gallery-tile" class="w-full border-0" />
+        ))
+      }
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       WHO IS ACTUALLY DOING THE WORK
+       ========================================================== -->
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,22rem)_1fr] lg:gap-16">
+        <Placeholder shot="mike-portrait" light class="w-full" />
+
+        <div>
+          <BendRule class="mb-8 max-w-[10rem]" />
+          <h2 class="max-w-[18ch] text-[clamp(2rem,5vw,3.25rem)]">
+            One person builds it, and that person is {business.owner}
+          </h2>
+          <div class="text-slate mt-6 max-w-[54ch] space-y-4 text-lg">
+            <p>
+              M1 Off-Road has been fabricating for off-road machines {business.yearsInBusiness}.
+              Most of what comes through is a Polaris RZR or a Can-Am, but the
+              shop has built for a wide range of machines and the answer to
+              "will it work on mine" is usually yes.
+            </p>
+            <p>
+              You talk to the person doing the welding. That is the whole
+              arrangement.
+            </p>
+          </div>
+          <a
+            href="/about/"
+            class="text-oxide mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
+          >
+            More about the shop
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==========================================================
+       CLOSING CTA
+       ========================================================== -->
+  <section class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
+        Tell me the machine and what you want done.
+      </h2>
+      <p class="text-steel mt-5 max-w-[48ch] text-lg">
+        Year, make and model is enough to start. Photos help if you have them.
+      </p>
+      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+        <a
+          href={phone.tel}
+          data-analytics="call-closing"
+          class="font-display bg-flare text-shop bend hover:bg-bone px-7 py-4 text-center text-lg font-bold transition-colors"
+        >
+          Call {phone.display}
+        </a>
+        <a
+          href={phone.sms}
+          data-analytics="text-closing"
+          class="font-display border-steel/50 bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
+        >
+          Send a text
+        </a>
+      </div>
+    </div>
+  </section>
+</Base>

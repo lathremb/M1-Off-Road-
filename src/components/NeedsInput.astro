@@ -1,0 +1,37 @@
+---
+/**
+ * A visible marker where a fact would go.
+ *
+ * The brief was explicit that nothing gets invented — no tubing spec, no lead
+ * time, no address, no review count. Where a page wanted one of those, this
+ * renders in its place. It is meant to be seen: a reviewer should be able to
+ * scan a page and find every hole in it without opening a document.
+ *
+ * Keys come from src/config/needs-input.ts, and the build fails if a key here
+ * does not exist in that file.
+ */
+import { gaps, type GapKey } from '../config/needs-input';
+
+interface Props {
+  key: GapKey;
+  /** Light grounds are the default; set for sections on shop black. */
+  dark?: boolean;
+  /** Renders as a block with its own line rather than inline in a sentence. */
+  block?: boolean;
+}
+
+const { key, dark = false, block = false } = Astro.props;
+const gap = gaps[key];
+---
+
+<span
+  class:list={[
+    'font-mono text-[0.75rem] leading-normal tracking-tight',
+    'border border-dashed px-1.5 py-0.5 align-baseline',
+    block ? 'inline-block' : 'inline',
+    dark ? 'border-flare/60 text-flare' : 'border-oxide/50 text-oxide',
+  ]}
+  title={gap.why}
+>
+  [ needs input — {gap.label} ]
+</span>

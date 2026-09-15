@@ -1,0 +1,116 @@
+---
+import ServiceLayout from '../layouts/ServiceLayout.astro';
+import Placeholder from '../components/Placeholder.astro';
+import NeedsInput from '../components/NeedsInput.astro';
+import BendRule from '../components/BendRule.astro';
+import { pricing, platforms, terms } from '../config/site';
+---
+
+<ServiceLayout
+  slug="roll-cages"
+  title="Custom UTV Roll Cages, Tucson AZ — From $2,500 | M1 Off-Road"
+  description="Custom roll cages for Polaris RZR, Can-Am and other UTVs, MIG welded in Tucson. Full cages start at $2,500. Built to your machine and your seating position."
+  headline="A cage built around your machine, not adapted to it"
+  lede="Full replacement cages, cut and bent and welded to fit the machine you actually own and the way you actually sit in it."
+  heroShot="svc-cage"
+  price={pricing.cageStartingAtDisplay}
+>
+  <!-- What the price covers. Straight to it — this is the reason people
+       opened this page. -->
+  <section class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule class="mb-8 max-w-xs" />
+      <div class="grid gap-10 lg:grid-cols-[1fr_minmax(0,26rem)] lg:gap-16">
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            What {pricing.cageStartingAtDisplay} actually buys
+          </h2>
+          <div class="text-slate mt-6 max-w-[56ch] space-y-4 text-lg">
+            <p>
+              A typical full cage runs {pricing.cageStartingAtDisplay}. That is
+              the whole cage — measured, bent, fitted to the machine, tacked in
+              place, then welded out.
+            </p>
+            <p>
+              What moves the number is the machine itself, whether it is a two
+              seat or a four seat, and what else gets built in while it is
+              apart. A cage, doors and a roof done together is less work than
+              the same three jobs done on three separate visits, and the quote
+              reflects that.
+            </p>
+            <p>
+              You are not without the machine for a month, either. A week is
+              the outside case.
+            </p>
+            <p class="text-shop">
+              Ask on the phone. You will get a number, not a form to fill in.
+            </p>
+          </div>
+
+          <dl class="border-bone-line mt-10 grid gap-px border-t">
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Welding</dt>
+              <dd class="text-slate">MIG, start to finish, done in house.</dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Finish</dt>
+              <dd class="text-slate">
+                Powder coating goes out to a coater. It is not done here.
+              </dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Tubing</dt>
+              <dd><NeedsInput key="tubing" /></dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Time in the shop</dt>
+              <dd class="text-slate">{terms.leadTime}.</dd>
+            </div>
+            <div class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[14rem_1fr]">
+              <dt class="font-semibold">Warranty</dt>
+              <dd><NeedsInput key="warranty" /></dd>
+            </div>
+          </dl>
+        </div>
+
+        <div class="space-y-4">
+          <Placeholder shot="cage-joint" light class="w-full" />
+          <Placeholder shot="weld-bead" light class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Platforms. Answers "will you do mine" without a claim we cannot back. -->
+  <section class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
+      <h2 class="max-w-[20ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+        Most of them are RZRs and Can-Ams. Not all of them.
+      </h2>
+      <p class="text-steel mt-5 max-w-[54ch] text-lg">
+        Those two are what roll through the door most often, so the fit-up is
+        well practised. Plenty of other machines have been caged here too — if
+        yours is not on this list, it is still worth the call.
+      </p>
+
+      <ul class="mt-10 grid gap-4 sm:grid-cols-3">
+        {
+          platforms.map((p) => (
+            <li class="border-shop-line bend border p-6">
+              <h3 class="text-xl">{p.name}</h3>
+              <p class="text-steel mt-2 text-[0.9375rem]">{p.note}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <p class="text-steel mt-8">
+        <a
+          href="/gallery/"
+          class="text-flare font-semibold underline decoration-1 underline-offset-4"
+          >See cages that have gone out</a
+        >
+      </p>
+    </div>
+  </section>
+</ServiceLayout>

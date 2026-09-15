@@ -1,0 +1,23 @@
+---
+/**
+ * A hairline that turns a corner on a radius instead of stopping dead —
+ * the tube-bend motif, at the weight of a drawn line.
+ *
+ * Used to break sections. It replaces the all-caps eyebrow label that would
+ * normally sit above a heading: it marks the start of a section without
+ * putting another piece of shouting type on the page.
+ */
+interface Props {
+  dark?: boolean;
+  class?: string;
+}
+
+const { dark = false, class: className = '' } = Astro.props;
+const line = dark ? 'border-shop-line' : 'border-bone-line';
+---
+
+<div class:list={['flex items-start', className]} aria-hidden="true">
+  <div class:list={['h-6 w-10 shrink-0 rounded-tl-[14px] border-t border-l', line]}>
+  </div>
+  <div class:list={['mt-0 h-px flex-1 border-t', line]}></div>
+</div>

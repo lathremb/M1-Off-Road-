@@ -1,0 +1,52 @@
+---
+/**
+ * The M1 Off-Road lockup: star mark + wordmark.
+ *
+ * ⚠ The star was traced by hand from a photograph of the badge on a door —
+ * it is an interpretation of Mike's mark, not his artwork. It needs his
+ * sign-off, or replacing with the original vector. Registered as
+ * [needs-input: logo-art].
+ *
+ * Pure geometry on purpose: no <text> inside the SVG, so the mark renders
+ * identically whether or not the webfont has loaded.
+ */
+interface Props {
+  /** Hides the wordmark and leaves the star alone (footer, favicon, share). */
+  markOnly?: boolean;
+  class?: string;
+}
+
+const { markOnly = false, class: className = '' } = Astro.props;
+
+/* Five-point star, outer radius 46, inner 18, on a 100×100 field. */
+const STAR =
+  'M50 4 L60.58 35.44 L93.75 35.79 L67.12 55.56 L77.04 87.21 ' +
+  'L50 68 L22.96 87.21 L32.88 55.56 L6.25 35.79 L39.42 35.44 Z';
+---
+
+<span class:list={['inline-flex items-center gap-2.5', className]}>
+  <svg
+    viewBox="0 0 100 100"
+    class="h-8 w-8 shrink-0 sm:h-9 sm:w-9"
+    fill="none"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path
+      d={STAR}
+      stroke="currentColor"
+      stroke-width="6"
+      stroke-linejoin="miter"
+    ></path>
+  </svg>
+
+  {
+    !markOnly && (
+      <span class="font-display text-[1.0625rem] leading-none font-extrabold tracking-[-0.015em] sm:text-lg">
+        M1 <span class="font-semibold">OFF-ROAD</span>
+      </span>
+    )
+  }
+
+  <span class="sr-only">M1 Off-Road</span>
+</span>

@@ -1,0 +1,161 @@
+@import 'tailwindcss';
+
+/* =========================================================
+   M1 Off-Road — design tokens
+
+   Three neutrals and one accent. The accent exists in two shades only
+   because a single hex cannot clear 4.5:1 against both the dark ground
+   and the light one; they are the same colour, not two accents.
+
+   Measured contrast (WCAG 2.1, normal text):
+     shop   on bone   16.6 : 1
+     ink    on bone   16.6 : 1
+     steel  on shop    5.6 : 1
+     slate  on bone    5.7 : 1
+     oxide  on bone    4.9 : 1
+     flare  on shop    5.7 : 1
+   Anything below 4.5 is display type only and is sized past 24px.
+   ========================================================= */
+
+@theme {
+  /* ground */
+  --color-shop: #111113; /* shop black — dominant dark */
+  --color-shop-lift: #191a1d; /* one step up, for blocks on black */
+  --color-shop-line: #2a2c30; /* hairlines on black */
+
+  /* light ground */
+  --color-bone: #f2efe9; /* caliche dust, warmer than white */
+  --color-bone-lift: #e7e2d9;
+  --color-bone-line: #d6d0c4;
+
+  /* type */
+  --color-steel: #8a8c8f; /* secondary text on dark */
+  --color-slate: #5c5e61; /* secondary text on light */
+
+  /* the one accent */
+  --color-oxide: #b4441c; /* on light grounds */
+  --color-flare: #e2673a; /* same colour, lifted for dark grounds */
+
+  --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial,
+    sans-serif;
+
+  /* the tube-bend radius — the only radius used anywhere on the site */
+  --radius-bend: 14px;
+}
+
+/* One file: variable weight axis, latin only, upright only. 34 KB.
+   Self-hosted so there is no third-party connection on first paint. */
+@font-face {
+  font-family: 'Archivo Variable';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('/fonts/archivo-latin-wght.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+    U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122,
+    U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background: var(--color-bone);
+    color: var(--color-shop);
+    font-family: var(--font-sans);
+    font-size: 1rem;
+    line-height: 1.6;
+    /* Clearance for the sticky call/text bar, which only exists under md. */
+    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  @media (min-width: 48rem) {
+    body {
+      padding-bottom: 0;
+    }
+  }
+
+  h1,
+  h2,
+  h3 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    line-height: 1.04;
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* Focus that is visible on both grounds without a second token. */
+  :focus-visible {
+    outline: 2px solid var(--color-flare);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-oxide);
+    color: var(--color-bone);
+  }
+
+  /* No entrance animation is used anywhere on this site, but transitions on
+     hover/focus still exist — this switches those off for anyone who asks. */
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* --- placeholder blocks -------------------------------------------
+     Deliberately styled rather than left as a grey box: the site has to be
+     reviewable before any photography exists. Diagonal hatch at 4% so it
+     reads as "reserved space", not as a failed image. */
+  .shot {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+    background-color: var(--color-shop-lift);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(255 255 255 / 0.04) 0 1px,
+      transparent 1px 9px
+    );
+    border: 1px solid var(--color-shop-line);
+  }
+
+  .shot--light {
+    background-color: var(--color-bone-lift);
+    background-image: repeating-linear-gradient(
+      -45deg,
+      rgb(17 17 19 / 0.045) 0 1px,
+      transparent 1px 9px
+    );
+    border-color: var(--color-bone-line);
+  }
+
+  /* --- the tube bend ------------------------------------------------
+     A hairline that turns a corner on a radius instead of stopping dead.
+     Used for section breaks and for the one cut corner on service blocks. */
+  .bend {
+    border-top-right-radius: var(--radius-bend);
+  }
+  .bend-bl {
+    border-bottom-left-radius: var(--radius-bend);
+  }
+}
