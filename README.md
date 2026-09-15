@@ -157,16 +157,23 @@ getting removed from it later.
 
 ## Lighthouse
 
-Mobile, against the production build, on 2026-09-14:
+Mobile, against the production build, on 2026-09-15:
 
 | Page | Performance | Accessibility | Best Practices | SEO |
 |---|---|---|---|---|
-| Home | 100 | 100 | 100 | 100 |
-| Contact | 100 | 100 | 100 | 100 |
-| Roll Cages | 100 | 100 | 100 | 100 |
-| Gallery | 100 | 100 | 100 | 100 |
+| Home | 100 | 100 | 100 | 66 \* |
+| Contact | 100 | 100 | 100 | 66 \* |
+| Gallery | 100 | 100 | 100 | 66 \* |
 
 FCP 0.8 s · LCP 1.2 s · TBT 0 ms · CLS 0.
+
+\* **The SEO score is 66 on purpose.** Exactly one audit fails —
+`is-crawlable`, "Page is blocked from indexing" — which is the `SITE_LIVE`
+gate doing its job. Every other SEO audit passes. Verified by temporarily
+flipping the gate open and re-running: **SEO 100**. It will score 100 the day
+the site is meant to be found, and not before.
+
+The colour-contrast audit passes on every page with the monochrome palette.
 
 **These were measured with placeholders, not photographs.** LCP will rise once
 real images land. What protects it: every slot already reserves its exact

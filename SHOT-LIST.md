@@ -24,7 +24,7 @@ cropped to 16:9 loses most of the machine.
 
 A finished four-seat machine, three-quarter front, shot low — camera at about hub height so the cage sits against the sky. Late afternoon or first hour after sunrise; midday sun flattens the tube and blows out the powder coat. Leave empty space on the left third for the headline. Landscape, horizon level. This is the single most important photo on the site.
 
-Used on: `src/pages/index.astro`
+Used on: `src/components/HeroImage.astro`
 
 ### Roll cage — profile, machine outdoors
 

@@ -45,7 +45,7 @@ const others = services.filter((s) => s.slug !== slug);
         {
           price && (
             <p class="font-display mt-6 text-2xl font-bold">
-              From <span class="text-flare">{price}</span>
+              From <span class="text-bone">{price}</span>
             </p>
           )
         }
@@ -54,7 +54,7 @@ const others = services.filter((s) => s.slug !== slug);
           <a
             href={phone.tel}
             data-analytics={`call-${slug}`}
-            class="font-display bg-flare text-shop bend hover:bg-bone px-6 py-3.5 text-center font-bold transition-colors"
+            class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-6 py-3.5 text-center font-bold transition-colors"
           >
             Call {phone.display}
           </a>
@@ -93,7 +93,7 @@ const others = services.filter((s) => s.slug !== slug);
           <a
             href={phone.tel}
             data-analytics={`call-${slug}-footer`}
-            class="font-display bg-oxide bend px-6 py-3.5 text-center font-bold text-white transition-opacity hover:opacity-90"
+            class="font-display bg-shop bend border border-shop px-6 py-3.5 text-center font-bold text-bone transition-colors hover:bg-transparent hover:text-shop"
           >
             {phone.display}
           </a>
@@ -113,7 +113,7 @@ const others = services.filter((s) => s.slug !== slug);
           others.map((s) => (
             <li class="border-bone-line bend border p-5">
               <h3 class="text-xl">
-                <a href={`/${s.slug}/`} class="hover:text-oxide transition-colors">
+                <a href={`/${s.slug}/`} class="hover:text-slate transition-colors">
                   {s.title}
                 </a>
               </h3>

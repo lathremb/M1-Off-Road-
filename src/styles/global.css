@@ -3,38 +3,41 @@
 /* =========================================================
    M1 Off-Road — design tokens
 
-   Three neutrals and one accent. The accent exists in two shades only
-   because a single hex cannot clear 4.5:1 against both the dark ground
-   and the light one; they are the same colour, not two accents.
+   Monochrome. Black, white, grey, and nothing else — no hue anywhere on
+   the site, including the warm cast the off-white used to carry.
+
+   With no accent colour, emphasis is carried by VALUE instead of hue: the
+   loudest thing available on a black section is pure bone, and on a bone
+   section it is pure black. Primary buttons are solid and invert on hover.
+   Links are underlined rather than coloured, because underline is the only
+   affordance left once colour is gone — do not remove it.
 
    Measured contrast (WCAG 2.1, normal text):
-     shop   on bone   16.6 : 1
-     ink    on bone   16.6 : 1
-     steel  on shop    5.6 : 1
-     slate  on bone    5.7 : 1
-     oxide  on bone    4.9 : 1
-     flare  on shop    5.7 : 1
-   Anything below 4.5 is display type only and is sized past 24px.
+     shop  on bone   17.3 : 1
+     bone  on shop   17.3 : 1
+     steel on shop    5.8 : 1
+     slate on bone    6.1 : 1
+     focus on shop    4.4 : 1   (and 3.9 : 1 on bone — one ring, both grounds)
    ========================================================= */
 
 @theme {
-  /* ground */
-  --color-shop: #111113; /* shop black — dominant dark */
-  --color-shop-lift: #191a1d; /* one step up, for blocks on black */
-  --color-shop-line: #2a2c30; /* hairlines on black */
+  /* dark ground */
+  --color-shop: #111111; /* shop black — dominant dark */
+  --color-shop-lift: #1a1a1a; /* one step up, for blocks on black */
+  --color-shop-line: #2c2c2e; /* hairlines on black */
 
   /* light ground */
-  --color-bone: #f2efe9; /* caliche dust, warmer than white */
-  --color-bone-lift: #e7e2d9;
-  --color-bone-line: #d6d0c4;
+  --color-bone: #f4f4f4; /* neutral off-white, no warmth */
+  --color-bone-lift: #e8e8e8;
+  --color-bone-line: #d4d4d4;
 
   /* type */
-  --color-steel: #8a8c8f; /* secondary text on dark */
-  --color-slate: #5c5e61; /* secondary text on light */
+  --color-steel: #8e8e8e; /* secondary text on dark */
+  --color-slate: #5c5c5c; /* secondary text on light */
 
-  /* the one accent */
-  --color-oxide: #b4441c; /* on light grounds */
-  --color-flare: #e2673a; /* same colour, lifted for dark grounds */
+  /* Focus ring. Deliberately mid-grey: it is the one value that clears 3:1
+     against BOTH grounds, so focus looks identical everywhere. */
+  --color-focus: #7a7a7a;
 
   --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans:
@@ -94,14 +97,14 @@
     text-wrap: pretty;
   }
 
-  /* Focus that is visible on both grounds without a second token. */
+  /* One ring for both grounds — see the note on --color-focus above. */
   :focus-visible {
-    outline: 2px solid var(--color-flare);
+    outline: 3px solid var(--color-focus);
     outline-offset: 3px;
   }
 
   ::selection {
-    background: var(--color-oxide);
+    background: var(--color-shop);
     color: var(--color-bone);
   }
 

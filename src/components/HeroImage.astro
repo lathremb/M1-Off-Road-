@@ -1,0 +1,62 @@
+---
+/**
+ * The hero photograph, or the placeholder if there isn't one yet.
+ *
+ * Picks up whatever image is sitting in src/assets/hero/ via import.meta.glob,
+ * rather than a hard import — a missing file would otherwise fail the build,
+ * and this has to stay buildable between now and the real photo shoot. Drop a
+ * file in that folder and it appears; remove it and the placeholder comes back.
+ *
+ * Goes through astro:assets, so the source file can be the full-size camera
+ * original: Astro emits AVIF/WebP at several widths and the browser takes the
+ * one it needs. Do NOT pre-shrink the file before putting it here.
+ *
+ * This is the LCP element on the home page, so it is eager with high fetch
+ * priority — lazy-loading the one image above the fold is the single most
+ * common way to wreck a mobile Lighthouse score.
+ */
+import { Image } from 'astro:assets';
+import Placeholder from './Placeholder.astro';
+import type { ImageMetadata } from 'astro';
+
+interface Props {
+  /**
+   * Which part of the photo to keep when the frame is wider than the image.
+   * The current shot is portrait going into a landscape slot, so this is the
+   * dial that decides what survives the crop. 50% 62% keeps the machine and
+   * the dune line and loses some empty sky.
+   */
+  position?: string;
+  alt?: string;
+}
+
+const {
+  position = '50% 62%',
+  alt = 'A four-seat Can-Am built by M1 Off-Road, parked on a dune at night with a lit whip and fireworks overhead.',
+} = Astro.props;
+
+const found = import.meta.glob<{ default: ImageMetadata }>(
+  '../assets/hero/*.{jpg,jpeg,png,webp,avif}',
+  { eager: true }
+);
+
+const first = Object.values(found)[0]?.default;
+---
+
+{
+  first ? (
+    <Image
+      src={first}
+      alt={alt}
+      widths={[640, 960, 1280, 1920, 2560]}
+      sizes="100vw"
+      loading="eager"
+      fetchpriority="high"
+      decoding="sync"
+      class="absolute inset-0 h-full w-full object-cover"
+      style={`object-position:${position}`}
+    />
+  ) : (
+    <Placeholder shot="hero-build" fill align="top" />
+  )
+}

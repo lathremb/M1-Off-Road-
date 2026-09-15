@@ -39,7 +39,7 @@ const JPEG_QUALITY = 0.82;
         type="text"
         required
         autocomplete="name"
-        class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+        class="border-bone-line focus:border-shop bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
       />
     </div>
 
@@ -54,7 +54,7 @@ const JPEG_QUALITY = 0.82;
         required
         inputmode="tel"
         autocomplete="tel"
-        class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+        class="border-bone-line focus:border-shop bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
       />
     </div>
   </div>
@@ -72,7 +72,7 @@ const JPEG_QUALITY = 0.82;
       type="text"
       required
       aria-describedby="q-machine-hint"
-      class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+      class="border-bone-line focus:border-shop bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
     />
   </div>
 
@@ -85,7 +85,7 @@ const JPEG_QUALITY = 0.82;
       name="work"
       rows="5"
       required
-      class="border-bone-line focus:border-oxide bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
+      class="border-bone-line focus:border-shop bg-bone mt-2 w-full border px-4 py-3 text-base outline-none"
     ></textarea>
   </div>
 
@@ -111,7 +111,7 @@ const JPEG_QUALITY = 0.82;
   <button
     type="submit"
     id="q-submit"
-    class="font-display bg-oxide bend mt-8 w-full px-8 py-4 text-lg font-bold text-white transition-opacity hover:opacity-90 disabled:opacity-60 sm:w-auto"
+    class="font-display bg-shop bend border border-shop mt-8 w-full px-8 py-4 text-lg font-bold text-bone transition-colors hover:bg-transparent hover:text-shop disabled:opacity-60 sm:w-auto"
   >
     Send it
   </button>
@@ -120,7 +120,7 @@ const JPEG_QUALITY = 0.82;
     Would rather talk? <a
       href={phone.tel}
       data-analytics="call-form"
-      class="text-oxide font-semibold underline decoration-1 underline-offset-4"
+      class="text-shop font-semibold underline decoration-1 underline-offset-4"
       >Call {phone.display}</a
     >.
   </p>
@@ -154,8 +154,8 @@ const JPEG_QUALITY = 0.82;
       status.className =
         'mt-6 border-l-2 px-4 py-3 ' +
         (kind === 'ok'
-          ? 'border-oxide bg-bone-lift'
-          : 'border-oxide bg-bone-lift text-shop');
+          ? 'border-slate bg-bone-lift'
+          : 'border-slate bg-bone-lift text-shop');
       status.innerHTML = html;
       status.hidden = false;
       status.classList.remove('hidden');
@@ -275,7 +275,7 @@ const JPEG_QUALITY = 0.82;
             'ok',
             '<p class="font-display font-bold text-lg">Got it.</p>' +
               '<p class="mt-1">Mike will call you back on the number you gave. ' +
-              'If you need an answer sooner, call <a class="text-oxide font-semibold underline underline-offset-4" href="' +
+              'If you need an answer sooner, call <a class="text-shop font-semibold underline underline-offset-4" href="' +
               telHref +
               '">' +
               telDisplay +
@@ -291,7 +291,7 @@ const JPEG_QUALITY = 0.82;
               (err.message && err.message !== 'failed'
                 ? String(err.message)
                 : 'That did not send.') +
-              ' Call <a class="text-oxide font-semibold underline underline-offset-4" href="' +
+              ' Call <a class="text-shop font-semibold underline underline-offset-4" href="' +
               telHref +
               '">' +
               telDisplay +

@@ -1,6 +1,7 @@
 ---
 import Base from '../layouts/Base.astro';
 import Placeholder from '../components/Placeholder.astro';
+import HeroImage from '../components/HeroImage.astro';
 import NeedsInput from '../components/NeedsInput.astro';
 import BendRule from '../components/BendRule.astro';
 import {
@@ -26,20 +27,23 @@ import {
        Everything below it is deliberately quiet.
        ========================================================== -->
   <section class="bg-shop text-bone relative">
-    <div class="relative min-h-[32rem] sm:min-h-[36rem] lg:min-h-[40rem]">
-      <Placeholder shot="hero-build" fill align="top" />
+    <!-- Taller than a typical hero on purpose: the current photograph is
+         portrait, and height is what stops a landscape frame from reducing it
+         to a letterbox slice. -->
+    <div class="relative min-h-[34rem] sm:min-h-[40rem] lg:min-h-[46rem]">
+      <HeroImage />
 
       <!-- Scrim. Heavier at the base so the type has something solid to sit on
            without washing the whole photograph out. -->
       <div
         class="absolute inset-0"
-        style="background:linear-gradient(to top, rgb(17 17 19 / .96) 0%, rgb(17 17 19 / .82) 38%, rgb(17 17 19 / .35) 72%, rgb(17 17 19 / .15) 100%)"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .94) 0%, rgb(17 17 17 / .78) 38%, rgb(17 17 17 / .30) 72%, rgb(17 17 17 / .10) 100%)"
         aria-hidden="true"
       >
       </div>
 
       <div
-        class="relative mx-auto flex min-h-[32rem] max-w-6xl flex-col justify-end px-5 py-12 sm:min-h-[36rem] sm:px-8 sm:py-16 lg:min-h-[40rem]"
+        class="relative mx-auto flex min-h-[34rem] max-w-6xl flex-col justify-end px-5 py-12 sm:min-h-[40rem] sm:px-8 sm:py-16 lg:min-h-[46rem]"
       >
         <h1
           class="max-w-[19ch] text-[clamp(2.5rem,9vw,5rem)] font-extrabold tracking-[-0.03em]"
@@ -50,7 +54,7 @@ import {
         <p class="text-steel mt-6 max-w-[46ch] text-lg sm:text-xl">
           MIG welded in {business.city} by {business.owner}, who has been doing
           this {business.yearsInBusiness}. Full cages start at{' '}
-          <strong class="text-flare font-semibold"
+          <strong class="text-bone font-semibold"
             >{pricing.cageStartingAtDisplay}</strong
           >.
         </p>
@@ -59,7 +63,7 @@ import {
           <a
             href={phone.tel}
             data-analytics="call-hero"
-            class="font-display bg-flare text-shop bend hover:bg-bone px-7 py-4 text-center text-lg font-bold transition-colors"
+            class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
           >
             Call {phone.display}
           </a>
@@ -107,7 +111,7 @@ import {
           </div>
           <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
             <h3 class="text-[clamp(1.5rem,3vw,2rem)]">
-              <a href="/roll-cages/" class="hover:text-oxide transition-colors">
+              <a href="/roll-cages/" class="hover:text-slate transition-colors">
                 Roll Cages
               </a>
             </h3>
@@ -120,7 +124,7 @@ import {
             </p>
             <a
               href="/roll-cages/"
-              class="text-oxide mt-5 inline-block self-start font-semibold underline decoration-1 underline-offset-4"
+              class="text-shop mt-5 inline-block self-start font-semibold underline decoration-1 underline-offset-4"
             >
               What goes into a cage
             </a>
@@ -131,7 +135,7 @@ import {
           <Placeholder shot="svc-doors" light class="w-full" />
           <div class="flex flex-1 flex-col p-6">
             <h3 class="text-2xl">
-              <a href="/doors/" class="hover:text-oxide transition-colors">Doors</a>
+              <a href="/doors/" class="hover:text-slate transition-colors">Doors</a>
             </h3>
             <p class="text-slate mt-3">
               Doors that close against the dust and latch the same way every
@@ -144,7 +148,7 @@ import {
           <Placeholder shot="svc-roofs" light class="w-full" />
           <div class="flex flex-1 flex-col p-6">
             <h3 class="text-2xl">
-              <a href="/roofs/" class="hover:text-oxide transition-colors">Roofs</a>
+              <a href="/roofs/" class="hover:text-slate transition-colors">Roofs</a>
             </h3>
             <p class="text-slate mt-3">
               Built to the cage it sits on, not bolted over the top of it.
@@ -162,7 +166,7 @@ import {
           </div>
           <div class="flex flex-1 flex-col justify-center p-6 sm:p-8">
             <h3 class="text-2xl">
-              <a href="/custom-fabrication/" class="hover:text-oxide transition-colors"
+              <a href="/custom-fabrication/" class="hover:text-slate transition-colors"
                 >Custom Fabrication</a
               >
             </h3>
@@ -194,7 +198,7 @@ import {
         <div>
           <p class="text-steel text-lg">A typical full cage runs</p>
           <p
-            class="font-display text-flare mt-1 text-[clamp(4rem,14vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.04em]"
+            class="font-display text-bone mt-1 text-[clamp(4rem,14vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.04em]"
           >
             {pricing.cageStartingAtDisplay}
           </p>
@@ -222,7 +226,7 @@ import {
             <a
               href={phone.tel}
               data-analytics="call-price"
-              class="font-display bg-flare text-shop bend hover:bg-bone px-6 py-3.5 text-center font-bold transition-colors"
+              class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-6 py-3.5 text-center font-bold transition-colors"
             >
               Call {phone.display}
             </a>
@@ -248,7 +252,7 @@ import {
         <h2 class="text-[clamp(2rem,5vw,3.25rem)]">Machines that have been through</h2>
         <a
           href="/gallery/"
-          class="text-oxide font-semibold underline decoration-1 underline-offset-4"
+          class="text-shop font-semibold underline decoration-1 underline-offset-4"
         >
           See the full gallery
         </a>
@@ -297,7 +301,7 @@ import {
           </div>
           <a
             href="/about/"
-            class="text-oxide mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
+            class="text-shop mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
           >
             More about the shop
           </a>
@@ -321,7 +325,7 @@ import {
         <a
           href={phone.tel}
           data-analytics="call-closing"
-          class="font-display bg-flare text-shop bend hover:bg-bone px-7 py-4 text-center text-lg font-bold transition-colors"
+          class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
         >
           Call {phone.display}
         </a>

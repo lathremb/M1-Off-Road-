@@ -22,7 +22,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
     <a
       href="/"
-      class="text-bone transition-colors hover:text-flare"
+      class="text-bone transition-colors hover:text-bone"
       aria-label="M1 Off-Road — home"
     >
       <Logo />
@@ -38,8 +38,8 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
                 href={item.href}
                 aria-current={isCurrent(item.href) ? 'page' : undefined}
                 class:list={[
-                  'text-[0.9375rem] transition-colors hover:text-flare',
-                  isCurrent(item.href) ? 'text-flare' : 'text-steel',
+                  'text-[0.9375rem] transition-colors hover:text-bone',
+                  isCurrent(item.href) ? 'text-bone' : 'text-steel',
                 ]}
               >
                 {item.label}
@@ -51,7 +51,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
           <a
             href={phone.tel}
             data-analytics="call-header"
-            class="font-display bg-flare text-shop hover:bg-bone bend px-4 py-2 text-[0.9375rem] font-bold transition-colors"
+            class="font-display bg-bone text-shop border border-bone hover:bg-transparent hover:text-bone bend px-4 py-2 text-[0.9375rem] font-bold transition-colors"
           >
             {phone.display}
           </a>
@@ -64,7 +64,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
     <button
       type="button"
       id="nav-toggle"
-      class="border-shop-line text-bone hover:border-flare -mr-1 border p-2.5 transition-colors md:hidden"
+      class="border-shop-line text-bone hover:border-bone -mr-1 border p-2.5 transition-colors md:hidden"
       aria-expanded="false"
       aria-controls="nav-mobile"
     >
@@ -85,7 +85,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
               aria-current={isCurrent(item.href) ? 'page' : undefined}
               class:list={[
                 'block py-3.5 text-[0.9375rem]',
-                isCurrent(item.href) ? 'text-flare' : 'text-bone',
+                isCurrent(item.href) ? 'text-bone' : 'text-bone',
               ]}
             >
               {item.label}

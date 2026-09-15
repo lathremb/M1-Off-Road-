@@ -180,15 +180,15 @@ export default async function handler(req, res) {
     .map(
       (k) =>
         '<tr>' +
-        '<td style="padding:6px 18px 6px 0;color:#5c5e61;font:600 11px/1.5 Arial,sans-serif;' +
+        '<td style="padding:6px 18px 6px 0;color:#5c5c5c;font:600 11px/1.5 Arial,sans-serif;' +
         'letter-spacing:.1em;text-transform:uppercase;vertical-align:top;white-space:nowrap">' +
         escapeHtml(LABELS[k]) +
         '</td>' +
-        '<td style="padding:6px 0;color:#111113;font:400 15px/1.6 Arial,sans-serif">' +
+        '<td style="padding:6px 0;color:#111111;font:400 15px/1.6 Arial,sans-serif">' +
         (k === 'phone'
           ? '<a href="tel:' +
             escapeHtml(data.phone.replace(/[^\d+]/g, '')) +
-            '" style="color:#b4441c;font-weight:700;text-decoration:none">' +
+            '" style="color:#111111;font-weight:700;text-decoration:underline">' +
             escapeHtml(data.phone) +
             '</a>'
           : escapeHtml(data[k])) +
@@ -197,28 +197,28 @@ export default async function handler(req, res) {
     .join('');
 
   const html =
-    '<div style="background:#f2efe9;padding:28px">' +
-    '<div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d6d0c4;padding:30px 32px">' +
-    '<p style="margin:0 0 4px;color:#b4441c;font:700 11px/1.5 Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase">' +
+    '<div style="background:#f4f4f4;padding:28px">' +
+    '<div style="max-width:620px;margin:0 auto;background:#fff;border:1px solid #d4d4d4;padding:30px 32px">' +
+    '<p style="margin:0 0 4px;color:#111111;font:700 11px/1.5 Arial,sans-serif;letter-spacing:.2em;text-transform:uppercase">' +
     'New quote request</p>' +
-    '<h1 style="margin:0 0 24px;color:#111113;font:700 26px/1.25 Arial,sans-serif">' +
+    '<h1 style="margin:0 0 24px;color:#111111;font:700 26px/1.25 Arial,sans-serif">' +
     escapeHtml(data.name) +
     '</h1>' +
     '<table cellpadding="0" cellspacing="0" style="width:100%;border-collapse:collapse">' +
     rows +
     '</table>' +
-    '<div style="margin-top:24px;padding-top:20px;border-top:1px solid #d6d0c4">' +
-    '<p style="margin:0 0 8px;color:#5c5e61;font:600 11px/1.5 Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase">' +
+    '<div style="margin-top:24px;padding-top:20px;border-top:1px solid #d4d4d4">' +
+    '<p style="margin:0 0 8px;color:#5c5c5c;font:600 11px/1.5 Arial,sans-serif;letter-spacing:.1em;text-transform:uppercase">' +
     escapeHtml(LABELS.work) +
     '</p>' +
-    '<div style="color:#111113;font:400 15px/1.7 Arial,sans-serif;white-space:pre-wrap">' +
+    '<div style="color:#111111;font:400 15px/1.7 Arial,sans-serif;white-space:pre-wrap">' +
     escapeHtml(data.work) +
     '</div></div>' +
     (attachments.length
-      ? '<p style="margin:20px 0 0;color:#5c5e61;font:400 13px/1.6 Arial,sans-serif">' +
+      ? '<p style="margin:20px 0 0;color:#5c5c5c;font:400 13px/1.6 Arial,sans-serif">' +
         '📎 A photo is attached to this email.</p>'
       : '') +
-    '<p style="margin:26px 0 0;padding-top:18px;border-top:1px solid #d6d0c4;color:#5c5e61;' +
+    '<p style="margin:26px 0 0;padding-top:18px;border-top:1px solid #d4d4d4;color:#5c5c5c;' +
     'font:400 12px/1.6 Arial,sans-serif">Sent from the quote form at m1offroad.com. ' +
     'There is no email address to reply to — call or text ' +
     escapeHtml(data.phone) +
