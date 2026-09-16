@@ -103,15 +103,14 @@ import { phone, pricing, terms, platforms } from '../config/site';
             <div
               class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
             >
-              <dt class="font-semibold">Tubing</dt>
-              <dd><NeedsInput key="tubing" /></dd>
+              <dt class="font-semibold">Time in the shop</dt>
+              <dd class="text-slate">{terms.leadTime}.</dd>
             </div>
-            <div
-              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
-            >
-              <dt class="font-semibold">Warranty</dt>
-              <dd><NeedsInput key="warranty" /></dd>
-            </div>
+            <!-- Tubing spec and warranty are still open questions and are
+                 tracked in NEEDS-INPUT.md. A spec table that shows a row with
+                 nothing in it reads worse than a table that only lists what is
+                 actually known, so they are added back when there is an answer
+                 rather than held open as blanks. -->
           </dl>
         </div>
 

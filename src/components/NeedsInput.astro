@@ -22,16 +22,32 @@ interface Props {
 
 const { key, dark = false, block = false } = Astro.props;
 const gap = gaps[key];
+
+/* Only launch-blocking gaps are allowed to render.
+
+   A `content` gap means "the site works, this page is just thinner" — by its
+   own definition it is not worth showing a visitor a hole. One of them
+   (deposit terms) was rendering on the home page three sentences after the
+   most reassuring line on the site, while two others of the same severity
+   were quietly omitted. The registry stayed the source of truth either way;
+   the pages disagreed with it. This makes the rule structural instead of
+   something each page has to remember. Every gap still appears in
+   NEEDS-INPUT.md. */
+const visible = gap.severity === 'launch';
 ---
 
-<span
-  class:list={[
-    'font-mono text-[0.75rem] leading-normal tracking-tight',
-    'border border-dashed px-1.5 py-0.5 align-baseline',
-    block ? 'inline-block' : 'inline',
-    dark ? 'border-steel/60 text-bone' : 'border-slate/60 text-shop',
-  ]}
-  title={gap.why}
->
-  [ needs input — {gap.label} ]
-</span>
+{
+  visible && (
+    <span
+      class:list={[
+        'font-mono text-[0.75rem] leading-normal tracking-tight',
+        'border border-dashed px-1.5 py-0.5 align-baseline',
+        block ? 'inline-block' : 'inline',
+        dark ? 'border-steel/60 text-bone' : 'border-slate/60 text-shop',
+      ]}
+      title={gap.why}
+    >
+      [ needs input — {gap.label} ]
+    </span>
+  )
+}

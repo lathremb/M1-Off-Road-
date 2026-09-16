@@ -139,10 +139,24 @@ const teaser = [
         )
       }
 
-      <!-- Scrim, weighted to the lower left where the type sits. -->
+      <!-- Two scrims, one per crop, because one curve cannot serve both.
+
+           The portrait source makes a taller hero, so the subhead sits higher
+           up the gradient than it does on the wide crop — measured at 0.49
+           alpha on a phone against 0.81 on desktop, which put the worst pixel
+           behind that line at 3.08:1. The desktop curve is already clearing
+           12:1 and darkening it further would only bury the machine, so the
+           phone gets its own steeper curve instead of both sharing a
+           compromise. -->
       <div
-        class="absolute inset-0"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .92) 0%, rgb(17 17 17 / .74) 34%, rgb(17 17 17 / .26) 68%, rgb(17 17 17 / .06) 100%)"
+        class="absolute inset-0 sm:hidden"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .94) 0%, rgb(17 17 17 / .88) 35%, rgb(17 17 17 / .80) 60%, rgb(17 17 17 / .38) 82%, rgb(17 17 17 / .06) 100%)"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 hidden sm:block"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .93) 0%, rgb(17 17 17 / .84) 34%, rgb(17 17 17 / .62) 58%, rgb(17 17 17 / .24) 80%, rgb(17 17 17 / .04) 100%)"
         aria-hidden="true"
       >
       </div>
@@ -169,8 +183,17 @@ const teaser = [
         Custom roll cages, doors and roofs.
       </h1>
 
-      <p class="text-steel mt-5 max-w-[42ch] text-lg sm:text-xl">
-        Built for UTVs in {business.city}. MIG welded by {business.owner}.
+      <!-- text-bone, not text-steel. The documented 5.8:1 for steel holds
+           against solid #111; this line sits where the scrim is thinnest, over
+           the brightest part of the photograph, where that figure does not
+           apply. It also now carries the two facts that decide a local trade
+           call — tenure, and that one person does the work — which were
+           previously only on /about/ and in the fifth paragraph of the price
+           column. -->
+      <p class="text-bone mt-5 max-w-[44ch] text-lg sm:text-xl">
+        Built for UTVs in {business.city} by {business.owner}. {
+          business.yearsInBusiness.replace(/^over/, 'Over')
+        } of it, and he welds every one himself.
       </p>
 
       <!-- The price sits on its own rule rather than inside the paragraph.
@@ -197,6 +220,12 @@ const teaser = [
           Get a quote
         </a>
         </div>
+
+        <!-- Hours next to the call, not only in the footer. Someone deciding
+             to ring a one-man shop needs to know whether anybody will pick up. -->
+        <p class="text-bone/75 mt-4 text-[0.9375rem]">
+          {business.hours.display}
+        </p>
       </div>
     </div>
   </section>
@@ -285,9 +314,6 @@ const teaser = [
           <p class="text-steel">
             Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
             Either way you are not without the machine long — {terms.leadTime.toLowerCase()}.
-          </p>
-          <p class="text-steel">
-            Deposit terms: <NeedsInput key="deposit" dark />
           </p>
           <p>
             Mike quotes the job and Mike welds it — <a

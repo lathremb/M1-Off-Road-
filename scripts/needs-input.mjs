@@ -226,7 +226,13 @@ _Last generated ${new Date().toISOString().slice(0, 10)}._
 await writeFile(join(ROOT, 'SHOT-LIST.md'), shotListDoc, 'utf8');
 
 /* --- drift check ----------------------------------------------------- */
-const orphanGaps = Object.entries(gapUsage).filter(([, w]) => !w.length);
+/* Only `launch` gaps are expected to appear on a page — NeedsInput.astro
+   refuses to render anything else, so a `content` gap with no reference is the
+   designed state, not drift. Warning about those four every build would teach
+   everyone to ignore this output, which costs more than it catches. */
+const orphanGaps = Object.entries(gapUsage).filter(
+  ([key, where]) => !where.length && gaps[key].severity === 'launch'
+);
 const orphanShots = Object.entries(shotUsage).filter(([, w]) => !w.length);
 
 console.log(

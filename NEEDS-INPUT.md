@@ -51,25 +51,25 @@ Appears in: `src/components/Logo.astro`
 
 Does the customer book ahead, drop the machine off, wait? This is the "how it works" section that is currently omitted rather than guessed at.
 
-Appears in: `src/pages/about.astro`
+Appears in: _not referenced anywhere — either fill it in or delete the entry_
 
 ### tubing spec
 
 Material and wall thickness. Competitors lead with this. Cannot be stated without Mike confirming it.
 
-Appears in: `src/pages/services.astro`
+Appears in: _not referenced anywhere — either fill it in or delete the entry_
 
 ### deposit terms
 
 Whether a deposit is required to book. Belongs next to the price so there are no surprises.
 
-Appears in: `src/pages/index.astro`
+Appears in: _not referenced anywhere — either fill it in or delete the entry_
 
 ### warranty
 
 Any guarantee on the welds or the finish. Omitted entirely rather than implied.
 
-Appears in: `src/pages/services.astro`
+Appears in: _not referenced anywhere — either fill it in or delete the entry_
 
 ---
 
@@ -79,4 +79,4 @@ Appears in: `src/pages/services.astro`
 2. Delete its entry from `src/config/needs-input.ts`.
 3. Run `npm run build`. It will name any page still referencing the marker.
 
-_Last generated 2026-09-15._
+_Last generated 2026-09-16._
