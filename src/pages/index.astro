@@ -36,38 +36,53 @@ const heroSource = heroShot.file
   ? photoFiles[`../assets/photos/${heroShot.file}`]?.default
   : undefined;
 
-/* Two sources, art-directed.
+/* Two sources, art-directed — and deliberately two different photographs.
 
-   The photograph is portrait (3:4). A hero box has a fixed-ish height and a
-   width that follows the window, so with `object-fit: cover` the visible slice
-   of a portrait source collapses as the window widens — measured at 60% of the
-   image at 800px down to 21% at 2560px. That is why it looked one way in a
-   narrow preview pane and another in a wide Firefox window: same code, very
-   different crop.
+   A hero box is wide; the night dune shot is portrait and its machine runs off
+   the left edge of the original frame, so on a desktop screen it could never
+   show a whole machine no matter how it was cropped. It is also only 1536px
+   across, which meant upscaling on any retina display. On a phone it is
+   perfect: portrait fills the screen with nothing cropped, and it carries the
+   shop's own number panel.
 
-   So: phones get the original portrait, which fills their screen with the whole
-   scene — fireworks, lit whip, machine. Wider screens get a 16:10 crop framed
-   on the machine, and the container carries a matching aspect-ratio so the
-   browser has almost nothing left to crop. */
-const HERO_WIDTHS = [640, 960, 1280, 1920, 2560];
+   So the phone keeps it, and wide screens get a machine photographed side-on
+   in daylight at 2048px with every corner of it in frame. */
+/* Widths stop at the source's own width. Asking for 1920 or 2560 from a
+   1536-wide file makes Astro upscale and re-encode, which is softer than
+   letting the browser scale the native file. That upscaling was the actual
+   cause of the soft hero, not the compression, so quality sits at 80: 86 cost
+   ~0.4s of LCP for a difference that is not visible at these sizes. */
+const buildSrcset = async (src: ImageMetadata | undefined) => {
+  if (!src) return '';
+  const widths = [640, 960, 1280, 1600, 2048].filter((w) => w <= src.width);
+  if (!widths.includes(src.width)) widths.push(src.width);
+  const made = await Promise.all(
+    widths.map((width) => getImage({ src, width, format: 'webp', quality: 80 }))
+  );
+  return made.map((v, i) => `${v.src} ${widths[i]}w`).join(', ');
+};
 
-const heroWideSource = photoFiles['../assets/photos/hero-night-dune-66-wide.jpg']?.default;
+/* Desktop hero: the red Pro R, 2048px wide, whole machine in frame with real
+   margin on all four sides — which is the part that matters. A photograph
+   whose subject touches the edges has no background left to give, so a wide
+   box crops the machine itself; this one can be trimmed at any window shape
+   and still lose only desert. The bare steel cage is the point: it is the
+   actual tube work, unpainted, which is what the shop sells.
 
-const buildSrcset = async (src: ImageMetadata | undefined) =>
-  src
-    ? (
-        await Promise.all(
-          HERO_WIDTHS.map((width) =>
-            getImage({ src, width, format: 'webp', quality: 70 })
-          )
-        )
-      )
-        .map((v, i) => `${v.src} ${HERO_WIDTHS[i]}w`)
-        .join(', ')
-    : '';
+   The night dune shot stays on phones. Portrait fills a phone screen with
+   nothing cropped and it carries the shop's own number panel, but it cannot do
+   the same job wide: its machine runs off the left edge of the original frame,
+   so no crop shows the whole of it, and at 1536px across it was upscaled
+   roughly 1.9x on a retina display. That was the blur. */
+const heroWideSource = photoFiles['../assets/photos/hero-rzr-red-wide.jpg']?.default;
 
 const heroSrcset = await buildSrcset(heroSource);
 const heroWideSrcset = await buildSrcset(heroWideSource);
+/* A <picture> has one alt for every <source>, and these two sources are
+   different machines. So the alt describes what is true of both rather than
+   naming a colour a desktop visitor cannot see or a phone visitor can. */
+const heroAlt =
+  'A four-seat UTV fitted with a custom M1 Off-Road roll cage.';
 
 /* Matches the <source media> below, so the preload picks the same file the
    browser will actually use. */
@@ -114,24 +129,24 @@ const teaser = [
                 media={HERO_WIDE_MEDIA}
                 srcset={heroWideSrcset}
                 sizes="100vw"
-                width="1536"
-                height="960"
+                width="2048"
+                height="1280"
               />
             )}
             <img
               srcset={heroSrcset}
               sizes="100vw"
-              alt={heroShot.alt}
+              alt={heroAlt}
               width={heroSource.width}
               height={heroSource.height}
               loading="eager"
               fetchpriority="high"
               decoding="sync"
               class="h-full w-full object-cover"
-              /* Biased to the top of the frame: when a very wide window still
-                 has to trim, it gives up foreground sand before it gives up
-                 the top of the cage. */
-              style="object-position:50% 35%"
+              /* Near-centred now that both sources carry margin around the
+                 machine: a trim at either edge takes sky or ground, not the
+                 cage or the tyres. */
+              style="object-position:50% 62%"
             />
           </picture>
         ) : (
@@ -156,7 +171,7 @@ const teaser = [
       </div>
       <div
         class="absolute inset-0 hidden sm:block"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .93) 0%, rgb(17 17 17 / .84) 34%, rgb(17 17 17 / .62) 58%, rgb(17 17 17 / .24) 80%, rgb(17 17 17 / .04) 100%)"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .88) 0%, rgb(17 17 17 / .76) 30%, rgb(17 17 17 / .52) 55%, rgb(17 17 17 / .16) 78%, rgb(17 17 17 / 0) 100%)"
         aria-hidden="true"
       >
       </div>
@@ -174,7 +189,7 @@ const teaser = [
          133vw is 3:4 and 62.5vw is 16:10 — the same proportions, but the box
          can grow when the content needs it to. -->
     <div
-      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(26rem,min(62.5vw,86vh,50rem))] lg:min-h-[max(26rem,min(62.5vw,90vh,58rem))]"
+      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(66.6vw,88vh,52rem))] lg:min-h-[max(28rem,min(66.6vw,92vh,62rem))]"
     >
       <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
       <h1
