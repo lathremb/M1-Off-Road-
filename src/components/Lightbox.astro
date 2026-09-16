@@ -49,7 +49,6 @@
       >
         Previous
       </button>
-      <p id="lightbox-caption" class="text-steel hidden max-w-[46ch] text-sm sm:block"></p>
       <button
         type="button"
         id="lightbox-next"
@@ -64,7 +63,6 @@
 <script>
   const dialog = document.getElementById('lightbox') as HTMLDialogElement | null;
   const img = document.getElementById('lightbox-img') as HTMLImageElement | null;
-  const caption = document.getElementById('lightbox-caption');
   const count = document.getElementById('lightbox-count');
   const tiles = Array.from(
     document.querySelectorAll<HTMLButtonElement>('[data-lightbox]')
@@ -78,8 +76,10 @@
       current = (i + tiles.length) % tiles.length;
       const tile = tiles[current];
       img.src = tile.dataset.full ?? '';
+      /* No visible caption, but the alt stays: it is what a screen reader
+         announces for the enlarged photo, and it is the only description
+         of the image once the tile behind the dialog is inert. */
       img.alt = tile.dataset.alt ?? '';
-      if (caption) caption.textContent = tile.dataset.alt ?? '';
       if (count) count.textContent = `${current + 1} / ${tiles.length}`;
     };
 
