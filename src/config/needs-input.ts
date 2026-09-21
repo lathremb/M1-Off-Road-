@@ -75,6 +75,11 @@ export const gaps = {
     why: 'Any guarantee on the welds or the finish. Omitted entirely rather than implied.',
     severity: 'content',
   },
+  'geo-coords': {
+    label: 'map pin for the shop',
+    why: "Latitude and longitude for the LocalBusiness block, so the shop resolves to a point on the map rather than to a street address Google has to parse. Set `geo` in src/config/site.ts and the schema emits it. It has to be the real pin from the Google Business Profile — Google cross-checks this pair against that listing, and a pair derived from the address by guesswork can land the shop on a neighbouring street. Everything else in the local SEO work is done; this is the one number missing from it.",
+    severity: 'content',
+  },
 } as const satisfies Record<string, Gap>;
 
 export type GapKey = keyof typeof gaps;

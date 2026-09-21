@@ -7,8 +7,8 @@ import { business, phone, pricing, terms } from '../config/site';
 ---
 
 <Base
-  title="About M1 Off-Road — Mike Sulger, Tucson Fabricator"
-  description="M1 Off-Road is Mike Sulger's fabrication shop in Tucson, Arizona. Over ten years building roll cages, doors and roofs for UTVs. MIG welding done in house."
+  title="About Mike Sulger | M1 Off-Road UTV Fabrication Tucson, AZ"
+  description="M1 Off-Road is Mike Sulger's UTV fabrication shop in Tucson, AZ. Over ten years of custom roll cages, doors, roofs and bumpers, MIG welded in house."
 >
   <section class="bg-shop text-bone">
     <!-- Text first, shop second. There is deliberately no portrait on this
@@ -19,7 +19,9 @@ import { business, phone, pricing, terms } from '../config/site';
       <div>
         <BendRule dark class="mb-8 max-w-[8rem]" />
         <h1 class="max-w-[18ch] text-[clamp(2.25rem,6vw,4rem)] font-extrabold">
-          {business.owner} has been doing this {business.yearsInBusiness}
+          {business.owner} has been building cages in {business.city} for {
+            business.yearsInBusiness
+          }
         </h1>
         <p class="text-steel mt-6 max-w-[48ch] text-lg sm:text-xl">
           M1 Off-Road is a custom fabrication shop in {business.city},{' '}
@@ -49,7 +51,7 @@ import { business, phone, pricing, terms } from '../config/site';
               machines have been built for too.
             </p>
 
-            <h3 class="text-shop pt-4 text-2xl">What is done here, and what is not</h3>
+            <h3 class="text-shop pt-4 text-2xl">MIG welding here, powder coating out</h3>
             <p>
               All welding is MIG and done in this shop. Powder coating is not
               done here; it goes out to a coater.

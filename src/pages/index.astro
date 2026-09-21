@@ -101,8 +101,8 @@ const teaser = [
 ---
 
 <Base
-  title="M1 Off-Road — Custom UTV Roll Cages, Doors & Roofs in Tucson"
-  description="Custom roll cages, doors and roofs for Polaris RZR, Can-Am and other UTVs. MIG welded in Tucson by Mike Sulger. Full cages start at $2,500. Call (520) 403-3366."
+  title="M1 Off-Road | Custom UTV Roll Cages & Fabrication Tucson, AZ"
+  description="Custom roll cages, doors, roofs and bumpers for Polaris RZR, Can-Am and other SxS machines. MIG welded in Tucson, AZ. Full cages from $2,500."
   schema
   preloadImage={heroWideSrcset ? { srcset: heroWideSrcset, sizes: '100vw', media: HERO_WIDE_MEDIA } : undefined}
 >
@@ -191,11 +191,62 @@ const teaser = [
     <div
       class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(66.6vw,88vh,52rem))] lg:min-h-[max(28rem,min(66.6vw,92vh,62rem))]"
     >
-      <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
-      <h1
-        class="max-w-[15ch] text-[clamp(2.375rem,7.5vw,4.5rem)] font-extrabold tracking-[-0.03em]"
+      <!-- A third scrim, and the only one anchored to the TEXT rather than to
+           the hero box.
+
+           The two scrims above are sized to the hero, which works while the
+           hero is tall and the words sit in its bottom third. It stops working
+           as the window narrows: the hero's height falls with the viewport but
+           the text stack's does not, so by about 1024px the words fill most of
+           the frame and the headline rides up to roughly a quarter from the
+           top — where the vertical scrim is still near transparent and the
+           photograph is bright sky. Measured on composited pixels under the
+           actual glyphs, the h1 was 1.87:1 at 1024px against a 3:1 minimum.
+
+           That was already true before this headline existed: the previous
+           wording measured 2.29:1 at the same width. It is not a wording
+           problem, and no wording fixes it — every variant tested put some
+           word on the same bright patch.
+
+           This gradient is painted on the block that holds the text, so its
+           height is the text's height at every viewport and it cannot drift
+           out of step the way a hero-sized one does. 0.55 is the measured
+           floor plus a margin: 0.50 was the least that cleared 3:1 at the
+           worst width. Cost to the photograph is a few percent of its
+           brightness, below the point where the machine stops reading as the
+           subject, and it is spent on the band the words occupy rather than
+           on the band the cage occupies.
+
+           It applies on the phone too. The phone crop is the night photograph
+           on its own much heavier curve, and that was failing as well —
+           2.09:1 for the wording that is live today, because the fireworks
+           and the lit whip are bright and the scrim there is thinnest exactly
+           where the headline sits. -->
+      <div
+        class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.55)_0%,rgb(17_17_17/0.49)_78%,rgb(17_17_17/0)_100%)]"
       >
-        Custom roll cages, doors and roofs.
+      <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
+      <!-- The city belongs in the h1, not only in the <title>: "roll cages
+           Tucson" is the search this page has to win, and the h1 is the
+           strongest on-page signal for it.
+
+           It names the cage and the city and stops there, rather than listing
+           doors and roofs as well, and that is a legibility decision as much
+           as an editorial one. Every longer wording tried here ran to a third
+           line on a 375px phone, and because the block is bottom-anchored the
+           extra line starts higher up the hero, where the scrim is thinnest
+           and the photograph is at its brightest. Three-line wordings could
+           not be made to clear 3:1 on a phone without darkening the picture
+           to the point where the machine stops being the subject; the
+           two-line ones clear it with room to spare.
+
+           Doors and roofs are not lost. They are in the <title>, in the meta
+           description, in the services list directly below this hero, and on
+           /services/ with an anchor each. -->
+      <h1
+        class="max-w-[20ch] text-[clamp(2.375rem,7.5vw,4.5rem)] font-extrabold tracking-[-0.03em]"
+      >
+        Custom UTV roll cages in Tucson.
       </h1>
 
       <!-- text-bone, not text-steel. The documented 5.8:1 for steel holds
@@ -205,8 +256,10 @@ const teaser = [
            call — tenure, and that one person does the work — which were
            previously only on /about/ and in the fifth paragraph of the price
            column. -->
+      <!-- "for UTVs in Tucson" moved up into the h1, so this line drops it
+           rather than saying both twice in four seconds. -->
       <p class="text-bone mt-5 max-w-[44ch] text-lg sm:text-xl">
-        Built for UTVs in {business.city} by {business.owner}. {
+        Built by {business.owner}. {
           business.yearsInBusiness.replace(/^over/, 'Over')
         } of it, and he welds every one himself.
       </p>
@@ -241,6 +294,7 @@ const teaser = [
         <p class="text-bone/75 mt-4 text-[0.9375rem]">
           {business.hours.display}
         </p>
+      </div>
       </div>
     </div>
   </section>
@@ -395,6 +449,14 @@ const teaser = [
       </h2>
       <p class="text-steel mt-5 max-w-[48ch] text-lg">
         Year, make and model is enough to start. Photos help if you have them.
+      </p>
+      <!-- The towns, written out once on the home page in a sentence rather
+           than as a keyword list. Somebody in Marana searching for a cage
+           needs to see their own town somewhere on the page before they
+           believe the shop is close enough to bother with. -->
+      <p class="text-steel mt-3 max-w-[48ch] text-lg">
+        Machines come in from {business.serviceAreaLine} and the rest of
+        southern Arizona.
       </p>
       <div class="mt-8 flex flex-col gap-3 sm:flex-row">
         <a

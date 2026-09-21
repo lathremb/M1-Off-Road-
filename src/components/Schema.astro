@@ -4,11 +4,17 @@
  *
  * Only confirmed facts go in here. Google penalises structured data that
  * disagrees with the page, and inventing an address or an aggregateRating is
- * both a lie and a manual-action risk — so `address` carries the locality
- * only, there is no `priceRange` rating, and there are no reviews.
+ * both a lie and a manual-action risk — so there are no reviews, no rating,
+ * no founding year and no claim to a service the shop does not sell.
  *
  * The one price claim is the roll-cage starting figure, which is confirmed,
- * expressed as an Offer rather than as a vague price band.
+ * expressed as an Offer with a real number rather than as a vague band.
+ * `priceRange` is emitted alongside it because Google's local pack reads that
+ * property specifically, but it is a relative indicator and nothing more.
+ *
+ * `geo` is emitted only once real coordinates exist in the config. An absent
+ * `geo` costs a little precision; a wrong one puts the shop on the wrong
+ * street and disagrees with the Google Business Profile, which costs more.
  */
 import { business, phone, pricing, services } from '../config/site';
 
@@ -21,8 +27,9 @@ const schema = {
   name: business.name,
   url: `${siteUrl}/`,
   description:
-    'Custom off-road fabrication in Tucson, Arizona. Roll cages, doors and roofs for UTVs, MIG welded in house.',
+    'Custom off-road fabrication in Tucson, Arizona. Roll cages, doors, roofs and bumpers for UTVs, MIG welded in house.',
   telephone: phone.e164,
+  priceRange: pricing.schemaRange,
 
   address: {
     '@type': 'PostalAddress',
@@ -33,23 +40,64 @@ const schema = {
     addressCountry: business.address.country,
   },
 
-  openingHours: business.hours.schema,
+  /* Spread, so the property is absent rather than null while the pin is
+     still missing. `"geo": null` is worse than no geo at all. */
+  ...(business.geo
+    ? {
+        geo: {
+          '@type': 'GeoCoordinates',
+          latitude: business.geo.lat,
+          longitude: business.geo.lng,
+        },
+      }
+    : {}),
 
-  areaServed: {
-    '@type': 'AdministrativeArea',
-    name: 'Tucson and Southern Arizona',
+  openingHours: business.hours.schema,
+  openingHoursSpecification: {
+    '@type': 'OpeningHoursSpecification',
+    dayOfWeek: [
+      'Monday',
+      'Tuesday',
+      'Wednesday',
+      'Thursday',
+      'Friday',
+    ],
+    opens: '09:00',
+    closes: '17:00',
   },
+
+  /* The three towns by name, then the wider region. Naming them individually
+     is what makes the shop eligible for "roll cages Marana" and "roll cages
+     Oro Valley" rather than only for the city it sits in. */
+  areaServed: [
+    ...business.serviceArea.map((city) => ({
+      '@type': 'City',
+      name: `${city}, ${business.stateCode}`,
+    })),
+    {
+      '@type': 'AdministrativeArea',
+      name: 'Southern Arizona',
+    },
+  ],
 
   founder: {
     '@type': 'Person',
     name: business.owner,
   },
 
+  employee: {
+    '@type': 'Person',
+    name: business.owner,
+  },
+
   knowsAbout: [
-    'UTV roll cages',
+    'Custom UTV roll cages',
+    'UTV doors and roofs',
+    'Custom UTV bumpers',
     'MIG welding',
     'Polaris RZR fabrication',
     'Can-Am Maverick fabrication',
+    'Kawasaki Teryx KRX fabrication',
   ],
 
   makesOffer: services.map((s) => ({
@@ -57,8 +105,14 @@ const schema = {
     itemOffered: {
       '@type': 'Service',
       name: s.title,
-      serviceType: s.title,
+      /* The displayed title first, then the phrasings somebody would search
+         for. All of them describe work the shop actually does. */
+      serviceType: [s.title, ...s.searchTerms],
       provider: { '@id': `${siteUrl}/#business` },
+      areaServed: business.serviceArea.map((city) => ({
+        '@type': 'City',
+        name: `${city}, ${business.stateCode}`,
+      })),
     },
     url: `${siteUrl}/services/#${s.slug}`,
     ...(s.startingAt

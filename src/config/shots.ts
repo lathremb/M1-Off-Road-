@@ -41,7 +41,7 @@ export const shots = {
   'hero-build': {
     file: 'hero-night-dune-66.jpg',
     position: '50% 58%',
-    alt: 'A four-seat machine built by M1 Off-Road parked on a dune at night, a lit whip and American flag alongside, fireworks overhead, and an M1 OFF-ROAD number panel on the door.',
+    alt: 'A four-seat UTV with a custom roll cage built by M1 Off-Road, parked on a dune at night, a lit whip and American flag alongside, fireworks overhead, and an M1 OFF-ROAD number panel on the door.',
     label: 'Hero — finished build, three-quarter front',
     aspect: '16 / 9',
     direction:
@@ -52,7 +52,7 @@ export const shots = {
   /* ---- services, home page and service page tops ---- */
   'svc-cage': {
     file: 'cage-rzr-white-3q.jpg',
-    alt: 'A black Polaris RZR Pro R with a white powder-coated M1 Off-Road cage, shot from the front three-quarter.',
+    alt: 'A black Polaris RZR Pro R with a white powder-coated M1 Off-Road roll cage, shot from the front three-quarter.',
     label: 'Roll cage — profile, machine outdoors',
     aspect: '4 / 3',
     direction:
@@ -70,7 +70,7 @@ export const shots = {
   },
   'svc-roofs': {
     file: 'roof-rzr-blue-above.jpg',
-    alt: 'A pale blue Polaris RZR Pro R seen from above the front corner, showing the roof and how it joins the cage.',
+    alt: 'A pale blue Polaris RZR Pro R seen from above the front corner, showing the custom roof and how it joins the roll cage.',
     label: 'Roof — from above front corner',
     aspect: '4 / 3',
     direction:
@@ -79,7 +79,7 @@ export const shots = {
   },
   'svc-fab': {
     file: 'fab-bumper-front.jpg',
-    alt: 'A custom tube front bumper on a Polaris RZR with auxiliary lights mounted inside it.',
+    alt: 'A custom tube front bumper built by M1 Off-Road on a Polaris RZR, with auxiliary lights mounted inside it.',
     label: 'Custom fab — bumper or mount detail',
     aspect: '4 / 3',
     direction:
@@ -97,7 +97,7 @@ export const shots = {
   },
   'cage-joint': {
     file: 'shop-bare-cage-jig.jpg',
-    alt: 'A bare steel cage on a jig cart in the shop, showing the welded nodes where the tubes meet.',
+    alt: 'A bare steel UTV roll cage on a jig cart in the shop, showing the MIG welded nodes where the tubes meet.',
     label: 'Cage detail — node where tubes meet',
     aspect: '3 / 2',
     direction:
@@ -112,7 +112,7 @@ export const shots = {
   },
   'roof-edge': {
     file: 'roof-canam-edge.jpg',
-    alt: 'The edge of a roof on a Can-Am Maverick X3 where it meets the cage tube.',
+    alt: 'The edge of a custom roof on a Can-Am Maverick X3 where it meets the roll cage tube.',
     label: 'Roof detail — edge and mount',
     aspect: '3 / 2',
     direction: 'Where the roof edge meets the cage tube. Shows it was built to fit, not bolted over.',
@@ -122,7 +122,7 @@ export const shots = {
   /* ---- in progress: the shop, the work, the person ---- */
   'shop-wide': {
     file: 'shop-bare-cage-cart.jpg',
-    alt: 'A bare steel cage mid-build on a rolling jig in the M1 Off-Road shop, tube stock racked on the wall behind it.',
+    alt: 'A bare steel UTV roll cage mid-build on a rolling jig in the M1 Off-Road shop in Tucson, tube stock racked on the wall behind it.',
     label: 'Shop — machine on the table, work in progress',
     aspect: '3 / 2',
     direction:
@@ -131,7 +131,7 @@ export const shots = {
   },
   'bend-bare': {
     file: 'shop-bare-cage-stands.jpg',
-    alt: 'A bare, unpainted cage on stands in the shop with a chop saw and welder behind it.',
+    alt: 'A bare, unpainted UTV roll cage on stands in the shop with a chop saw and MIG welder behind it.',
     label: 'Bare tube — bent sections before assembly',
     aspect: '3 / 2',
     direction:
@@ -142,7 +142,7 @@ export const shots = {
   'badge': {
     file: 'detail-badge-white-cage.jpg',
     position: '50% 45%',
-    alt: 'The M1 Off-Road badge bolted to a white cage tube — a star with a stylised M1 in it, the 1 drawn as a waving flag, and OFF-ROAD on the diagonal.',
+    alt: 'The M1 Off-Road badge bolted to a white roll cage tube — a star with a stylised M1 in it, the 1 drawn as a waving flag, and OFF-ROAD on the diagonal.',
     label: 'Badge — the mark on a finished cage',
     aspect: '4 / 3',
     direction:

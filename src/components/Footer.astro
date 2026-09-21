@@ -76,6 +76,12 @@ const year = new Date().getFullYear();
           </a>
         </p>
         <p class="mt-3 text-[0.9375rem]">{business.hours.display}</p>
+        <!-- The catchment, on every page. This is the footer line that tells
+             somebody in Marana or Oro Valley the shop is theirs too, and it
+             is the same list the JSON-LD emits as areaServed. -->
+        <p class="mt-3 text-[0.9375rem]">
+          Serving {business.serviceAreaLine}.
+        </p>
       </div>
     </div>
 

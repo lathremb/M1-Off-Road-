@@ -44,6 +44,35 @@ export const business = {
     /* schema.org openingHours format. */
     schema: 'Mo-Fr 09:00-17:00',
   },
+
+  /* ---------------------------------------------------------
+     Where the customers come from.
+
+     Tucson is where the shop is. Marana and Oro Valley are the two towns
+     next to it — 85743 sits on the Marana side of the city line, so both are
+     a short tow. This is a statement of catchment, not a confirmed fact from
+     the brief: it is the shop saying who it expects to hear from, which is
+     what `areaServed` means in schema.org.
+
+     It drives the JSON-LD and the footer line from here, so removing a town
+     removes it from both.
+     --------------------------------------------------------- */
+  serviceArea: ['Tucson', 'Marana', 'Oro Valley'],
+  /** The same list as a sentence fragment: "Tucson, Marana and Oro Valley". */
+  get serviceAreaLine() {
+    const a = this.serviceArea;
+    return `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`;
+  },
+
+  /* Latitude and longitude for the LocalBusiness block.
+
+     Null on purpose. A guessed pin puts the shop on the wrong street, and
+     Google cross-checks this pair against the Google Business Profile — so a
+     wrong one is worse than none at all. Copy the real numbers off the
+     Business Profile listing (or the URL bar on Google Maps with the pin
+     dropped) and the schema starts emitting `geo` with no other change.
+     [needs-input: geo-coords] */
+  geo: null as { readonly lat: number; readonly lng: number } | null,
 } as const;
 
 /* ---------------------------------------------------------
@@ -73,6 +102,11 @@ const SMS_PREFILL = "Hi Mike, I'd like a quote on my ";
 export const pricing = {
   cageStartingAt: 2500,
   cageStartingAtDisplay: '$2,500',
+  /* schema.org priceRange — a relative band, which is all that property is
+     for. It is not a quote and it is not shown to anyone on the page; the one
+     real figure the shop publishes is the cage starting price above, and that
+     ships separately as an Offer with an actual number on it. */
+  schemaRange: '$$$',
 } as const;
 
 /* ---------------------------------------------------------
@@ -120,6 +154,11 @@ export const indexable =
    What the shop does. Drives the nav, the home page and the
    service-page routes from one list.
    --------------------------------------------------------- */
+/* `searchTerms` is what somebody actually types into Google for this job,
+   written out so the JSON-LD can carry it as `serviceType`. It exists only in
+   the structured data — none of it is displayed, because a page written in
+   search terms reads like a page written for a machine. Every entry has to
+   describe work the shop genuinely does. */
 export const services = [
   {
     slug: 'roll-cages',
@@ -129,6 +168,12 @@ export const services = [
     blurb:
       'Full replacement cages built to fit your machine, MIG welded start to finish.',
     startingAt: pricing.cageStartingAtDisplay,
+    searchTerms: [
+      'Custom UTV roll cages',
+      'Polaris RZR roll cage fabrication',
+      'Can-Am Maverick roll cage fabrication',
+      'SxS roll cage replacement',
+    ],
   },
   {
     slug: 'doors',
@@ -137,6 +182,7 @@ export const services = [
     blurb:
       'Custom doors that seal against the dust and latch the same way every time.',
     startingAt: null,
+    searchTerms: ['Custom UTV doors', 'SxS full door fabrication'],
   },
   {
     slug: 'roofs',
@@ -144,6 +190,7 @@ export const services = [
     nav: 'Roofs',
     blurb: 'Roofs built to the cage, not bolted on over it.',
     startingAt: null,
+    searchTerms: ['Custom UTV roofs', 'SxS roof fabrication'],
   },
   {
     slug: 'custom-fabrication',
@@ -152,6 +199,11 @@ export const services = [
     blurb:
       'Bumpers, mounts, brackets, repairs — the work that does not come in a box.',
     startingAt: null,
+    searchTerms: [
+      'Custom UTV bumpers',
+      'Off-road fabrication',
+      'MIG welding and repair',
+    ],
   },
 ] as const;
 

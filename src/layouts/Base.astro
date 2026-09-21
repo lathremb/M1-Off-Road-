@@ -5,7 +5,7 @@ import Footer from '../components/Footer.astro';
 import StickyBar from '../components/StickyBar.astro';
 import Schema from '../components/Schema.astro';
 import Analytics from '../components/Analytics.astro';
-import { indexable } from '../config/site';
+import { business, indexable } from '../config/site';
 
 interface Props {
   /** Unique per page. Written in full — no automatic suffix, so every one was
@@ -13,7 +13,12 @@ interface Props {
   title: string;
   /** Unique per page, 140–160 characters. */
   description: string;
-  /** Only the home page needs the LocalBusiness block. */
+  /**
+   * Emit the LocalBusiness block. Home and /contact/ only — those are the two
+   * pages a local result lands on. Both carry the same `@id`, so search
+   * engines read one business described twice rather than two businesses.
+   * Putting it on all six would be six competing entities.
+   */
   schema?: boolean;
   /**
    * srcset for the page's LCP image, so it can be preloaded.
@@ -76,13 +81,37 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="en_US" />
     <!-- og:image is intentionally absent until there is a real share image: a
          card pointing at a placeholder is worse than no card at all. The slot
-         is reserved in the shot list — reserved-shot: og-share -->
-    <meta name="twitter:card" content="summary_large_image" />
+         is reserved in the shot list — reserved-shot: og-share
 
+         The card type follows from that. `summary_large_image` promises an
+         image and there is none, so it degrades to a blank panel; `summary`
+         is what this actually is until the share photo exists. Change both
+         together. -->
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+
+    <!-- Legacy geo meta. No search engine weights these any more, but they
+         cost nothing and some directory scrapers still read them. -->
     <meta name="geo.region" content="US-AZ" />
     <meta name="geo.placename" content="Tucson" />
+    {
+      business.geo && (
+        <>
+          <meta
+            name="geo.position"
+            content={`${business.geo.lat};${business.geo.lng}`}
+          />
+          <meta
+            name="ICBM"
+            content={`${business.geo.lat}, ${business.geo.lng}`}
+          />
+        </>
+      )
+    }
 
     {schema && <Schema />}
     <Analytics />

@@ -7,7 +7,7 @@ Nothing on this site was invented to fill a gap. Every item below is a fact
 that was not in the brief, and every one of them renders on the page as a
 visible `[ needs input — … ]` marker until it is answered.
 
-**5 blocking launch · 4 would improve the site**
+**5 blocking launch · 5 would improve the site**
 
 ---
 
@@ -71,6 +71,12 @@ Any guarantee on the welds or the finish. Omitted entirely rather than implied.
 
 Appears in: _not referenced anywhere — either fill it in or delete the entry_
 
+### map pin for the shop
+
+Latitude and longitude for the LocalBusiness block, so the shop resolves to a point on the map rather than to a street address Google has to parse. Set `geo` in src/config/site.ts and the schema emits it. It has to be the real pin from the Google Business Profile — Google cross-checks this pair against that listing, and a pair derived from the address by guesswork can land the shop on a neighbouring street. Everything else in the local SEO work is done; this is the one number missing from it.
+
+Appears in: `src/config/site.ts`
+
 ---
 
 ### How to clear one
@@ -79,4 +85,4 @@ Appears in: _not referenced anywhere — either fill it in or delete the entry_
 2. Delete its entry from `src/config/needs-input.ts`.
 3. Run `npm run build`. It will name any page still referencing the marker.
 
-_Last generated 2026-09-16._
+_Last generated 2026-09-21._
