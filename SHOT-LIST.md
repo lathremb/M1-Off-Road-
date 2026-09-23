@@ -49,7 +49,7 @@ Used on: `src/layouts/Base.astro`
 These slots have a real photograph in `src/assets/photos/`. Replace the file
 if a better frame turns up — nothing else needs to change.
 
-- **Hero — finished build, three-quarter front** — `hero-night-dune-66.jpg`
+- **Hero — finished build, three-quarter front** — `hero-dune-sunset-66.jpg`
 - **Roll cage — profile, machine outdoors** — `cage-rzr-white-3q.jpg`
 - **Doors — closed, latch side** — `doors-rzr-white-side.jpg`
 - **Roof — from above front corner** — `roof-rzr-blue-above.jpg`

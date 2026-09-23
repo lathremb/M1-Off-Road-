@@ -38,10 +38,16 @@ export interface Shot {
 
 export const shots = {
   /* ---- the one that carries the whole site ---- */
+  /* Supplied 2026-09-22 as "Final Hero Photo", 3840x2880. It is the first
+     photograph in the library that does not force a compromise: landscape,
+     so it suits a wide hero; 3840px, so nothing upscales anywhere; the whole
+     machine in frame with margin on all four sides, so a wide crop trims sky
+     and sand rather than bodywork; and shot at dusk, so the sky is dark
+     enough behind text without the picture having to be dimmed for it. */
   'hero-build': {
-    file: 'hero-night-dune-66.jpg',
-    position: '50% 58%',
-    alt: 'A four-seat UTV with a custom roll cage built by M1 Off-Road, parked on a dune at night, a lit whip and American flag alongside, fireworks overhead, and an M1 OFF-ROAD number panel on the door.',
+    file: 'hero-dune-sunset-66.jpg',
+    position: '50% 60%',
+    alt: 'A four-seat UTV with a custom roll cage built by M1 Off-Road, parked on a dune at sunset, two lit whips flying flags above it, underglow lighting the sand, and an M1 OFF-ROAD number 66 panel on the door.',
     label: 'Hero — finished build, three-quarter front',
     aspect: '16 / 9',
     direction:

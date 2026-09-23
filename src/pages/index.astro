@@ -41,10 +41,17 @@ const heroSource = heroShot.file
    letting the browser scale the native file. That upscaling was the actual
    cause of the soft hero, not the compression, so quality sits at 80: 86 cost
    ~0.4s of LCP for a difference that is not visible at these sizes. */
-const buildSrcset = async (src: ImageMetadata | undefined) => {
+/* Capped at 2560 rather than at the source's full 3840. A 3840-wide webp is
+   most of a megabyte and it would be the LCP request on every retina desktop;
+   2560 is about a third of that. The cost is that a 2x laptop at 1512 CSS
+   asks for 3024 and gets 2560, an upscale of 1.18 — far below the 1.9 that
+   made the old hero visibly soft, and not something you can see at arm's
+   length. Every 1x monitor, which is most of them, is served exactly. */
+const buildSrcset = async (src: ImageMetadata | undefined, maxWidth = 2560) => {
   if (!src) return '';
-  const widths = [640, 960, 1280, 1600, 2048].filter((w) => w <= src.width);
-  if (!widths.includes(src.width)) widths.push(src.width);
+  const cap = Math.min(src.width, maxWidth);
+  const widths = [640, 960, 1280, 1600, 2048, 2560].filter((w) => w <= cap);
+  if (!widths.includes(cap)) widths.push(cap);
   const made = await Promise.all(
     widths.map((width) => getImage({ src, width, format: 'webp', quality: 80 }))
   );
@@ -53,31 +60,26 @@ const buildSrcset = async (src: ImageMetadata | undefined) => {
 
 /* ONE photograph, one slot, no art direction.
 
-   The hero used to carry two different machines: the portrait night shot on
-   phones and a landscape daylight shot on wide screens. That split existed
-   for one reason — a full-bleed wide hero cannot use a 1536px portrait file
-   without upscaling it, and on a retina display that upscale was about 1.9x.
-   It was the blur.
+   The hero used to carry two different machines — a portrait night shot on
+   phones and a landscape daylight shot on wide screens — because neither
+   could do the job alone. The portrait one upscaled about 1.9x in a wide box
+   and that was the blur; the landscape one had its machine running off the
+   left edge of the original frame, so no crop showed the whole of it.
 
-   The answer was never a second photograph. It was to stop asking a portrait
-   file to fill a landscape box. This layout gives the picture a TALL panel,
-   which is the shape the file already is, so one source covers every
-   breakpoint and nothing is upscaled anywhere: the panel is capped at 34rem,
-   so even at 2x it asks for 1088px of a 1536px original.
+   The photograph supplied on 2026-09-22 removes the reason for the split. It
+   is landscape, it is 3840px, and the machine sits with margin on all four
+   sides, so one source now fills a full-bleed hero at every breakpoint and a
+   wide crop trims sky and sand instead of bodywork.
 
-   Measured across all 35 photographs in the library, this one is the darkest
-   by a wide margin — mean luminance 64 against 95 for the next and 108 for
-   the daylight shot it replaces. That is not a coincidence of exposure; it is
-   the only night frame in the set, and the dark is what was wanted.
-
-   Dropping the second source also gives the alt text back. With two machines
-   it had to describe what was true of both; with one it can describe the
-   actual photograph, which is what a screen reader should hear. */
+   One source also gives the alt text back: with two machines it had to
+   describe what was true of both, and it can now describe this photograph. */
 const heroSrcset = await buildSrcset(heroSource);
 const heroAlt = heroShot.alt;
 
-/* The panel is 34rem from lg up and full width below it. */
-const HERO_SIZES = '(min-width: 64rem) 34rem, 100vw';
+/* Full bleed, so the slot is the viewport. This MUST match the sizes on the
+   <img> below — a preload that disagrees by one attribute picks a different
+   candidate and downloads the hero twice. */
+const HERO_SIZES = '100vw';
 
 /* Six tiles for the teaser strip, taken one at a time across the platforms so
    the row is not six near-identical RZRs. */
@@ -98,162 +100,189 @@ const teaser = [
   preloadImage={heroSrcset ? { srcset: heroSrcset, sizes: HERO_SIZES } : undefined}
 >
   <!-- ==========================================================
-       HERO — a black type field beside a tall photograph.
+       HERO — the photograph fills it, the words sit on it.
 
-       The previous two heroes both put the words on top of the picture:
-       first directly, then on a plate laid over it. Both were fighting the
-       same thing — the background behind the text is a photograph, and a
-       photograph is different at every window size.
+       Back to the original arrangement, which the new photograph can finally
+       carry. The previous two rewrites existed to work around the pictures
+       available at the time: one was portrait and 1536px, so a wide box both
+       cropped the machine and upscaled it, and the other had the machine
+       running off the left edge of the frame. Neither could be a full-bleed
+       hero without losing the thing it was a photograph of.
 
-       This one stops overlapping them. The type sits on flat shop black and
-       the photograph gets a panel of its own, which buys three things at
-       once. Contrast becomes a non-question: the ground is #111 everywhere,
-       so there is no scrim anywhere on this page any more. The photograph is
-       never dimmed, because nothing has to be read through it. And the panel
-       is TALL, which is the shape this file actually is — so the night shot
-       finally runs at native resolution instead of being stretched across a
-       wide box.
+       This one is 3840x2880, landscape, and the machine sits with margin on
+       all four sides — so a wide crop takes sky and sand instead of bodywork,
+       and there is enough resolution left over to cap the ladder well below
+       the source and still serve every 1x monitor exactly.
        ========================================================== -->
-  <section class="bg-shop text-bone">
-    <!-- The left padding aligns the headline with every section below it.
+  <section class="bg-shop text-bone relative overflow-hidden">
+    <!-- The photograph gets its own absolutely positioned wrapper rather than
+         being stretched against the section directly. An <img> at height:100%
+         needs a containing block with a DEFINITE height, and a box that takes
+         its height from min-height plus content resolves to auto in Firefox —
+         the image then falls back to its intrinsic height and leaves the
+         bottom of the hero uncovered. inset-0 is definite in every engine. -->
+    <!-- In flow below sm, full bleed behind the words from sm up.
 
-         `100%` here resolves against the section, which is the real available
-         width — unlike `100vw`, which includes the scrollbar and would leave
-         the hero about 8px out of step with the rest of the page on Windows.
-         72rem is max-w-6xl and 2rem is the sm gutter, so this reproduces
-         exactly where `mx-auto max-w-6xl px-8` starts, and the max() floor
-         takes over once the viewport is narrower than the container. -->
-    <div
-      class="grid lg:min-h-[min(40rem,82vh)] lg:grid-cols-[1fr_minmax(0,34rem)] lg:pl-[max(2rem,calc((100%-72rem)/2+2rem))]"
-    >
-      <!-- The photograph is first in the document and moves to the right
-           column from lg up. Source order is the phone order, so a screen
-           reader hears the machine described before the sentence about it,
-           which is also what a sighted visitor on a phone sees. -->
+         A landscape photograph cannot sit behind overlaid text in a portrait
+         box without becoming wallpaper. Measured on a 375px phone the
+         full-bleed version showed 58% of the frame's width against the 75%
+         the machine occupies, so it lost the front bumper and the spare —
+         and what was left sat behind the headline and two buttons. The car
+         was in the hero without being visible in it.
+
+         Below sm the picture gets a 4:3 band of its own instead. That is the
+         file's own ratio, so nothing is cropped at all: the whole photograph
+         shows, and the words sit underneath it on flat #111. From sm up the
+         box is wide enough for the overlay to work — at 640 it already shows
+         93% of the frame's height and all of its width — so it goes back to
+         full bleed, which is the arrangement this was asked for. -->
+    <div class="relative aspect-[4/3] w-full sm:absolute sm:inset-0 sm:aspect-auto">
+      {
+        heroSource ? (
+          <img
+            srcset={heroSrcset}
+            sizes={HERO_SIZES}
+            alt={heroAlt}
+            width={heroSource.width}
+            height={heroSource.height}
+            loading="eager"
+            fetchpriority="high"
+            decoding="sync"
+            class="h-full w-full object-cover"
+            /* 60%, not centre. The machine occupies roughly 28% to 87% of the
+               frame's height; centring the crop would cut the bottoms of the
+               tyres off. Biasing down keeps the whole machine and gives up
+               sky, which is the cheapest thing in the frame. */
+            style="object-position:50% 62%"
+          />
+        ) : (
+          <Shot shot="hero-build" fill eager sizes="100vw" />
+        )
+      }
+
+      <!-- One scrim. It only has to work at the bottom of the frame now: the
+           words sit in the lower left, where this photograph is already dune
+           shadow and sand rather than sky, so the gradient is doing far less
+           lifting than the three it replaced. It clears entirely before the
+           halfway mark, which leaves the sunset and the whips untouched. -->
       <div
-        /* Square below lg, not 4:5. At 4:5 the photograph was 469px of a
-           375px-wide phone and pushed the whole type block past the fold —
-           not just the buttons but the price. Square costs about 14% off the
-           top of the frame, which is sky and the outer edge of the fireworks,
-           and keeps the machine, the whip, the flag and the number panel.
-           The vh cap stops it turning into a 768px slab on a tablet. */
-        /* `w-full` is load-bearing next to the aspect ratio. An aspect-ratio
-           box clamped by max-height gives up WIDTH to keep the ratio, so on a
-           768px tablet the photograph collapsed to a 512px square with a
-           column of black beside it. Fixing the width means max-height only
-           clamps the height, and object-cover takes the difference out of the
-           crop, which is what it is there for. */
-        class="border-shop-line relative order-1 aspect-square w-full max-h-[50vh] lg:order-2 lg:aspect-auto lg:max-h-none lg:border-l"
+        class="absolute inset-0"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .72) 0%, rgb(17 17 17 / .50) 24%, rgb(17 17 17 / .24) 46%, rgb(17 17 17 / .06) 68%, rgb(17 17 17 / 0) 88%)"
+        aria-hidden="true"
       >
-        {
-          heroSource ? (
-            <img
-              srcset={heroSrcset}
-              sizes={HERO_SIZES}
-              alt={heroAlt}
-              width={heroSource.width}
-              height={heroSource.height}
-              loading="eager"
-              fetchpriority="high"
-              decoding="sync"
-              class="absolute inset-0 h-full w-full object-cover"
-              /* 58%, not centre. The machine and the number panel are in the
-                 lower half of the frame and the fireworks are in the upper;
-                 when the panel is wider than 3:4 and has to trim, this takes
-                 it off the sky rather than off the machine. */
-              style="object-position:50% 58%"
-            />
-          ) : (
-            <Shot shot="hero-build" fill eager sizes={HERO_SIZES} />
-          )
-        }
       </div>
+    </div>
 
-      <!-- Type field. No scrim, no plate, no overlay: flat #111. -->
+    <!-- A FULL-WIDTH sizer takes the hero's height from the VIEWPORT width, so
+         the box keeps roughly the photograph's own proportions instead of
+         holding one height while the width runs away.
+
+         The caps are chosen against this photograph. The machine spans about
+         59% of the frame's height, so the hero has to show at least that much
+         of it: at 1440 it shows 69%, at 1920 62%. min-height rather than
+         aspect-ratio, because aspect-ratio is a fixed height and the text
+         would overflow it on a phone. -->
+    <div
+      class="relative flex min-h-0 items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
+    >
+      <!-- A second scrim, and the only one anchored to the TEXT rather than to
+           the hero box. This is the piece that makes contrast hold across the
+           range, and the hero-sized gradient above has been lightened because
+           of it.
+
+           A hero-sized gradient cannot track the words. The hero's height
+           comes from the viewport and the text stack's does not, so as the
+           window narrows the words occupy more of the frame and ride up into
+           the thin end of the curve: at 1024 the headline measured 2.79:1 and
+           the subhead 3.57:1 against floors of 3 and 4.5, while the same
+           markup at 1440 was comfortably clear. Painting the gradient on the
+           block that holds the text makes its height the text's height at
+           every viewport, so the two cannot drift apart.
+
+           Splitting the work this way also costs the photograph less than one
+           heavy hero-wide curve did: the darkening is spent on the band the
+           words occupy rather than on the band the machine occupies. -->
       <div
-        /* py-10 below sm is measured, not chosen. It is what puts the whole
-           proposition — photograph, price, headline, subhead and the primary
-           button — above the fold on a 375x812 phone once the 68px sticky
-           header and the 57px call bar are taken off. py-12 left the button
-           16px short of it. */
-        class="order-2 flex items-center px-5 py-10 sm:px-8 sm:py-14 lg:order-1 lg:px-0 lg:py-20 lg:pr-14"
+        class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.64)_0%,rgb(17_17_17/0.56)_80%,rgb(17_17_17/0)_100%)]"
       >
-        <div class="w-full max-w-[34rem]">
-          <!-- The one number that stops people calling, set as a chip above
-               the headline rather than as a sentence inside the block.
+      <div class="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:py-16">
+        <!-- The one number that stops people calling, set as a chip above the
+             headline. Sentence case on purpose: an all-caps eyebrow over a
+             heading is the pattern this site avoids, and what keeps this clear
+             of it is that it carries a fact rather than a category label, and
+             appears once rather than above every heading.
 
-               Sentence case on purpose. An all-caps eyebrow over a heading is
-               the pattern this site avoids everywhere else and this sits in
-               exactly that slot; what keeps it clear is that it carries a
-               fact rather than a category label, and appears once on the site
-               rather than above every heading. -->
-          <p
-            class="border-shop-line bend mb-4 inline-flex items-baseline gap-2 border px-3 py-1.5"
+             The chip has its own translucent fill here, unlike on the flat
+             black field it came from — a hairline border alone disappears
+             against a photograph. -->
+        <p
+          class="border-shop-line bg-shop/90 bend mb-4 inline-flex items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px]"
+        >
+          <span class="text-steel text-[0.8125rem]">Full cages from</span>
+          <span class="font-display text-[0.9375rem] font-bold"
+            >{pricing.cageStartingAtDisplay}</span
           >
-            <span class="text-steel text-[0.8125rem]">Full cages from</span>
-            <span class="font-display text-[0.9375rem] font-bold"
-              >{pricing.cageStartingAtDisplay}</span
-            >
-          </p>
+        </p>
 
-          <!-- The city belongs in the h1, not only in the <title>: "roll
-               cages Tucson" is the search this page has to win, and the h1 is
-               the strongest on-page signal for it.
+        <!-- The city belongs in the h1, not only in the <title>: "roll cages
+             Tucson" is the search this page has to win, and the h1 is the
+             strongest on-page signal for it.
 
-               It can breathe a little now. On the old plate the headline was
-               held down by the width of the plate; against an open black
-               field it takes 44px again, with the letterfit still at -0.03em
-               and the leading still at 1.02. Tight fit and tight leading is
-               what reads athletic — loose is what reads like a template. -->
-          <h1
-            class="max-w-[16ch] text-[clamp(2rem,3.4vw,2.75rem)] leading-[1.02] font-bold tracking-[-0.03em]"
+             44px with the letterfit at -0.03em and the leading at 1.02. Tight
+             fit and tight leading is what reads athletic; a big sans set
+             loosely is what reads like a template, and that — not the size —
+             was what made the first version of this headline feel generic. -->
+        <h1
+          class="max-w-[16ch] text-[clamp(2rem,3.4vw,2.75rem)] leading-[1.02] font-bold tracking-[-0.03em]"
+        >
+          Custom UTV roll cages in Tucson.
+        </h1>
+
+        <!-- bone at 80%, not steel. steel's documented 5.8:1 holds against
+             flat #111; this line sits on a photograph, where that figure does
+             not apply, so it takes its contrast from the scrim and is
+             measured rather than assumed. -->
+        <p class="text-bone/90 mt-4 max-w-[42ch] text-base leading-[1.55]">
+          Built by {business.owner}. {
+            business.yearsInBusiness.replace(/^over/, 'Over')
+          } of it, and he welds every one himself.
+        </p>
+
+        <!-- The quote form leads and the phone follows it. That is a
+             conversion trade as much as a visual one, because the phone is how
+             a one-man shop books work; what makes it fair is that the number
+             has not moved — it is in the sticky header on every page and in
+             the fixed call/text bar at the bottom of every phone screen —
+             while the form is the only thing that catches somebody deciding at
+             ten at night.
+
+             The ghost button's border is bone/60 rather than steel here. On a
+             photograph a grey hairline vanishes, and on a ghost button the
+             border IS the control's boundary, so it answers to the 3:1
+             non-text contrast floor rather than to taste. -->
+        <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
+          <a
+            href="/contact/"
+            class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
           >
-            Custom UTV roll cages in Tucson.
-          </h1>
-
-          <p class="text-steel mt-4 max-w-[42ch] text-base leading-[1.55]">
-            Built by {business.owner}. {
-              business.yearsInBusiness.replace(/^over/, 'Over')
-            } of it, and he welds every one himself.
-          </p>
-
-          <!-- The quote form leads and the phone follows it.
-
-               That is a conversion trade and not only a visual one, because
-               the phone is how a one-man shop books work. What makes it fair
-               is that the number has not moved — it is in the sticky header
-               on every page and in the fixed call/text bar at the bottom of
-               every phone screen — while the form is the only thing that
-               catches somebody deciding at ten at night.
-
-               steel/75 on the ghost border, not steel/50: on a ghost button
-               the border IS the control's boundary, so it answers to the 3:1
-               non-text contrast floor. Against flat #111, 50% measures
-               2.42:1 and 75% measures 3.94:1. -->
-          <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
-            <a
-              href="/contact/"
-              class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
-            >
-              Get a quote
-            </a>
-            <a
-              href={phone.tel}
-              data-analytics="call-hero"
-              class="font-display border-steel/75 text-bone bend hover:border-bone hover:bg-bone/5 border px-6 py-3.5 text-center font-bold transition-colors"
-            >
-              Call {phone.display}
-            </a>
-          </div>
-
-          <!-- Hours next to the call, not only in the footer. Someone
-               deciding to ring a one-man shop needs to know whether anybody
-               will pick up. 13px to match the chip, so the two tertiary items
-               in this block agree instead of sitting a pixel apart. -->
-          <p class="text-steel mt-6 text-[0.8125rem] tracking-[0.01em]">
-            {business.hours.display}
-          </p>
+            Get a quote
+          </a>
+          <a
+            href={phone.tel}
+            data-analytics="call-hero"
+            class="font-display border-bone/60 text-bone bend hover:border-bone hover:bg-bone/10 border px-6 py-3.5 text-center font-bold transition-colors"
+          >
+            Call {phone.display}
+          </a>
         </div>
+
+        <!-- Hours next to the call, not only in the footer. Someone deciding
+             to ring a one-man shop needs to know whether anybody will pick
+             up. -->
+        <p class="text-bone/75 mt-6 text-[0.8125rem] tracking-[0.01em]">
+          {business.hours.display}
+        </p>
+      </div>
       </div>
     </div>
   </section>
