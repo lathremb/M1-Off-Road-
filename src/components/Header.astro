@@ -2,9 +2,20 @@
 import Logo from './Logo.astro';
 import { phone, services } from '../config/site';
 
-/* Static, not sticky. The sticky element on this site is the call/text bar at
-   the bottom of the mobile viewport, and two fixed bars would leave very
-   little screen left on a phone. */
+/* Sticky, so the number and the nav are reachable from anywhere on the page
+   rather than only from the top of it. The gallery is long and /services/ is
+   longer; having to scroll back up to call was the cost of a static bar.
+
+   `sticky`, not `fixed`: it stays in normal flow, so nothing underneath has
+   to reserve space for it and there is no layout shift on load. The mobile
+   call/text bar at the bottom IS fixed, and `body` pads for that one.
+
+   Two bars on a phone is the trade. It costs about 68px at the top on top of
+   the 68px already spent at the bottom; the header carries only the wordmark
+   and the menu button under md, so that is the whole price.
+
+   Anchors are handled by `scroll-padding-top` on `html` in global.css — a
+   section linked as /services/#roofs would otherwise land underneath this. */
 
 const path = Astro.url.pathname.replace(/\/$/, '') || '/';
 
@@ -21,7 +32,11 @@ const nav = [
 const isCurrent = (href: string) => path === href.replace(/\/$/, '');
 ---
 
-<header class="bg-shop text-bone">
+<!-- z-40 sits under the skip link (z-60) and the mobile call bar (z-50).
+     Neither overlaps this one, but the order matters if any of them ever
+     grows. The background is solid, not translucent: this bar spends most of
+     its life over the hero photograph. -->
+<header class="bg-shop text-bone sticky top-0 z-40">
   <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 sm:px-8">
     <a
       href="/"

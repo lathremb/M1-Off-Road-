@@ -65,6 +65,27 @@
   html {
     -webkit-text-size-adjust: 100%;
     scroll-behavior: smooth;
+    /* Clearance for the sticky header. Without it, following a link like
+       /services/#roofs scrolls the section to y=0, which is underneath the
+       bar. Set on the scroll container rather than on each target, so it
+       covers every anchor on the site including ones added later.
+
+       Measured, not guessed: the header is 68px under md, where it carries
+       the wordmark and the menu button, and 58px from md up, where the nav
+       row is shorter than that button. These are each about 4px more, so a
+       section lands just clear of the bar. Much more than that and a strip
+       of the PREVIOUS section shows under the header, which on this site
+       means a band of the opposite colour and reads as a mistake.
+
+       Targets must not add `scroll-mt-*` on top of this, or that strip comes
+       back. */
+    scroll-padding-top: 4.5rem;
+  }
+
+  @media (min-width: 48rem) {
+    html {
+      scroll-padding-top: 3.875rem;
+    }
   }
 
   body {

@@ -85,4 +85,4 @@ Appears in: `src/config/site.ts`
 2. Delete its entry from `src/config/needs-input.ts`.
 3. Run `npm run build`. It will name any page still referencing the marker.
 
-_Last generated 2026-09-21._
+_Last generated 2026-09-23._
