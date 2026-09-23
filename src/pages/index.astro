@@ -111,72 +111,6 @@ const teaser = [
        Everything below it is deliberately quiet.
        ========================================================== -->
   <section class="bg-shop text-bone relative overflow-hidden">
-    <!-- The photograph lives in its own absolutely positioned wrapper rather
-         than being stretched directly against this section.
-
-         An <img> sized with height:100% needs a containing block with a
-         DEFINITE height. This container gets its height from min-height plus
-         content, which Firefox resolves to auto — so the image fell back to
-         its intrinsic height and left the bottom of the hero uncovered. The
-         wrapper takes a definite height from inset-0, so the image fills it
-         in every engine. -->
-    <div class="absolute inset-0">
-      {
-        heroSource ? (
-          <picture>
-            {heroWideSrcset && (
-              <source
-                media={HERO_WIDE_MEDIA}
-                srcset={heroWideSrcset}
-                sizes="100vw"
-                width="2048"
-                height="1280"
-              />
-            )}
-            <img
-              srcset={heroSrcset}
-              sizes="100vw"
-              alt={heroAlt}
-              width={heroSource.width}
-              height={heroSource.height}
-              loading="eager"
-              fetchpriority="high"
-              decoding="sync"
-              class="h-full w-full object-cover"
-              /* Near-centred now that both sources carry margin around the
-                 machine: a trim at either edge takes sky or ground, not the
-                 cage or the tyres. */
-              style="object-position:50% 62%"
-            />
-          </picture>
-        ) : (
-          <Shot shot="hero-build" fill eager sizes="100vw" />
-        )
-      }
-
-      <!-- Two scrims, one per crop, because one curve cannot serve both.
-
-           The portrait source makes a taller hero, so the subhead sits higher
-           up the gradient than it does on the wide crop — measured at 0.49
-           alpha on a phone against 0.81 on desktop, which put the worst pixel
-           behind that line at 3.08:1. The desktop curve is already clearing
-           12:1 and darkening it further would only bury the machine, so the
-           phone gets its own steeper curve instead of both sharing a
-           compromise. -->
-      <div
-        class="absolute inset-0 sm:hidden"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .94) 0%, rgb(17 17 17 / .88) 35%, rgb(17 17 17 / .80) 60%, rgb(17 17 17 / .38) 82%, rgb(17 17 17 / .06) 100%)"
-        aria-hidden="true"
-      >
-      </div>
-      <div
-        class="absolute inset-0 hidden sm:block"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .88) 0%, rgb(17 17 17 / .76) 30%, rgb(17 17 17 / .52) 55%, rgb(17 17 17 / .16) 78%, rgb(17 17 17 / 0) 100%)"
-        aria-hidden="true"
-      >
-      </div>
-    </div>
-
     <!-- A FULL-WIDTH sizer sets the hero height from the VIEWPORT width, so the
          box stays close to the photograph's own ratio instead of holding one
          height while the width runs away. Putting this on the max-w-6xl content
@@ -184,117 +118,206 @@ const teaser = [
          creep back in on wide monitors.
 
          min-height rather than aspect-ratio, because aspect-ratio is a fixed
-         height: when the headline, price and two stacked buttons are taller
-         than it on a phone, the text overflows the hero onto the section below.
-         133vw is 3:4 and 62.5vw is 16:10 — the same proportions, but the box
-         can grow when the content needs it to. -->
+         height: when the headline, price and buttons are taller than it on a
+         phone, the text overflows the hero onto the section below. 133vw is
+         3:4 and 62.5vw is 16:10 — the same proportions, but the box can grow
+         when the content needs it to. -->
     <div
-      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(66.6vw,88vh,52rem))] lg:min-h-[max(28rem,min(66.6vw,92vh,62rem))]"
+      class="relative flex min-h-[max(32rem,min(133vw,80vh))] flex-col sm:min-h-[max(28rem,min(66.6vw,88vh,52rem))] lg:min-h-[max(28rem,min(66.6vw,92vh,62rem))]"
     >
-      <!-- A third scrim, and the only one anchored to the TEXT rather than to
-           the hero box.
+      <!-- The photograph's own band, and the reason the hero is a column
+           rather than a bottom-aligned row. Two things are solved here.
 
-           The two scrims above are sized to the hero, which works while the
-           hero is tall and the words sit in its bottom third. It stops working
-           as the window narrows: the hero's height falls with the viewport but
-           the text stack's does not, so by about 1024px the words fill most of
-           the frame and the headline rides up to roughly a quarter from the
-           top — where the vertical scrim is still near transparent and the
-           photograph is bright sky. Measured on composited pixels under the
-           actual glyphs, the h1 was 1.87:1 at 1024px against a 3:1 minimum.
+           PROPORTION. The plate's height comes from its words; the hero's
+           comes from the viewport. Those are independent, which is fine on a
+           wide screen — 828px of hero against 459px of plate — and not fine
+           on a phone, where the hero bottoms out at its 32rem minimum while
+           the plate still wants 451px of it. That left 61px of picture: a
+           black box with a stripe of photograph on top. This band claims its
+           height first and the plate takes what it needs underneath, so the
+           split holds at any size instead of only where the min-height was
+           tuned. `grow` lets it absorb the slack on wide screens, where the
+           min-height is the larger number and there is room to give away.
 
-           That was already true before this headline existed: the previous
-           wording measured 2.29:1 at the same width. It is not a wording
-           problem, and no wording fixes it — every variant tested put some
-           word on the same bright patch.
+           CROP, which is why the photograph lives INSIDE the band rather than
+           behind the whole hero. object-fit resolves against its own box.
+           Stretched over the full phone hero, the portrait night shot is
+           taller than it is wide, so height binds, no vertical crop happens,
+           and object-position does nothing whatsoever — the visible band came
+           out as the top third of the frame, which is sky and fireworks. The
+           machine is in the lower half, behind the plate. Bounded to this
+           band the box is landscape, width binds instead, and 62% then picks
+           the part of the photograph the machine is actually in.
 
-           This gradient is painted on the block that holds the text, so its
-           height is the text's height at every viewport and it cannot drift
-           out of step the way a hero-sized one does. 0.55 is the measured
-           floor plus a margin: 0.50 was the least that cleared 3:1 at the
-           worst width. Cost to the photograph is a few percent of its
-           brightness, below the point where the machine stops reading as the
-           subject, and it is spent on the band the words occupy rather than
-           on the band the cage occupies.
-
-           It applies on the phone too. The phone crop is the night photograph
-           on its own much heavier curve, and that was failing as well —
-           2.09:1 for the wording that is live today, because the fireworks
-           and the lit whip are bright and the scrim there is thinnest exactly
-           where the headline sits. -->
+           `sm:static` hands the photograph back to the sizer from sm up, so a
+           wide screen returns to full bleed behind the plate. -->
+      <!-- The sm floor is viewport-relative because a fixed one does not hold
+           across the range. The plate's height barely moves between 768px and
+           1440px, while the hero's shrinks with the window — so a flat 10rem
+           band was 45% of the hero at 1440 and 27% at 768, where the plate
+           had swallowed most of the machine. 34vw scales it with the window,
+           22rem stops it growing past what a wide screen needs, and 38vh
+           keeps it off a short laptop screen where a tall hero would push the
+           phone number below the fold. -->
       <div
-        class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.55)_0%,rgb(17_17_17/0.49)_78%,rgb(17_17_17/0)_100%)]"
+        class="relative min-h-[16rem] grow sm:static sm:min-h-[min(22rem,34vw,38vh)]"
       >
-      <div class="mx-auto w-full max-w-6xl px-5 py-14 sm:px-8 sm:py-16">
-      <!-- The city belongs in the h1, not only in the <title>: "roll cages
-           Tucson" is the search this page has to win, and the h1 is the
-           strongest on-page signal for it.
+        <!-- An <img> sized with height:100% needs a containing block with a
+             DEFINITE height. A container taking its height from min-height
+             plus content resolves to auto in Firefox, and the image then
+             falls back to its intrinsic height and leaves part of the hero
+             uncovered. inset-0 is definite in every engine. -->
+        <div class="absolute inset-0">
+          {
+            heroSource ? (
+              <picture>
+                {heroWideSrcset && (
+                  <source
+                    media={HERO_WIDE_MEDIA}
+                    srcset={heroWideSrcset}
+                    sizes="100vw"
+                    width="2048"
+                    height="1280"
+                  />
+                )}
+                <img
+                  srcset={heroSrcset}
+                  sizes="100vw"
+                  alt={heroAlt}
+                  width={heroSource.width}
+                  height={heroSource.height}
+                  loading="eager"
+                  fetchpriority="high"
+                  decoding="sync"
+                  class="h-full w-full object-cover"
+                  style="object-position:50% 62%"
+                />
+              </picture>
+            ) : (
+              <Shot shot="hero-build" fill eager sizes="100vw" />
+            )
+          }
 
-           It names the cage and the city and stops there, rather than listing
-           doors and roofs as well, and that is a legibility decision as much
-           as an editorial one. Every longer wording tried here ran to a third
-           line on a 375px phone, and because the block is bottom-anchored the
-           extra line starts higher up the hero, where the scrim is thinnest
-           and the photograph is at its brightest. Three-line wordings could
-           not be made to clear 3:1 on a phone without darkening the picture
-           to the point where the machine stops being the subject; the
-           two-line ones clear it with room to spare.
+          <!-- ONE scrim now, and a light one, where there used to be three.
 
-           Doors and roofs are not lost. They are in the <title>, in the meta
-           description, in the services list directly below this hero, and on
-           /services/ with an anchor each. -->
-      <h1
-        class="max-w-[20ch] text-[clamp(2.375rem,7.5vw,4.5rem)] font-extrabold tracking-[-0.03em]"
-      >
-        Custom UTV roll cages in Tucson.
-      </h1>
+               All three existed to hold text directly on the photograph, and
+               that is what forced them to be heavy: the words needed a dark
+               enough background wherever they happened to fall, so the whole
+               picture got dimmed to protect the brightest patch behind a
+               letter. The words are on their own plate now, so the photograph
+               carries nothing. This is all that is left to do — settle the
+               bottom edge so the plate has something to sit against rather
+               than looking pasted on.
 
-      <!-- text-bone, not text-steel. The documented 5.8:1 for steel holds
-           against solid #111; this line sits where the scrim is thinnest, over
-           the brightest part of the photograph, where that figure does not
-           apply. It also now carries the two facts that decide a local trade
-           call — tenure, and that one person does the work — which were
-           previously only on /about/ and in the fifth paragraph of the price
-           column. -->
-      <!-- "for UTVs in Tucson" moved up into the h1, so this line drops it
-           rather than saying both twice in four seconds. -->
-      <p class="text-bone mt-5 max-w-[44ch] text-lg sm:text-xl">
-        Built by {business.owner}. {
-          business.yearsInBusiness.replace(/^over/, 'Over')
-        } of it, and he welds every one himself.
-      </p>
-
-      <!-- The price sits on its own rule rather than inside the paragraph.
-           Most shops make you call to find it out; putting it here is the
-           single most useful thing on the page. -->
-      <p
-        class="border-steel/40 font-display mt-7 border-t pt-5 text-xl font-bold sm:text-2xl"
-      >
-        Full cages from {pricing.cageStartingAtDisplay}
-      </p>
-
-      <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <a
-          href={phone.tel}
-          data-analytics="call-hero"
-          class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
-        >
-          Call {phone.display}
-        </a>
-        <a
-          href="/contact/"
-          class="font-display border-steel/50 text-bone bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
-        >
-          Get a quote
-        </a>
+               It clears entirely by the halfway mark, so the machine sits in
+               an undimmed picture for the first time. Both crops share it:
+               with no text riding on the photo, there is nothing left for two
+               separate curves to disagree about. -->
+          <div
+            class="absolute inset-0"
+            style="background:linear-gradient(to top, rgb(17 17 17 / .62) 0%, rgb(17 17 17 / .28) 24%, rgb(17 17 17 / .04) 52%, rgb(17 17 17 / 0) 100%)"
+            aria-hidden="true"
+          >
+          </div>
         </div>
-
-        <!-- Hours next to the call, not only in the footer. Someone deciding
-             to ring a one-man shop needs to know whether anybody will pick up. -->
-        <p class="text-bone/75 mt-4 text-[0.9375rem]">
-          {business.hours.display}
-        </p>
       </div>
+
+      <!-- The words sit on a plate, not on the photograph.
+
+           This is the change that lets the picture be bright. Text laid
+           straight onto a photo has to darken whatever happens to be behind
+           it, and what is behind it moves with every window size — which is
+           why this hero had grown three separate scrims and still measured
+           1.87:1 under the headline at some widths. A plate ends that
+           argument. The background behind every word is a known colour, so
+           contrast is fixed by construction instead of retuned per
+           breakpoint, and the photograph gets to keep its own brightness.
+
+           It is flush to the bottom edge of the hero and aligned to the same
+           max-w-6xl column as every section below it, so it reads as part of
+           the page's structure rather than as a card floating on a picture.
+           One bend on the top-right corner, and a hairline that turns that
+           corner with it — the move BendRule makes everywhere else here. -->
+      <!-- `relative` is load-bearing. The photograph above is absolutely
+           positioned, and in the same stacking context a positioned element
+           paints over a static one no matter how the source is ordered — so
+           without this the picture covers the plate on wide screens, where it
+           spans the whole sizer. -->
+      <div class="relative mx-auto w-full max-w-6xl px-5 sm:px-8">
+        <div
+          class="bg-shop/95 border-shop-line bend max-w-[34rem] border-t border-r px-6 pt-8 pb-9 sm:px-9 sm:pt-10 sm:pb-11"
+        >
+          <!-- The city belongs in the h1, not only in the <title>: "roll
+               cages Tucson" is the search this page has to win, and the h1 is
+               the strongest on-page signal for it.
+
+               Smaller than it was, and bold rather than extra-bold. At 72px
+               and weight 800 the headline was competing with the machine for
+               the eye, which is the wrong fight on a page selling
+               fabrication — the photograph is the proof, the sentence is only
+               the label on it. It is also the single loudest tell of a
+               template hero. At 44px on a plate it still leads, because
+               position and ground do the work that size was doing. -->
+          <h1
+            class="max-w-[20ch] text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold tracking-[-0.02em]"
+          >
+            Custom UTV roll cages in Tucson.
+          </h1>
+
+          <!-- steel, not bone. On a known dark ground the documented 5.8:1
+               holds, so the secondary line can finally be secondary; it had
+               to be full-strength bone before only because it was sitting on
+               an unpredictable photograph. -->
+          <p class="text-steel mt-4 max-w-[44ch] text-[1.0625rem] sm:text-lg">
+            Built by {business.owner}. {
+              business.yearsInBusiness.replace(/^over/, 'Over')
+            } of it, and he welds every one himself.
+          </p>
+
+          <!-- The price as a label and a figure on one rule, rather than as a
+               sentence. Most shops make you call to find this out; it is the
+               most useful thing in the hero, and setting it like a spec line
+               rather than a marketing line is also what stops it reading as
+               one. -->
+          <p
+            class="border-shop-line mt-7 flex items-baseline gap-3 border-t pt-5"
+          >
+            <span class="text-steel text-[0.9375rem]">Full cages from</span>
+            <span
+              class="font-display text-[1.75rem] leading-none font-bold sm:text-[2rem]"
+              >{pricing.cageStartingAtDisplay}</span
+            >
+          </p>
+
+          <!-- One button, not two. A solid primary next to an outlined
+               secondary is the other half of the template hero, and the
+               second action was never equal to the first anyway: this is a
+               one-man shop and the phone is how it gets booked. The quote
+               path stays, set as a link, which is also how every other
+               secondary action on this site is set. -->
+          <div class="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
+            <a
+              href={phone.tel}
+              data-analytics="call-hero"
+              class="font-display bg-bone text-shop bend border-bone hover:bg-transparent hover:text-bone border px-6 py-3.5 font-bold transition-colors"
+            >
+              Call {phone.display}
+            </a>
+            <a
+              href="/contact/"
+              class="text-bone hover:text-steel font-semibold underline decoration-1 underline-offset-4 transition-colors"
+            >
+              Get a quote
+            </a>
+          </div>
+
+          <!-- Hours next to the call, not only in the footer. Someone
+               deciding to ring a one-man shop needs to know whether anybody
+               will pick up. -->
+          <p class="text-steel mt-6 text-[0.875rem]">
+            {business.hours.display}
+          </p>
+        </div>
       </div>
     </div>
   </section>
