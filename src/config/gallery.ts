@@ -99,6 +99,11 @@ export const gallery: Record<string, GalleryPhoto[]> = {
       position: '50% 55%',
     },
     {
+      file: 'hero-dune-sunset-66.jpg',
+      alt: 'The same four-seat machine on a dune at sunset, two lit whips flying flags above it and underglow lighting the sand.',
+      position: '50% 55%',
+    },
+    {
       file: 'detail-badge-white-cage.jpg',
       alt: 'The M1 Off-Road badge on a white roll cage tube, weld beads visible along the joint.',
     },

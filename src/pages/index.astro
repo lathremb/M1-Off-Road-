@@ -130,13 +130,18 @@ const teaser = [
          and what was left sat behind the headline and two buttons. The car
          was in the hero without being visible in it.
 
-         Below sm the picture gets a 4:3 band of its own instead. That is the
-         file's own ratio, so nothing is cropped at all: the whole photograph
-         shows, and the words sit underneath it on flat #111. From sm up the
-         box is wide enough for the overlay to work — at 640 it already shows
-         93% of the frame's height and all of its width — so it goes back to
-         full bleed, which is the arrangement this was asked for. -->
-    <div class="relative aspect-[4/3] w-full sm:absolute sm:inset-0 sm:aspect-auto">
+         Below sm the picture gets a 16:10 band of its own instead. That is
+         the file's own ratio, so nothing is cropped at all: the whole
+         photograph shows, and the words sit underneath it on flat #111. From
+         sm up the box is wide enough for the overlay to work — at 640 it
+         already shows 89% of the frame's width and all of its height — so it
+         goes back to full bleed, which is the arrangement this was asked
+         for.
+
+         The ratio here tracks the hero photograph. Swap the file for one with
+         a different shape and this needs to change with it, or the band
+         starts cropping the thing it exists to show whole. -->
+    <div class="relative aspect-[16/10] w-full sm:absolute sm:inset-0 sm:aspect-auto">
       {
         heroSource ? (
           <img
@@ -149,11 +154,11 @@ const teaser = [
             fetchpriority="high"
             decoding="sync"
             class="h-full w-full object-cover"
-            /* 60%, not centre. The machine occupies roughly 28% to 87% of the
-               frame's height; centring the crop would cut the bottoms of the
-               tyres off. Biasing down keeps the whole machine and gives up
-               sky, which is the cheapest thing in the frame. */
-            style="object-position:50% 62%"
+            /* 55%, only just below centre. This machine sits at 16% to 89%
+               down the frame — 16% of sky above it but only 11% of dirt
+               below — so the crop is biased down a touch to protect the
+               tighter margin, the one under the tyres. */
+            style="object-position:50% 55%"
           />
         ) : (
           <Shot shot="hero-build" fill eager sizes="100vw" />

@@ -38,16 +38,22 @@ export interface Shot {
 
 export const shots = {
   /* ---- the one that carries the whole site ---- */
-  /* Supplied 2026-09-22 as "Final Hero Photo", 3840x2880. It is the first
-     photograph in the library that does not force a compromise: landscape,
-     so it suits a wide hero; 3840px, so nothing upscales anywhere; the whole
-     machine in frame with margin on all four sides, so a wide crop trims sky
-     and sand rather than bodywork; and shot at dusk, so the sky is dark
-     enough behind text without the picture having to be dimmed for it. */
+  /* The red Pro R, 2048x1280. Chosen back over the 3840px dune shot on
+     2026-09-22: it is 16:10 rather than 4:3, which is much closer to the
+     shape of a hero, so a wide box trims very little and the whole
+     photograph reads at almost any window. The machine sits at 12-87% across
+     and 16-89% down, near enough centred that object-position barely has to
+     work.
+
+     The trade is resolution. At 2048 it is the second-lowest hero candidate
+     in the library, and a 2x display at 1440 CSS asks for 2880, so it
+     upscales about 1.4x there. That is well short of the 1.9x that was
+     visibly soft on the old night shot, and every 1x monitor is served
+     exactly — but a larger original of this frame would be worth having. */
   'hero-build': {
-    file: 'hero-dune-sunset-66.jpg',
-    position: '50% 60%',
-    alt: 'A four-seat UTV with a custom roll cage built by M1 Off-Road, parked on a dune at sunset, two lit whips flying flags above it, underglow lighting the sand, and an M1 OFF-ROAD number 66 panel on the door.',
+    file: 'hero-rzr-red-wide.jpg',
+    position: '50% 55%',
+    alt: 'A red Polaris RZR Pro R with a bare, uncoated steel roll cage built by M1 Off-Road, shot side-on in the desert.',
     label: 'Hero — finished build, three-quarter front',
     aspect: '16 / 9',
     direction:
