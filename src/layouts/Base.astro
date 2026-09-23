@@ -28,10 +28,24 @@ interface Props {
    * is two extra round trips and roughly a second of LCP. The bytes were
    * never the problem; the discovery time was.
    */
-  preloadImage?: { srcset: string; sizes: string; media?: string };
+  /**
+   * One entry, or one per art-directed crop. When the hero serves a different
+   * photograph per breakpoint, each needs its own preload carrying the same
+   * `media` as its <source> — otherwise only the crop that happens to be
+   * listed gets the head start, and the other breakpoint discovers its hero
+   * the slow way.
+   */
+  preloadImage?:
+    | { srcset: string; sizes: string; media?: string }
+    | { srcset: string; sizes: string; media?: string }[];
 }
 
 const { title, description, schema = false, preloadImage } = Astro.props;
+const preloads = preloadImage
+  ? (Array.isArray(preloadImage) ? preloadImage : [preloadImage]).filter(
+      (p) => p?.srcset
+    )
+  : [];
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
@@ -61,16 +75,16 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
     />
 
     {
-      preloadImage && (
+      preloads.map((p) => (
         <link
           rel="preload"
           as="image"
-          imagesrcset={preloadImage.srcset}
-          imagesizes={preloadImage.sizes}
-          media={preloadImage.media}
+          imagesrcset={p.srcset}
+          imagesizes={p.sizes}
+          media={p.media}
           fetchpriority="high"
         />
-      )
+      ))
     }
 
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />

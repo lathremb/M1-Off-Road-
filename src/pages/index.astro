@@ -73,8 +73,31 @@ const buildSrcset = async (src: ImageMetadata | undefined, maxWidth = 2560) => {
 
    One source also gives the alt text back: with two machines it had to
    describe what was true of both, and it can now describe this photograph. */
+/* The phone gets a different photograph, and this time it is a choice rather
+   than a workaround.
+
+   A hero box is wide on a desktop and tall on a phone, and no single frame is
+   both. The red Pro R is 16:10 and suits the wide box; forced into a portrait
+   phone hero it showed 58% of its width against the 75% the machine occupies,
+   losing the front bumper and the spare. The night dune shot is 3:4 and fills
+   a phone screen with nothing cropped at all — and at 375px it is asking for
+   750 device pixels of a 1536px file, so the upscaling that made it soft in a
+   WIDE box never happens in a tall one.
+
+   The cost is the alt text. A <picture> has one alt for every <source>, and
+   these are two different machines, so it has to describe what is true of
+   both rather than naming a colour half the visitors cannot see. */
+const heroNarrowSource =
+  photoFiles['../assets/photos/hero-night-dune-66.jpg']?.default;
+
 const heroSrcset = await buildSrcset(heroSource);
-const heroAlt = heroShot.alt;
+const heroNarrowSrcset = await buildSrcset(heroNarrowSource);
+const heroAlt = 'A four-seat UTV fitted with a custom M1 Off-Road roll cage.';
+
+/* Matches the <source media> below, so the preload picks the same file the
+   browser will actually use. 640px is the sm breakpoint. */
+const HERO_WIDE_MEDIA = '(min-width: 640px)';
+const HERO_NARROW_MEDIA = '(max-width: 639.98px)';
 
 /* Full bleed, so the slot is the viewport. This MUST match the sizes on the
    <img> below — a preload that disagrees by one attribute picks a different
@@ -97,7 +120,10 @@ const teaser = [
   title="M1 Off-Road | Custom UTV Roll Cages & Fabrication Tucson, AZ"
   description="Custom roll cages, doors, roofs and bumpers for Polaris RZR, Can-Am and other SxS machines. MIG welded in Tucson, AZ. Full cages from $2,500."
   schema
-  preloadImage={heroSrcset ? { srcset: heroSrcset, sizes: HERO_SIZES } : undefined}
+  preloadImage={[
+    { srcset: heroSrcset, sizes: HERO_SIZES, media: HERO_WIDE_MEDIA },
+    { srcset: heroNarrowSrcset, sizes: HERO_SIZES, media: HERO_NARROW_MEDIA },
+  ]}
 >
   <!-- ==========================================================
        HERO — the photograph fills it, the words sit on it.
@@ -121,57 +147,55 @@ const teaser = [
          its height from min-height plus content resolves to auto in Firefox —
          the image then falls back to its intrinsic height and leaves the
          bottom of the hero uncovered. inset-0 is definite in every engine. -->
-    <!-- In flow below sm, full bleed behind the words from sm up.
-
-         A landscape photograph cannot sit behind overlaid text in a portrait
-         box without becoming wallpaper. Measured on a 375px phone the
-         full-bleed version showed 58% of the frame's width against the 75%
-         the machine occupies, so it lost the front bumper and the spare —
-         and what was left sat behind the headline and two buttons. The car
-         was in the hero without being visible in it.
-
-         Below sm the picture gets a 16:10 band of its own instead. That is
-         the file's own ratio, so nothing is cropped at all: the whole
-         photograph shows, and the words sit underneath it on flat #111. From
-         sm up the box is wide enough for the overlay to work — at 640 it
-         already shows 89% of the frame's width and all of its height — so it
-         goes back to full bleed, which is the arrangement this was asked
-         for.
-
-         The ratio here tracks the hero photograph. Swap the file for one with
-         a different shape and this needs to change with it, or the band
-         starts cropping the thing it exists to show whole. -->
-    <div class="relative aspect-[16/10] w-full sm:absolute sm:inset-0 sm:aspect-auto">
+    <div class="absolute inset-0">
       {
         heroSource ? (
-          <img
-            srcset={heroSrcset}
-            sizes={HERO_SIZES}
-            alt={heroAlt}
-            width={heroSource.width}
-            height={heroSource.height}
-            loading="eager"
-            fetchpriority="high"
-            decoding="sync"
-            class="h-full w-full object-cover"
-            /* 55%, only just below centre. This machine sits at 16% to 89%
-               down the frame — 16% of sky above it but only 11% of dirt
-               below — so the crop is biased down a touch to protect the
-               tighter margin, the one under the tyres. */
-            style="object-position:50% 55%"
-          />
+          <picture>
+            {heroNarrowSrcset && (
+              <source
+                media={HERO_NARROW_MEDIA}
+                srcset={heroNarrowSrcset}
+                sizes={HERO_SIZES}
+                width="1536"
+                height="2048"
+              />
+            )}
+            <img
+              srcset={heroSrcset}
+              sizes={HERO_SIZES}
+              alt={heroAlt}
+              width={heroSource.width}
+              height={heroSource.height}
+              loading="eager"
+              fetchpriority="high"
+              decoding="sync"
+              class="h-full w-full object-cover object-[50%_58%] sm:object-[50%_55%]"
+            />
+          </picture>
         ) : (
           <Shot shot="hero-build" fill eager sizes="100vw" />
         )
       }
 
-      <!-- One scrim. It only has to work at the bottom of the frame now: the
-           words sit in the lower left, where this photograph is already dune
-           shadow and sand rather than sky, so the gradient is doing far less
-           lifting than the three it replaced. It clears entirely before the
-           halfway mark, which leaves the sunset and the whips untouched. -->
+      <!-- Two hero-wide scrims, one per crop, because one curve cannot serve
+           both. The phone hero is a taller box holding the same amount of
+           text, so the words start higher up the gradient than they do on the
+           wide crop; the night frame also has a lit whip and fireworks in the
+           upper half, which are the brightest things in either photograph.
+           The phone therefore gets its own steeper curve instead of the two
+           sharing a compromise that is too heavy for one and too light for
+           the other.
+
+           Both are lighter than they would have to be alone, because the
+           block that holds the text carries a third gradient of its own. -->
       <div
-        class="absolute inset-0"
+        class="absolute inset-0 sm:hidden"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .86) 0%, rgb(17 17 17 / .70) 28%, rgb(17 17 17 / .42) 52%, rgb(17 17 17 / .14) 74%, rgb(17 17 17 / 0) 92%)"
+        aria-hidden="true"
+      >
+      </div>
+      <div
+        class="absolute inset-0 hidden sm:block"
         style="background:linear-gradient(to top, rgb(17 17 17 / .72) 0%, rgb(17 17 17 / .50) 24%, rgb(17 17 17 / .24) 46%, rgb(17 17 17 / .06) 68%, rgb(17 17 17 / 0) 88%)"
         aria-hidden="true"
       >
@@ -188,7 +212,7 @@ const teaser = [
          aspect-ratio, because aspect-ratio is a fixed height and the text
          would overflow it on a phone. -->
     <div
-      class="relative flex min-h-0 items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
+      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
     >
       <!-- A second scrim, and the only one anchored to the TEXT rather than to
            the hero box. This is the piece that makes contrast hold across the
