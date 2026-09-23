@@ -247,19 +247,36 @@ const teaser = [
         <div
           class="bg-shop/95 border-shop-line bend max-w-[34rem] border-t border-r px-6 pt-8 pb-9 sm:px-9 sm:pt-10 sm:pb-11"
         >
+          <!-- The one number that stops people calling, moved above the
+               headline and set as a chip rather than as a sentence on a rule
+               halfway down the block.
+
+               Sentence case, deliberately. An all-caps eyebrow over a heading
+               is the pattern this site avoids everywhere else, and this sits
+               in exactly that slot — what keeps it clear of the anti-pattern
+               is that it carries a fact rather than a category label, and
+               appears once on the site rather than above every heading. -->
+          <p
+            class="border-shop-line bend mb-5 inline-flex items-baseline gap-2 border px-3 py-1.5"
+          >
+            <span class="text-steel text-[0.8125rem]">Full cages from</span>
+            <span class="font-display text-[0.9375rem] font-bold"
+              >{pricing.cageStartingAtDisplay}</span
+            >
+          </p>
+
           <!-- The city belongs in the h1, not only in the <title>: "roll
                cages Tucson" is the search this page has to win, and the h1 is
                the strongest on-page signal for it.
 
-               Smaller than it was, and bold rather than extra-bold. At 72px
-               and weight 800 the headline was competing with the machine for
-               the eye, which is the wrong fight on a page selling
-               fabrication — the photograph is the proof, the sentence is only
-               the label on it. It is also the single loudest tell of a
-               template hero. At 44px on a plate it still leads, because
-               position and ground do the work that size was doing. -->
+               38px, down from 44 and from 72 before that, with the letterfit
+               pulled to -0.03em and the leading pinned at 1.02 rather than
+               inheriting 1.04. Size alone was never what made this headline
+               feel generic — a big sans set loosely is what does that. Tight
+               fit and tight leading at a smaller size reads athletic; the
+               same words at 44px and -0.02em were drifting toward stock. -->
           <h1
-            class="max-w-[20ch] text-[clamp(1.875rem,3.4vw,2.75rem)] font-bold tracking-[-0.02em]"
+            class="max-w-[18ch] text-[clamp(1.75rem,2.9vw,2.375rem)] leading-[1.02] font-bold tracking-[-0.03em]"
           >
             Custom UTV roll cages in Tucson.
           </h1>
@@ -268,53 +285,51 @@ const teaser = [
                holds, so the secondary line can finally be secondary; it had
                to be full-strength bone before only because it was sitting on
                an unpredictable photograph. -->
-          <p class="text-steel mt-4 max-w-[44ch] text-[1.0625rem] sm:text-lg">
+          <p class="text-steel mt-4 max-w-[42ch] text-base leading-[1.55]">
             Built by {business.owner}. {
               business.yearsInBusiness.replace(/^over/, 'Over')
             } of it, and he welds every one himself.
           </p>
 
-          <!-- The price as a label and a figure on one rule, rather than as a
-               sentence. Most shops make you call to find this out; it is the
-               most useful thing in the hero, and setting it like a spec line
-               rather than a marketing line is also what stops it reading as
-               one. -->
-          <p
-            class="border-shop-line mt-7 flex items-baseline gap-3 border-t pt-5"
-          >
-            <span class="text-steel text-[0.9375rem]">Full cages from</span>
-            <span
-              class="font-display text-[1.75rem] leading-none font-bold sm:text-[2rem]"
-              >{pricing.cageStartingAtDisplay}</span
-            >
-          </p>
+          <!-- The quote form leads and the phone follows it.
 
-          <!-- One button, not two. A solid primary next to an outlined
-               secondary is the other half of the template hero, and the
-               second action was never equal to the first anyway: this is a
-               one-man shop and the phone is how it gets booked. The quote
-               path stays, set as a link, which is also how every other
-               secondary action on this site is set. -->
-          <div class="mt-7 flex flex-wrap items-center gap-x-7 gap-y-4">
+               That is a conversion trade, not only a visual one: the phone is
+               how a one-man shop actually books work. What makes it a fair
+               trade here is that the number has not gone anywhere — it is in
+               the sticky header on every page and in the fixed call/text bar
+               at the bottom of every phone screen — while the form is the
+               only thing that catches somebody deciding at ten at night.
+
+               On a near-black plate a "dark fill" primary would disappear, so
+               the loudest fill available is bone, and the secondary is the
+               ghost. Hover steps to bone-lift rather than inverting: a full
+               invert on the primary reads as a state change, which is more
+               noise than a hover needs to make. -->
+          <div class="mt-7 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <a
+              href="/contact/"
+              class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Get a quote
+            </a>
             <a
               href={phone.tel}
               data-analytics="call-hero"
-              class="font-display bg-bone text-shop bend border-bone hover:bg-transparent hover:text-bone border px-6 py-3.5 font-bold transition-colors"
+              /* steel/75, not steel/50. On a ghost button the border IS the
+                 control's boundary, so it answers to the 3:1 non-text
+                 contrast floor rather than to taste. Against this plate 50%
+                 composites to 2.29:1 and 75% to 3.52:1. */
+              class="font-display border-steel/75 text-bone bend hover:border-bone hover:bg-bone/5 border px-6 py-3.5 text-center font-bold transition-colors"
             >
               Call {phone.display}
-            </a>
-            <a
-              href="/contact/"
-              class="text-bone hover:text-steel font-semibold underline decoration-1 underline-offset-4 transition-colors"
-            >
-              Get a quote
             </a>
           </div>
 
           <!-- Hours next to the call, not only in the footer. Someone
                deciding to ring a one-man shop needs to know whether anybody
-               will pick up. -->
-          <p class="text-steel mt-6 text-[0.875rem]">
+               will pick up. 13px to match the badge: the two tertiary items
+               in this block now agree instead of sitting a pixel apart. -->
+          <p class="text-steel mt-6 text-[0.8125rem] tracking-[0.01em]">
             {business.hours.display}
           </p>
         </div>
