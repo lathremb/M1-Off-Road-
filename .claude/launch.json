@@ -2,10 +2,11 @@
   "version": "0.0.1",
   "configurations": [
     {
+      "//": "Port 4330, not Astro's default 4321. LT Scales runs on 4321, and two projects cannot hold the same port: whichever starts second fails to start at all. Each project gets its own number so both dev servers can run side by side.",
       "name": "m1-dev",
       "runtimeExecutable": "C:\\Users\\Lathr\\AppData\\Local\\nodejs-portable\\node.exe",
-      "runtimeArgs": ["node_modules/astro/bin/astro.mjs", "dev", "--port", "4321"],
-      "port": 4321
+      "runtimeArgs": ["node_modules/astro/bin/astro.mjs", "dev", "--port", "4330"],
+      "port": 4330
     }
   ]
 }
