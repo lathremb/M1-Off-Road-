@@ -2,11 +2,11 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
 
   "redirects": [
-    { "source": "/services", "destination": "/#what-we-build", "permanent": true },
+    { "source": "/services", "destination": "/#roll-cages", "permanent": true },
     { "source": "/gallery", "destination": "/#gallery", "permanent": true },
     { "source": "/about", "destination": "/#about", "permanent": true },
     { "source": "/contact", "destination": "/#contact", "permanent": true },
-    { "source": "/services/:slug", "destination": "/#what-we-build", "permanent": true }
+    { "source": "/services/:slug", "destination": "/#:slug", "permanent": true }
   ],
 
   "headers": [

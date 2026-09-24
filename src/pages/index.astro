@@ -268,57 +268,8 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
     </div>
   </section>
 
-  <!-- ==========================================================
-       WHAT COMES OUT OF THE SHOP
-       One photo and a plain list. On a single page the list is also the
-       index: each item jumps to the section that details it, a few
-       screens down, so the overview does not repeat the detail.
-       ========================================================== -->
-  <section id="what-we-build" class="bg-bone">
-    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-      <BendRule class="mb-8 max-w-xs" />
-
-      <h2 class="max-w-[16ch] text-[clamp(2rem,5vw,3.25rem)]">
-        What comes out of the shop
-      </h2>
-
-      <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
-        <Shot shot="bend-bare" light class="w-full" />
-
-        <div>
-          <ul class="border-bone-line border-t">
-            {
-              services.map((s) => (
-                <li class="border-bone-line border-b">
-                  <a
-                    href={`#${s.slug}`}
-                    class="hover:text-slate flex flex-col gap-1.5 py-5 transition-colors"
-                  >
-                    <span class="flex items-baseline justify-between gap-4">
-                      <span class="font-display text-xl font-bold">{s.title}</span>
-                      {s.startingAt && (
-                        <span class="font-display shrink-0 text-lg font-bold">
-                          From {s.startingAt}
-                        </span>
-                      )}
-                    </span>
-                    <span class="text-slate max-w-[44ch]">{s.blurb}</span>
-                  </a>
-                </li>
-              ))
-            }
-          </ul>
-        </div>
-      </div>
-      <p class="text-slate mt-10 max-w-[62ch] text-lg">
-        All welding is MIG and done in house. Powder coating is sent out to a
-        coater.
-      </p>
-    </div>
-  </section>
-
   <!-- ---------- roll cages ---------- -->
-  <section id="roll-cages" class="bg-shop text-bone">
+  <section id="roll-cages" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
@@ -328,7 +279,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           <p class="font-display mt-4 text-2xl font-bold">
             From {pricing.cageStartingAtDisplay}
           </p>
-          <div class="text-steel mt-6 max-w-[54ch] space-y-4 text-lg">
+          <div class="text-slate mt-6 max-w-[54ch] space-y-4 text-lg">
             <p>
               A full replacement cage, measured and bent to your machine, fitted
               and tacked in place, then welded out.
@@ -339,29 +290,29 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               doors and a roof done at the same time costs less than the same
               three jobs on three separate visits.
             </p>
-            <p class="text-bone">
+            <p class="text-shop">
               Time in the shop: {terms.leadTime.toLowerCase()}.
             </p>
           </div>
 
-          <dl class="border-shop-line mt-8 grid gap-px border-t">
+          <dl class="border-bone-line mt-8 grid gap-px border-t">
             <div
-              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
             >
               <dt class="font-semibold">Welding</dt>
-              <dd class="text-steel">MIG, start to finish, in house.</dd>
+              <dd class="text-slate">MIG, start to finish, in house.</dd>
             </div>
             <div
-              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
             >
               <dt class="font-semibold">Finish</dt>
-              <dd class="text-steel">Powder coating is sent out to a coater.</dd>
+              <dd class="text-slate">Powder coating is sent out to a coater.</dd>
             </div>
             <div
-              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
             >
               <dt class="font-semibold">Time in the shop</dt>
-              <dd class="text-steel">{terms.leadTime}.</dd>
+              <dd class="text-slate">{terms.leadTime}.</dd>
             </div>
             <!-- Tubing spec and warranty are still open questions and are
                  tracked in NEEDS-INPUT.md. A spec table showing a row with
@@ -371,8 +322,8 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
         </div>
 
         <div class="space-y-4">
-          <Shot shot="svc-cage" class="w-full" />
-          <Shot shot="cage-joint" class="w-full" />
+          <Shot shot="svc-cage" light class="w-full" />
+          <Shot shot="cage-joint" light class="w-full" />
           <!-- A macro of a bare joint belongs here, third in this stack — it
                is the most persuasive photo on the site after the hero.
                reserved-shot: weld-bead -->
@@ -382,16 +333,16 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
   </section>
 
   <!-- ---------- doors ---------- -->
-  <section id="doors" class="bg-bone">
+  <section id="doors" class="bg-shop text-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <!-- A close frame of the latch would pair with this one.
              reserved-shot: door-latch -->
-        <Shot shot="svc-doors" light class="w-full" />
+        <Shot shot="svc-doors" class="w-full" />
 
         <div>
           <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Doors</h2>
-          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
+          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
               Factory half doors leave the opening half open. A full door closes
               it, which keeps most of the dust out.
@@ -401,7 +352,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               the latch side are set against the actual tube rather than to a
               standard measurement.
             </p>
-            <p class="text-shop">
+            <p class="text-bone">
               Cheaper at the same time as a cage, since the machine is already
               apart. {terms.servicePricing}.
             </p>
@@ -412,12 +363,12 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
   </section>
 
   <!-- ---------- roofs ---------- -->
-  <section id="roofs" class="bg-shop text-bone">
+  <section id="roofs" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
         <div>
           <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Roofs</h2>
-          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
+          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
               A bolt-on roof mounts to whatever it can reach and rattles. One
               built to the cage picks up the tube where the tube actually runs,
@@ -432,24 +383,24 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
         </div>
 
         <div class="space-y-4">
-          <Shot shot="svc-roofs" class="w-full" />
-          <Shot shot="roof-edge" class="w-full" />
+          <Shot shot="svc-roofs" light class="w-full" />
+          <Shot shot="roof-edge" light class="w-full" />
         </div>
       </div>
     </div>
   </section>
 
   <!-- ---------- custom fabrication ---------- -->
-  <section id="custom-fabrication" class="bg-bone">
+  <section id="custom-fabrication" class="bg-shop text-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-        <Shot shot="svc-fab" light class="w-full" />
+        <Shot shot="svc-fab" class="w-full" />
 
         <div>
           <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">
             Custom Fabrication
           </h2>
-          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
+          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
               Bumpers, mounts, brackets and repairs. Anything steel that goes on
               an off-road machine and does not come as a part you can buy.
@@ -458,7 +409,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             <!-- Bumpers get their own heading because "custom UTV bumper" is a
                  search in its own right, and because there are real bumper
                  photographs on the site to back it up. -->
-            <h3 class="text-shop pt-2 text-2xl">Custom bumpers</h3>
+            <h3 class="text-bone pt-2 text-2xl">Custom bumpers</h3>
             <p>
               Tube bumpers built to the machine rather than bolted on from a
               catalogue. Same MIG welding as the cages.
@@ -468,7 +419,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               Quoted per job, since the price depends on the part. If it is not
               something the shop can do, you will be told that on the phone.
             </p>
-            <p class="text-shop">
+            <p class="text-bone">
               <a
                 href={phone.sms}
                 data-analytics="text-fab-inline"
@@ -487,7 +438,18 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
        Not knowing what a cage costs is what stops people calling,
        so the number gets a section to itself.
        ========================================================== -->
-  <section id="price" class="bg-shop text-bone">
+  <!-- The one hairline in the section rhythm, and it earns its place.
+
+       Removing "what comes out of the shop" cost the page a light section
+       directly under the hero, so the four service blocks were flipped to put
+       one back: light, dark, light, dark. That leaves custom fabrication and
+       this section both dark and touching — the only two adjacent tones on
+       the page. Carrying the inversion further would mean flipping the
+       contact section too, and the quote form is styled for a light ground.
+
+       So the seam gets a rule instead of a tone change. A hairline is how
+       every other boundary on this site is drawn. -->
+  <section id="price" class="bg-shop text-bone border-shop-line border-t">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
         <div>

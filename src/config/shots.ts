@@ -141,15 +141,14 @@ export const shots = {
       'Wide, inside the shop. A machine mid-build with bare tube tacked in place. Tools and sparks are good here — this is the only place on the site where mess helps.',
     priority: 'should',
   },
-  'bend-bare': {
-    file: 'shop-bare-cage-stands.jpg',
-    alt: 'A bare, unpainted UTV roll cage on stands in the shop with a chop saw and MIG welder behind it.',
-    label: 'Bare tube — bent sections before assembly',
-    aspect: '3 / 2',
-    direction:
-      'Bent tube sections laid out or in the bender, bare steel, before anything is welded. Reads as craft immediately.',
-    priority: 'should',
-  },
+  /* 'bend-bare' lived here until 2026-09-23. It filled the "what comes out of
+     the shop" block, and that block came out: on one page it sat directly
+     above the same four services in full, saying the same thing twice.
+
+     This registry lists SLOTS that exist on the site, so an entry with no
+     slot left has to go or the build warns about it forever. The photograph
+     itself is not lost — shop-bare-cage-stands.jpg is in the gallery under
+     "In the Shop". */
 
   'badge': {
     file: 'detail-badge-white-cage.jpg',
