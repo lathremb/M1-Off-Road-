@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "node scripts/check-vercel-json.mjs && astro build",
     "build:docs": "astro build && node scripts/needs-input.mjs",
     "preview": "astro preview",
     "needs-input": "node scripts/needs-input.mjs",

@@ -1,17 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
 
-  "//redirects": [
-    "The five-page site became one page on 2026-09-23. These keep any link",
-    "already shared — a text message, the Facebook page, a business card —",
-    "landing on the right part of the new one instead of a 404.",
-    "",
-    "Real 301s from the edge, not Astro's static redirects, which emit an",
-    "HTML page with a meta refresh: that is a crawlable document telling a",
-    "search engine a URL still exists, which is the opposite of what a",
-    "permanent redirect is for. The fragment survives the hop, so /services/",
-    "lands on the services block rather than the top of the page."
-  ],
   "redirects": [
     { "source": "/services", "destination": "/#what-we-build", "permanent": true },
     { "source": "/gallery", "destination": "/#gallery", "permanent": true },
