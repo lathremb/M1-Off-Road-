@@ -15,21 +15,21 @@ import { phone, services } from '../config/site';
    and the menu button under md, so that is the whole price.
 
    Anchors are handled by `scroll-padding-top` on `html` in global.css — a
-   section linked as /services/#roofs would otherwise land underneath this. */
+   section linked as #roofs would otherwise land underneath this. */
 
-const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+/* Four sections of one page, not four pages.
 
-/* Four items, not seven. The four services used to each have a page and a nav
-   slot; they are now anchored sections on one /services/ page, which is the
-   whole reason this nav fits comfortably on a phone. */
+   There is deliberately no aria-current here any more. It marked the page you
+   were on, and on a single-page site every one of these is the page you are
+   on, so marking one would be a lie and marking all four would be noise.
+   Doing it honestly means scroll-spying the sections and moving the mark as
+   you scroll, which is a lot of script for a four-item bar. */
 const nav = [
-  { href: '/services/', label: 'What We Build' },
-  { href: '/gallery/', label: 'Gallery' },
-  { href: '/about/', label: 'About' },
-  { href: '/contact/', label: 'Contact' },
+  { href: '#what-we-build', label: 'What We Build' },
+  { href: '#gallery', label: 'Gallery' },
+  { href: '#about', label: 'About' },
+  { href: '#contact', label: 'Contact' },
 ];
-
-const isCurrent = (href: string) => path === href.replace(/\/$/, '');
 ---
 
 <!-- z-40 sits under the skip link (z-60) and the mobile call bar (z-50).
@@ -54,11 +54,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
             <li>
               <a
                 href={item.href}
-                aria-current={isCurrent(item.href) ? 'page' : undefined}
-                class:list={[
-                  'text-[0.9375rem] transition-colors hover:text-bone',
-                  isCurrent(item.href) ? 'text-bone' : 'text-steel',
-                ]}
+                class="text-steel hover:text-bone text-[0.9375rem] transition-colors"
               >
                 {item.label}
               </a>
@@ -98,14 +94,7 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
       {
         nav.map((item) => (
           <li class="border-shop-line/60 border-b last:border-0">
-            <a
-              href={item.href}
-              aria-current={isCurrent(item.href) ? 'page' : undefined}
-              class:list={[
-                'block py-3.5 text-[0.9375rem]',
-                isCurrent(item.href) ? 'text-bone' : 'text-bone',
-              ]}
-            >
+            <a href={item.href} class="text-bone block py-3.5 text-[0.9375rem]">
               {item.label}
             </a>
           </li>
@@ -119,9 +108,23 @@ const isCurrent = (href: string) => path === href.replace(/\/$/, '');
   const toggle = document.getElementById('nav-toggle');
   const menu = document.getElementById('nav-mobile');
 
+  const setOpen = (open: boolean) => {
+    toggle?.setAttribute('aria-expanded', String(open));
+    menu?.classList.toggle('hidden', !open);
+  };
+
   toggle?.addEventListener('click', () => {
-    const open = toggle.getAttribute('aria-expanded') === 'true';
-    toggle.setAttribute('aria-expanded', String(!open));
-    menu?.classList.toggle('hidden', open);
+    setOpen(toggle.getAttribute('aria-expanded') !== 'true');
   });
+
+  /* Close on choosing a destination.
+
+     This became necessary when the site became one page. Every one of these
+     used to be a navigation, and the new document arrived with the menu shut
+     because it was a new document. They are same-page anchors now: the menu
+     stays open over the very section it just scrolled to, which on a phone
+     means the answer is behind the thing that asked the question. */
+  menu?.querySelectorAll('a').forEach((link) =>
+    link.addEventListener('click', () => setOpen(false))
+  );
 </script>

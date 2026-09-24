@@ -30,8 +30,18 @@ export default defineConfig({
   },
 
   build: {
-    // Small per-page CSS goes inline, which removes a render-blocking request
-    // on the pages that matter most for the mobile score.
+    // Left at 'auto', which keeps this site's 27KB stylesheet external.
+    //
+    // 'always' was tried on the theory that a single-page site gains nothing
+    // from an external stylesheet — there are no other navigations to reuse
+    // the cache on — and that the extra render-blocking request was what took
+    // LCP from 2.4s to 2.6s when the five pages became one.
+    //
+    // It was not. Three runs each: LCP 2.6s external, 2.6s inlined, FCP 0.9s
+    // both ways. The stylesheet is not on the critical path in any way that
+    // shows up. Inlining would have added 28KB to every HTML response, which
+    // /_astro/* caching otherwise serves once a year, so it is not worth
+    // paying for a difference that does not exist.
     inlineStylesheets: 'auto',
   },
 });

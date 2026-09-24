@@ -14,10 +14,8 @@ interface Props {
   /** Unique per page, 140–160 characters. */
   description: string;
   /**
-   * Emit the LocalBusiness block. Home and /contact/ only — those are the two
-   * pages a local result lands on. Both carry the same `@id`, so search
-   * engines read one business described twice rather than two businesses.
-   * Putting it on all six would be six competing entities.
+   * Emit the LocalBusiness block. The home page only — it is the whole site
+   * now, and 404 has no business being described as one.
    */
   schema?: boolean;
   /**

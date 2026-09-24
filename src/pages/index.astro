@@ -1,9 +1,39 @@
 ---
+/**
+ * The whole site, on one page.
+ *
+ * This replaced five routes — home, services, gallery, about and contact —
+ * on 2026-09-23. A one-man shop with one location, one phone number and one
+ * person doing the work does not have five pages' worth of separate intent
+ * behind it; it has one decision to make, and splitting that decision across
+ * five navigations was asking the visitor to assemble the answer themselves.
+ *
+ * WHAT THIS COSTS IN SEARCH, AND WHAT PAYS IT BACK
+ *
+ * Five titles, five descriptions and five h1s become one of each. That is a
+ * real loss of long-tail surface: /about/ was the only thing addressing
+ * "Mike Sulger" as a query, and /gallery/ was 33 captioned photographs on a
+ * URL of their own.
+ *
+ * What survives is the part that actually decides a local ranking. The
+ * LocalBusiness block, the address, the hours, the service list and the
+ * area served are all structured data and none of it cares how many pages
+ * carry it. Every photograph keeps its alt text. The heading hierarchy does
+ * the work the separate pages used to: one h1, then an h2 per section that
+ * names the job in the words somebody searches for, so the sections are
+ * still individually addressable — by anchor, and to a crawler reading the
+ * outline.
+ *
+ * If the shop ever wants image-search reach back, /gallery/ is the one page
+ * worth splitting out again: 33 photographs with real captions is the only
+ * part of this site that was ever going to rank on its own.
+ */
 import Base from '../layouts/Base.astro';
 import Shot from '../components/Shot.astro';
 import GalleryTile from '../components/GalleryTile.astro';
-import NeedsInput from '../components/NeedsInput.astro';
 import BendRule from '../components/BendRule.astro';
+import Lightbox from '../components/Lightbox.astro';
+import QuoteForm from '../components/QuoteForm.astro';
 import {
   business,
   phone,
@@ -12,13 +42,10 @@ import {
   platforms,
   terms,
 } from '../config/site';
-import { gallery } from '../config/gallery';
+import { gallery, galleryCount } from '../config/gallery';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { shots } from '../config/shots';
-
-/* Home is the only page carrying the LocalBusiness block, so the markup
-   describes one business rather than eight. */
 
 /* ---------------------------------------------------------
    The hero is generated here rather than through <Shot>, because it is the
@@ -36,17 +63,10 @@ const heroSource = heroShot.file
   ? photoFiles[`../assets/photos/${heroShot.file}`]?.default
   : undefined;
 
-/* Widths stop at the source's own width. Asking for 1920 or 2560 from a
-   1536-wide file makes Astro upscale and re-encode, which is softer than
-   letting the browser scale the native file. That upscaling was the actual
-   cause of the soft hero, not the compression, so quality sits at 80: 86 cost
-   ~0.4s of LCP for a difference that is not visible at these sizes. */
-/* Capped at 2560 rather than at the source's full 3840. A 3840-wide webp is
+/* Capped at 2560 rather than at a source's full width. A 3840-wide webp is
    most of a megabyte and it would be the LCP request on every retina desktop;
-   2560 is about a third of that. The cost is that a 2x laptop at 1512 CSS
-   asks for 3024 and gets 2560, an upscale of 1.18 — far below the 1.9 that
-   made the old hero visibly soft, and not something you can see at arm's
-   length. Every 1x monitor, which is most of them, is served exactly. */
+   2560 is about a third of that. Widths never exceed the source either, so
+   nothing is ever upscaled and re-encoded before the browser sees it. */
 const buildSrcset = async (src: ImageMetadata | undefined, maxWidth = 2560) => {
   if (!src) return '';
   const cap = Math.min(src.width, maxWidth);
@@ -58,35 +78,15 @@ const buildSrcset = async (src: ImageMetadata | undefined, maxWidth = 2560) => {
   return made.map((v, i) => `${v.src} ${widths[i]}w`).join(', ');
 };
 
-/* ONE photograph, one slot, no art direction.
-
-   The hero used to carry two different machines — a portrait night shot on
-   phones and a landscape daylight shot on wide screens — because neither
-   could do the job alone. The portrait one upscaled about 1.9x in a wide box
-   and that was the blur; the landscape one had its machine running off the
-   left edge of the original frame, so no crop showed the whole of it.
-
-   The photograph supplied on 2026-09-22 removes the reason for the split. It
-   is landscape, it is 3840px, and the machine sits with margin on all four
-   sides, so one source now fills a full-bleed hero at every breakpoint and a
-   wide crop trims sky and sand instead of bodywork.
-
-   One source also gives the alt text back: with two machines it had to
-   describe what was true of both, and it can now describe this photograph. */
-/* The phone gets a different photograph, and this time it is a choice rather
-   than a workaround.
-
-   A hero box is wide on a desktop and tall on a phone, and no single frame is
-   both. The red Pro R is 16:10 and suits the wide box; forced into a portrait
-   phone hero it showed 58% of its width against the 75% the machine occupies,
-   losing the front bumper and the spare. The night dune shot is 3:4 and fills
-   a phone screen with nothing cropped at all — and at 375px it is asking for
-   750 device pixels of a 1536px file, so the upscaling that made it soft in a
-   WIDE box never happens in a tall one.
+/* The phone gets a different photograph, and it is a choice rather than a
+   workaround. A hero box is wide on a desktop and tall on a phone and no
+   single frame is both: the red Pro R forced into a 375px portrait hero
+   showed 58% of its width against the 75% the machine occupies, losing the
+   front bumper and the spare. The night dune frame is 3:4 and fills a phone
+   screen with nothing cropped.
 
    The cost is the alt text. A <picture> has one alt for every <source>, and
-   these are two different machines, so it has to describe what is true of
-   both rather than naming a colour half the visitors cannot see. */
+   these are two different machines, so it describes what is true of both. */
 const heroNarrowSource =
   photoFiles['../assets/photos/hero-night-dune-66.jpg']?.default;
 
@@ -94,26 +94,25 @@ const heroSrcset = await buildSrcset(heroSource);
 const heroNarrowSrcset = await buildSrcset(heroNarrowSource);
 const heroAlt = 'A four-seat UTV fitted with a custom M1 Off-Road roll cage.';
 
-/* Matches the <source media> below, so the preload picks the same file the
-   browser will actually use. 640px is the sm breakpoint. */
+const HERO_SIZES = '100vw';
 const HERO_WIDE_MEDIA = '(min-width: 640px)';
 const HERO_NARROW_MEDIA = '(max-width: 639.98px)';
 
-/* Full bleed, so the slot is the viewport. This MUST match the sizes on the
-   <img> below — a preload that disagrees by one attribute picks a different
-   candidate and downloads the hero twice. */
-const HERO_SIZES = '100vw';
-
-/* Six tiles for the teaser strip, taken one at a time across the platforms so
-   the row is not six near-identical RZRs. */
-const teaser = [
-  gallery['polaris-rzr'][0],
-  gallery['can-am'][0],
-  gallery['kawasaki'][0],
-  gallery['polaris-rzr'][10],
-  gallery['in-the-shop'][0],
-  gallery['polaris-rzr'][4],
-];
+/* ---------------------------------------------------------
+   Gallery. One enlarged variant per photo, generated at build time so
+   opening a tile is a single cached request, capped at 1600px — past that is
+   more pixels than a phone or a laptop will show.
+   --------------------------------------------------------- */
+const flat = platforms.flatMap((p) => gallery[p.slug] ?? []);
+const fullUrls = new Map<string, string>();
+for (const photo of flat) {
+  const src = photoFiles[`../assets/photos/${photo.file}`]?.default;
+  if (!src) continue;
+  const big = await getImage({ src, width: 1600, format: 'webp', quality: 74 });
+  fullUrls.set(photo.file, big.src);
+}
+/** Position in the flat list, so the lightbox can page through every photo. */
+const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 ---
 
 <Base
@@ -127,18 +126,6 @@ const teaser = [
 >
   <!-- ==========================================================
        HERO — the photograph fills it, the words sit on it.
-
-       Back to the original arrangement, which the new photograph can finally
-       carry. The previous two rewrites existed to work around the pictures
-       available at the time: one was portrait and 1536px, so a wide box both
-       cropped the machine and upscaled it, and the other had the machine
-       running off the left edge of the frame. Neither could be a full-bleed
-       hero without losing the thing it was a photograph of.
-
-       This one is 3840x2880, landscape, and the machine sits with margin on
-       all four sides — so a wide crop takes sky and sand instead of bodywork,
-       and there is enough resolution left over to cap the ladder well below
-       the source and still serve every 1x monitor exactly.
        ========================================================== -->
   <section class="bg-shop text-bone relative overflow-hidden">
     <!-- The photograph gets its own absolutely positioned wrapper rather than
@@ -180,14 +167,10 @@ const teaser = [
       <!-- Two hero-wide scrims, one per crop, because one curve cannot serve
            both. The phone hero is a taller box holding the same amount of
            text, so the words start higher up the gradient than they do on the
-           wide crop; the night frame also has a lit whip and fireworks in the
-           upper half, which are the brightest things in either photograph.
-           The phone therefore gets its own steeper curve instead of the two
-           sharing a compromise that is too heavy for one and too light for
-           the other.
-
-           Both are lighter than they would have to be alone, because the
-           block that holds the text carries a third gradient of its own. -->
+           wide crop, and the night frame has a lit whip and fireworks in its
+           upper half — the brightest things in either photograph. Both are
+           lighter than they would need to be alone, because the block holding
+           the text carries a third gradient of its own. -->
       <div
         class="absolute inset-0 sm:hidden"
         style="background:linear-gradient(to top, rgb(17 17 17 / .86) 0%, rgb(17 17 17 / .70) 28%, rgb(17 17 17 / .42) 52%, rgb(17 17 17 / .14) 74%, rgb(17 17 17 / 0) 92%)"
@@ -204,123 +187,94 @@ const teaser = [
 
     <!-- A FULL-WIDTH sizer takes the hero's height from the VIEWPORT width, so
          the box keeps roughly the photograph's own proportions instead of
-         holding one height while the width runs away.
-
-         The caps are chosen against this photograph. The machine spans about
-         59% of the frame's height, so the hero has to show at least that much
-         of it: at 1440 it shows 69%, at 1920 62%. min-height rather than
+         holding one height while the width runs away. min-height rather than
          aspect-ratio, because aspect-ratio is a fixed height and the text
          would overflow it on a phone. -->
     <div
       class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
     >
-      <!-- A second scrim, and the only one anchored to the TEXT rather than to
-           the hero box. This is the piece that makes contrast hold across the
-           range, and the hero-sized gradient above has been lightened because
-           of it.
-
-           A hero-sized gradient cannot track the words. The hero's height
-           comes from the viewport and the text stack's does not, so as the
-           window narrows the words occupy more of the frame and ride up into
-           the thin end of the curve: at 1024 the headline measured 2.79:1 and
-           the subhead 3.57:1 against floors of 3 and 4.5, while the same
-           markup at 1440 was comfortably clear. Painting the gradient on the
-           block that holds the text makes its height the text's height at
-           every viewport, so the two cannot drift apart.
-
-           Splitting the work this way also costs the photograph less than one
-           heavy hero-wide curve did: the darkening is spent on the band the
-           words occupy rather than on the band the machine occupies. -->
+      <!-- A third scrim, and the only one anchored to the TEXT rather than to
+           the hero box. A hero-sized gradient cannot track the words: the
+           hero's height comes from the viewport and the text stack's does
+           not, so as the window narrows the words ride up into the thin end
+           of the curve. Painting it on the block that holds the text makes
+           its height the text's height at every viewport. -->
       <div
         class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.64)_0%,rgb(17_17_17/0.56)_80%,rgb(17_17_17/0)_100%)]"
       >
-      <div class="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:py-16">
-        <!-- The one number that stops people calling, set as a chip above the
-             headline. Sentence case on purpose: an all-caps eyebrow over a
-             heading is the pattern this site avoids, and what keeps this clear
-             of it is that it carries a fact rather than a category label, and
-             appears once rather than above every heading.
-
-             The chip has its own translucent fill here, unlike on the flat
-             black field it came from — a hairline border alone disappears
-             against a photograph. -->
-        <p
-          class="border-shop-line bg-shop/90 bend mb-4 inline-flex items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px]"
-        >
-          <span class="text-steel text-[0.8125rem]">Full cages from</span>
-          <span class="font-display text-[0.9375rem] font-bold"
-            >{pricing.cageStartingAtDisplay}</span
+        <div class="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:py-16">
+          <!-- The one number that stops people calling, set as a chip above
+               the headline. Sentence case on purpose: an all-caps eyebrow
+               over a heading is the pattern this site avoids, and what keeps
+               this clear of it is that it carries a fact rather than a
+               category label, and appears once rather than above every
+               heading. Its own translucent fill, because a hairline border
+               alone disappears against a photograph. -->
+          <p
+            class="border-shop-line bg-shop/90 bend mb-4 inline-flex items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px]"
           >
-        </p>
+            <span class="text-steel text-[0.8125rem]">Full cages from</span>
+            <span class="font-display text-[0.9375rem] font-bold"
+              >{pricing.cageStartingAtDisplay}</span
+            >
+          </p>
 
-        <!-- The city belongs in the h1, not only in the <title>: "roll cages
-             Tucson" is the search this page has to win, and the h1 is the
-             strongest on-page signal for it.
-
-             44px with the letterfit at -0.03em and the leading at 1.02. Tight
-             fit and tight leading is what reads athletic; a big sans set
-             loosely is what reads like a template, and that — not the size —
-             was what made the first version of this headline feel generic. -->
-        <h1
-          class="max-w-[16ch] text-[clamp(2rem,3.4vw,2.75rem)] leading-[1.02] font-bold tracking-[-0.03em]"
-        >
-          Custom UTV roll cages in Tucson.
-        </h1>
-
-        <!-- bone at 80%, not steel. steel's documented 5.8:1 holds against
-             flat #111; this line sits on a photograph, where that figure does
-             not apply, so it takes its contrast from the scrim and is
-             measured rather than assumed. -->
-        <p class="text-bone/90 mt-4 max-w-[42ch] text-base leading-[1.55]">
-          Built by {business.owner}. {
-            business.yearsInBusiness.replace(/^over/, 'Over')
-          } of it, and he welds every one himself.
-        </p>
-
-        <!-- The quote form leads and the phone follows it. That is a
-             conversion trade as much as a visual one, because the phone is how
-             a one-man shop books work; what makes it fair is that the number
-             has not moved — it is in the sticky header on every page and in
-             the fixed call/text bar at the bottom of every phone screen —
-             while the form is the only thing that catches somebody deciding at
-             ten at night.
-
-             The ghost button's border is bone/60 rather than steel here. On a
-             photograph a grey hairline vanishes, and on a ghost button the
-             border IS the control's boundary, so it answers to the 3:1
-             non-text contrast floor rather than to taste. -->
-        <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
-          <a
-            href="/contact/"
-            class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
+          <!-- The city belongs in the h1: "roll cages Tucson" is the search
+               this page has to win, and on a single-page site this is the
+               only h1 there is. -->
+          <h1
+            class="max-w-[16ch] text-[clamp(2rem,3.4vw,2.75rem)] leading-[1.02] font-bold tracking-[-0.03em]"
           >
-            Get a quote
-          </a>
-          <a
-            href={phone.tel}
-            data-analytics="call-hero"
-            class="font-display border-bone/60 text-bone bend hover:border-bone hover:bg-bone/10 border px-6 py-3.5 text-center font-bold transition-colors"
-          >
-            Call {phone.display}
-          </a>
+            Custom UTV roll cages in Tucson.
+          </h1>
+
+          <p class="text-bone/90 mt-4 max-w-[42ch] text-base leading-[1.55]">
+            Built by {business.owner}. {
+              business.yearsInBusiness.replace(/^over/, 'Over')
+            } of it, and he welds every one himself.
+          </p>
+
+          <!-- The quote form leads and the phone follows it. The number has
+               not moved — it is in the sticky header on every screen and in
+               the fixed call/text bar at the bottom of every phone — while
+               the form is the only thing that catches somebody deciding at
+               ten at night.
+
+               steel/75 on the ghost border, not steel/50: on a ghost button
+               the border IS the control's boundary, so it answers to the 3:1
+               non-text contrast floor rather than to taste. -->
+          <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
+            <a
+              href="#contact"
+              data-analytics="quote-hero"
+              class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Get a quote
+            </a>
+            <a
+              href={phone.tel}
+              data-analytics="call-hero"
+              class="font-display border-bone/60 text-bone bend hover:border-bone hover:bg-bone/10 border px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Call {phone.display}
+            </a>
+          </div>
+
+          <p class="text-bone/75 mt-6 text-[0.8125rem] tracking-[0.01em]">
+            {business.hours.display}
+          </p>
         </div>
-
-        <!-- Hours next to the call, not only in the footer. Someone deciding
-             to ring a one-man shop needs to know whether anybody will pick
-             up. -->
-        <p class="text-bone/75 mt-6 text-[0.8125rem] tracking-[0.01em]">
-          {business.hours.display}
-        </p>
-      </div>
       </div>
     </div>
   </section>
 
   <!-- ==========================================================
-       WHAT HE BUILDS
-       One photo and a plain list. The detail lives on /services/.
+       WHAT COMES OUT OF THE SHOP
+       One photo and a plain list. On a single page the list is also the
+       index: each item jumps to the section that details it, a few
+       screens down, so the overview does not repeat the detail.
        ========================================================== -->
-  <section class="bg-bone">
+  <section id="what-we-build" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <BendRule class="mb-8 max-w-xs" />
 
@@ -328,40 +282,32 @@ const teaser = [
         What comes out of the shop
       </h2>
 
-      <!-- One photo and a list, not four photo cards. Each service keeps its
-           own heading and anchor on /services/; repeating all four here as
-           cards was the single busiest thing on the page. -->
       <div class="mt-12 grid gap-10 lg:grid-cols-2 lg:gap-16">
         <Shot shot="bend-bare" light class="w-full" />
 
         <div>
           <ul class="border-bone-line border-t">
-            {services.map((s) => (
-              <li class="border-bone-line border-b">
-                <a
-                  href={`/services/#${s.slug}`}
-                  class="hover:text-slate flex flex-col gap-1.5 py-5 transition-colors"
-                >
-                  <span class="flex items-baseline justify-between gap-4">
-                    <span class="font-display text-xl font-bold">{s.title}</span>
-                    {s.startingAt && (
-                      <span class="font-display shrink-0 text-lg font-bold">
-                        From {s.startingAt}
-                      </span>
-                    )}
-                  </span>
-                  <span class="text-slate max-w-[44ch]">{s.blurb}</span>
-                </a>
-              </li>
-            ))}
+            {
+              services.map((s) => (
+                <li class="border-bone-line border-b">
+                  <a
+                    href={`#${s.slug}`}
+                    class="hover:text-slate flex flex-col gap-1.5 py-5 transition-colors"
+                  >
+                    <span class="flex items-baseline justify-between gap-4">
+                      <span class="font-display text-xl font-bold">{s.title}</span>
+                      {s.startingAt && (
+                        <span class="font-display shrink-0 text-lg font-bold">
+                          From {s.startingAt}
+                        </span>
+                      )}
+                    </span>
+                    <span class="text-slate max-w-[44ch]">{s.blurb}</span>
+                  </a>
+                </li>
+              ))
+            }
           </ul>
-
-          <a
-            href="/services/"
-            class="text-shop mt-6 inline-block font-semibold underline decoration-1 underline-offset-4"
-          >
-            What goes into each of these
-          </a>
         </div>
       </div>
       <p class="text-slate mt-10 max-w-[62ch] text-lg">
@@ -371,16 +317,183 @@ const teaser = [
     </div>
   </section>
 
+  <!-- ---------- roll cages ---------- -->
+  <section id="roll-cages" class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h2 class="max-w-[16ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            Roll Cages
+          </h2>
+          <p class="font-display mt-4 text-2xl font-bold">
+            From {pricing.cageStartingAtDisplay}
+          </p>
+          <div class="text-steel mt-6 max-w-[54ch] space-y-4 text-lg">
+            <p>
+              A full replacement cage, measured and bent to your machine, fitted
+              and tacked in place, then welded out.
+            </p>
+            <p>
+              The price depends on the machine, whether it is a two seat or a
+              four seat, and what else gets built while it is apart. A cage,
+              doors and a roof done at the same time costs less than the same
+              three jobs on three separate visits.
+            </p>
+            <p class="text-bone">
+              Time in the shop: {terms.leadTime.toLowerCase()}.
+            </p>
+          </div>
+
+          <dl class="border-shop-line mt-8 grid gap-px border-t">
+            <div
+              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Welding</dt>
+              <dd class="text-steel">MIG, start to finish, in house.</dd>
+            </div>
+            <div
+              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Finish</dt>
+              <dd class="text-steel">Powder coating is sent out to a coater.</dd>
+            </div>
+            <div
+              class="border-shop-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
+            >
+              <dt class="font-semibold">Time in the shop</dt>
+              <dd class="text-steel">{terms.leadTime}.</dd>
+            </div>
+            <!-- Tubing spec and warranty are still open questions and are
+                 tracked in NEEDS-INPUT.md. A spec table showing a row with
+                 nothing in it reads worse than one that only lists what is
+                 known, so they are added back when there is an answer. -->
+          </dl>
+        </div>
+
+        <div class="space-y-4">
+          <Shot shot="svc-cage" class="w-full" />
+          <Shot shot="cage-joint" class="w-full" />
+          <!-- A macro of a bare joint belongs here, third in this stack — it
+               is the most persuasive photo on the site after the hero.
+               reserved-shot: weld-bead -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- doors ---------- -->
+  <section id="doors" class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <!-- A close frame of the latch would pair with this one.
+             reserved-shot: door-latch -->
+        <Shot shot="svc-doors" light class="w-full" />
+
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Doors</h2>
+          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              Factory half doors leave the opening half open. A full door closes
+              it, which keeps most of the dust out.
+            </p>
+            <p>
+              Doors are built to the cage on your machine, so the hinge side and
+              the latch side are set against the actual tube rather than to a
+              standard measurement.
+            </p>
+            <p class="text-shop">
+              Cheaper at the same time as a cage, since the machine is already
+              apart. {terms.servicePricing}.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- roofs ---------- -->
+  <section id="roofs" class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Roofs</h2>
+          <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              A bolt-on roof mounts to whatever it can reach and rattles. One
+              built to the cage picks up the tube where the tube actually runs,
+              so it stays tight and stays quiet.
+            </p>
+            <p>
+              Roofs go on with a new cage or onto one already built. {
+                terms.servicePricing
+              }.
+            </p>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <Shot shot="svc-roofs" class="w-full" />
+          <Shot shot="roof-edge" class="w-full" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ---------- custom fabrication ---------- -->
+  <section id="custom-fabrication" class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <div class="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+        <Shot shot="svc-fab" light class="w-full" />
+
+        <div>
+          <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">
+            Custom Fabrication
+          </h2>
+          <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
+            <p>
+              Bumpers, mounts, brackets and repairs. Anything steel that goes on
+              an off-road machine and does not come as a part you can buy.
+            </p>
+
+            <!-- Bumpers get their own heading because "custom UTV bumper" is a
+                 search in its own right, and because there are real bumper
+                 photographs on the site to back it up. -->
+            <h3 class="text-shop pt-2 text-2xl">Custom bumpers</h3>
+            <p>
+              Tube bumpers built to the machine rather than bolted on from a
+              catalogue. Same MIG welding as the cages.
+            </p>
+
+            <p>
+              Quoted per job, since the price depends on the part. If it is not
+              something the shop can do, you will be told that on the phone.
+            </p>
+            <p class="text-shop">
+              <a
+                href={phone.sms}
+                data-analytics="text-fab-inline"
+                class="font-semibold underline decoration-1 underline-offset-4"
+                >Text a photo to {phone.display}</a
+              > — usually the fastest way.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <!-- ==========================================================
        PRICE
        Not knowing what a cage costs is what stops people calling,
        so the number gets a section to itself.
        ========================================================== -->
-  <section class="bg-shop text-bone">
+  <section id="price" class="bg-shop text-bone">
     <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
       <div class="grid gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
         <div>
-          <p class="text-steel text-lg">A typical full cage runs</p>
+          <h2 class="text-steel text-lg font-normal tracking-normal">
+            A typical full cage runs
+          </h2>
           <p
             class="font-display text-bone mt-1 text-[clamp(4rem,14vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.04em]"
           >
@@ -401,13 +514,6 @@ const teaser = [
             Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
             Either way you are not without the machine long — {terms.leadTime.toLowerCase()}.
           </p>
-          <p>
-            Mike quotes the job and Mike welds it — <a
-              href="/about/"
-              class="font-semibold underline decoration-1 underline-offset-4"
-              >more about the shop</a
-            >.
-          </p>
           <div class="flex flex-col gap-3 pt-2 sm:flex-row">
             <a
               href={phone.tel}
@@ -417,7 +523,8 @@ const teaser = [
               Call {phone.display}
             </a>
             <a
-              href="/contact/"
+              href="#contact"
+              data-analytics="quote-price"
               class="font-display border-steel/50 bend hover:border-bone border px-6 py-3.5 text-center font-bold transition-colors"
             >
               Send the details
@@ -429,68 +536,276 @@ const teaser = [
   </section>
 
   <!-- ==========================================================
-       GALLERY TEASER — dense, square, no gaps. The camera-roll grid.
+       GALLERY — dense, square, no gaps. The contact-sheet grid.
+
+       Grouped by platform because the first thing anyone wants to know is
+       whether a machine like theirs has been done before. The platform
+       headings are h3 under this section's h2, so the outline still says
+       these are subdivisions of the gallery rather than peers of it.
        ========================================================== -->
-  <section class="bg-bone">
+  <section id="gallery" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-24">
       <BendRule class="mb-8 max-w-xs" />
-      <div class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-        <h2 class="text-[clamp(2rem,5vw,3.25rem)]">Machines that have been through</h2>
-        <a
-          href="/gallery/"
-          class="text-shop font-semibold underline decoration-1 underline-offset-4"
-        >
-          See the full gallery
-        </a>
-      </div>
-      <p class="text-slate mt-4 max-w-[52ch] text-lg">
-        {platforms.map((p) => p.name).join(', ')} — and plenty that do not fit a
-        category.
+      <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
+        Machines that have been through the Tucson shop
+      </h2>
+      <!-- "photos" not "builds": some of these are detail shots of the same
+           machine, and a count of builds would be a number we cannot stand
+           behind. -->
+      <p class="text-slate mt-5 max-w-[52ch] text-lg">
+        {galleryCount} photos, grouped by platform — because the first thing
+        anyone wants to know is whether a machine like theirs has been done
+        before.
       </p>
     </div>
 
-    <!-- Full-bleed, gutterless, square. This is the one dense thing on the
-         page and it is meant to read as a wall of work. -->
-    <div class="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
-      {teaser.map((photo) => <GalleryTile photo={photo} href="/gallery/" />)}
+    {
+      platforms.map((p) => {
+        const photos = gallery[p.slug] ?? [];
+        if (!photos.length) return null;
+        return (
+          <div>
+            <div class="mx-auto max-w-6xl px-5 pt-12 sm:px-8">
+              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <h3 class="text-[clamp(1.5rem,3.5vw,2rem)]">{p.name}</h3>
+                <p class="text-slate">{p.note}</p>
+              </div>
+            </div>
+
+            {/* Full bleed, no gutters, strict squares. */}
+            <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
+              {photos.map((photo) => (
+                <GalleryTile
+                  photo={photo}
+                  full={fullUrls.get(photo.file)}
+                  index={indexOf.get(photo.file)}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })
+    }
+
+    <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
+      <p class="text-slate max-w-[54ch] text-lg">
+        A wide range of machines has come through here. If yours is not in
+        these, call with the year, make and model and you will get a straight
+        answer.
+      </p>
     </div>
   </section>
 
   <!-- ==========================================================
-       CLOSING CTA
+       ABOUT — how the shop works.
        ========================================================== -->
-  <section class="bg-shop text-bone">
-    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-20">
-      <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
-        Tell me the machine and what you want done.
-      </h2>
-      <p class="text-steel mt-5 max-w-[48ch] text-lg">
-        Year, make and model is enough to start. Photos help if you have them.
-      </p>
-      <!-- The towns, written out once on the home page in a sentence rather
-           than as a keyword list. Somebody in Marana searching for a cage
-           needs to see their own town somewhere on the page before they
-           believe the shop is close enough to bother with. -->
-      <p class="text-steel mt-3 max-w-[48ch] text-lg">
-        Machines come in from {business.serviceAreaLine} and the rest of
-        southern Arizona.
-      </p>
-      <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-        <a
-          href={phone.tel}
-          data-analytics="call-closing"
-          class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-7 py-4 text-center text-lg font-bold transition-colors"
-        >
-          Call {phone.display}
-        </a>
-        <a
-          href={phone.sms}
-          data-analytics="text-closing"
-          class="font-display border-steel/50 bend hover:border-bone border px-7 py-4 text-center text-lg font-bold transition-colors"
-        >
-          Send a text
-        </a>
+  <section id="about" class="bg-shop text-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule dark class="mb-8 max-w-xs" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_minmax(0,24rem)] lg:gap-16">
+        <div class="max-w-[58ch]">
+          <h2 class="max-w-[22ch] text-[clamp(2rem,5vw,3.25rem)]">
+            {business.owner} has been building cages in {business.city} for {
+              business.yearsInBusiness
+            }
+          </h2>
+
+          <div class="text-steel mt-6 space-y-5 text-lg">
+            <p>
+              M1 Off-Road is a custom fabrication shop in {business.city},{' '}
+              {business.stateCode}, geared to off-road vehicles. Cages, doors
+              and roofs, mostly for UTVs.
+            </p>
+            <p>
+              Mike quotes the job, builds it and welds it. You deal with him
+              directly.
+            </p>
+            <p>
+              Most of what comes through is side-by-sides, though other machines
+              have been built for too.
+            </p>
+
+            <h3 class="text-bone pt-4 text-2xl">
+              MIG welding here, powder coating out
+            </h3>
+            <p>
+              All welding is MIG and done in this shop. Powder coating is not
+              done here; it goes out to a coater.
+            </p>
+            <p>A typical full cage is {pricing.cageStartingAtDisplay}.</p>
+
+            <h3 class="text-bone pt-4 text-2xl">Getting a job booked</h3>
+            <p>
+              Call with the year, make, model, and what you want done. {
+                business.hours.short
+              }.
+            </p>
+          </div>
+        </div>
+
+        <aside class="space-y-4">
+          <!-- A closer frame than the wide shop shot: the nodes where the
+               tubes actually meet. -->
+          <Shot shot="shop-wide" class="w-full" />
+          <Shot shot="badge" class="w-full" />
+
+          <div class="border-shop-line bend border p-6">
+            <h3 class="text-xl">The short version</h3>
+            <dl class="mt-4 space-y-3 text-[0.9375rem]">
+              <div>
+                <dt class="text-steel">Owner</dt>
+                <dd class="font-semibold">{business.owner}</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Shop</dt>
+                <dd class="font-semibold">
+                  {business.city}, {business.stateCode}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-steel">In business</dt>
+                <dd class="font-semibold">
+                  {business.yearsInBusiness.replace(/^over/, 'Over')}
+                </dd>
+              </div>
+              <div>
+                <dt class="text-steel">Welding</dt>
+                <dd class="font-semibold">MIG, in house</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Powder coating</dt>
+                <dd class="font-semibold">Sent out</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Full cage from</dt>
+                <dd class="font-semibold">{pricing.cageStartingAtDisplay}</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Everything else</dt>
+                <dd class="font-semibold">{terms.servicePricing}</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Time in the shop</dt>
+                <dd class="font-semibold">{terms.leadTime}</dd>
+              </div>
+              <div>
+                <dt class="text-steel">Serving</dt>
+                <dd class="font-semibold">{business.serviceAreaLine}</dd>
+              </div>
+            </dl>
+          </div>
+        </aside>
       </div>
     </div>
   </section>
+
+  <!-- ==========================================================
+       CONTACT — the close. The form and the shop's own details.
+       ========================================================== -->
+  <section id="contact" class="bg-bone">
+    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+      <BendRule class="mb-8 max-w-xs" />
+      <div class="grid gap-12 lg:grid-cols-[1fr_minmax(0,22rem)] lg:gap-16">
+        <div>
+          <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
+            Tell me the machine and what you want done
+          </h2>
+          <p class="text-slate mt-5 max-w-[52ch] text-lg">
+            Five things, and one of them is optional. It goes straight to Mike,
+            who will call you back on the number you leave. Year, make and model
+            is enough to start — photos help if you have them.
+          </p>
+
+          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+            <a
+              href={phone.tel}
+              data-analytics="call-contact"
+              class="font-display bg-shop text-bone bend border-shop hover:text-shop border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
+            >
+              Call {phone.display}
+            </a>
+            <a
+              href={phone.sms}
+              data-analytics="text-contact"
+              class="font-display border-bone-line bend hover:border-shop border px-6 py-3.5 text-center font-bold transition-colors"
+            >
+              Text {phone.display}
+            </a>
+          </div>
+
+          <QuoteForm />
+        </div>
+
+        <aside class="space-y-4">
+          <div class="border-bone-line bend border p-6">
+            <h3 class="text-xl">The shop</h3>
+            <dl class="mt-4 space-y-4 text-[0.9375rem]">
+              <div>
+                <dt class="text-slate">Phone</dt>
+                <dd class="font-display mt-0.5 text-xl font-bold">
+                  <a
+                    href={phone.tel}
+                    data-analytics="call-contact-aside"
+                    class="hover:text-slate transition-colors">{phone.display}</a
+                  >
+                </dd>
+              </div>
+              <div>
+                <dt class="text-slate">Text</dt>
+                <dd class="mt-0.5 font-semibold">
+                  <a
+                    href={phone.sms}
+                    data-analytics="text-contact-aside"
+                    class="hover:text-slate transition-colors">Same number</a
+                  >
+                </dd>
+              </div>
+              <div>
+                <dt class="text-slate">Owner</dt>
+                <dd class="mt-0.5 font-semibold">{business.owner}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Address</dt>
+                <dd class="mt-0.5 font-semibold">
+                  <a
+                    href={business.address.mapUrl}
+                    rel="noopener"
+                    class="hover:text-slate underline decoration-1 underline-offset-4 transition-colors"
+                  >
+                    {business.address.street}<br />
+                    {business.address.locality}, {business.address.region}{' '}
+                    {business.address.postalCode}
+                  </a>
+                </dd>
+              </div>
+              <div>
+                <dt class="text-slate">Hours</dt>
+                <dd class="mt-0.5 font-semibold">{business.hours.display}</dd>
+              </div>
+              <div>
+                <dt class="text-slate">Serving</dt>
+                <dd class="mt-0.5 font-semibold">{business.serviceAreaLine}</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="bg-shop text-bone bend p-6">
+            <h3 class="text-xl">Before you ask</h3>
+            <p class="text-steel mt-3 text-[0.9375rem]">
+              A typical full cage runs {pricing.cageStartingAtDisplay}. Doors,
+              roofs and custom work are {terms.servicePricing.toLowerCase()}.
+            </p>
+            <p class="text-steel mt-3 text-[0.9375rem]">
+              {terms.leadTime} for time in the shop.
+            </p>
+            <p class="text-steel mt-3 text-[0.9375rem]">
+              All welding is MIG and done in house. Powder coating is sent out.
+            </p>
+          </div>
+        </aside>
+      </div>
+    </div>
+  </section>
+
+  <Lightbox />
 </Base>
