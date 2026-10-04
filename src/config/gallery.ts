@@ -38,7 +38,7 @@ export const gallery: Record<string, GalleryPhoto[]> = {
     },
     {
       file: 'roof-rzr-blue-above.jpg',
-      alt: 'Pale blue Polaris RZR Pro R with a black roll cage and roof, seen from above the front corner.',
+      alt: 'Pale blue Polaris RZR Pro R with a black roll cage, seen from above the front corner.',
     },
     {
       file: 'rzr-pror-blue-side.jpg',

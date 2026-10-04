@@ -113,9 +113,10 @@ export const pricing = {
    Terms. Confirmed 2026-09-14.
    --------------------------------------------------------- */
 export const terms = {
-  /* A week is the OUTSIDE case, not the typical one — worded so it reads as a
-     ceiling rather than a promise of exactly seven days. */
-  leadTime: 'A week at the outside',
+  /* A ceiling, not a promise of exactly seven days. "At the outside" was the
+     earlier wording and read as a figure of speech rather than a fact; this
+     says the same thing in words a customer would use. */
+  leadTime: 'A week at most',
   /* Doors, roofs and custom work vary too much for a starting figure. Saying
      so plainly beats leaving the row blank. */
   servicePricing: 'Quoted per machine',

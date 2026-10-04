@@ -71,22 +71,31 @@ export const shots = {
       'Full side profile of a finished cage on the machine. Square to the vehicle, not angled. Plain background — a wall or open desert, not a cluttered yard.',
     priority: 'must',
   },
+  /* Swapped off doors-rzr-white-side.jpg on 2026-10-04. That frame is a tight
+     side-on crop: the machine runs out of the picture at both edges in the
+     ORIGINAL, so there was no zooming out to be done — only a different
+     photograph. This one carries the whole machine with margin all round and
+     the full doors are still the obvious feature. */
   'svc-doors': {
-    file: 'doors-rzr-white-side.jpg',
-    alt: 'A white Polaris RZR with full custom doors, shot square from the side so the panel gaps read.',
+    file: 'rzr-xp-red-cage.jpg',
+    alt: 'A black Polaris RZR XP 1000 four-seat with full custom doors and a red roll cage, parked in the desert.',
     label: 'Doors — closed, latch side',
     aspect: '4 / 3',
     direction:
       'Doors closed, shot square from the side so the panel gaps read. Get the latch in frame.',
     priority: 'must',
   },
+  /* This slot used to point at roof-rzr-blue-above.jpg, and the roof on that
+     machine is the FACTORY one — the cage is the shop's work, the roof is not.
+     Leading the roofs section with it credited the shop for a part it did not
+     build, so the file is gone and the slot is back on the shot list. Until
+     there is a photograph of a roof this shop actually made, the roofs section
+     runs on roof-edge alone. */
   'svc-roofs': {
-    file: 'roof-rzr-blue-above.jpg',
-    alt: 'A pale blue Polaris RZR Pro R seen from above the front corner, showing the custom roof and how it joins the roll cage.',
-    label: 'Roof — from above front corner',
+    label: 'Roof — whole machine, custom roof',
     aspect: '4 / 3',
     direction:
-      'From slightly above the front corner so the roof surface and its join to the cage are both visible.',
+      'A machine wearing a roof THIS SHOP BUILT, from slightly above the front corner so the roof surface and its join to the cage are both visible. The previous photo in this slot was a factory roof. If a build with a custom roof is not on the books, shoot it next time one is.',
     priority: 'must',
   },
   'svc-fab': {

@@ -42,7 +42,7 @@ import {
   platforms,
   terms,
 } from '../config/site';
-import { gallery, galleryCount } from '../config/gallery';
+import { gallery } from '../config/gallery';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { shots } from '../config/shots';
@@ -229,9 +229,9 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           </h1>
 
           <p class="text-bone/90 mt-4 max-w-[42ch] text-base leading-[1.55]">
-            Built by {business.owner}. {
+            Built and welded by {business.owner}. {
               business.yearsInBusiness.replace(/^over/, 'Over')
-            } of it, and he welds every one himself.
+            } in {business.city}.
           </p>
 
           <!-- The quote form leads and the phone follows it. The number has
@@ -281,14 +281,13 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           </p>
           <div class="text-slate mt-6 max-w-[54ch] space-y-4 text-lg">
             <p>
-              A full replacement cage, measured and bent to your machine, fitted
-              and tacked in place, then welded out.
+              A full replacement cage. Measured and bent to your machine,
+              fitted, tacked in place, then welded out.
             </p>
             <p>
-              The price depends on the machine, whether it is a two seat or a
-              four seat, and what else gets built while it is apart. A cage,
-              doors and a roof done at the same time costs less than the same
-              three jobs on three separate visits.
+              Price depends on the machine, two seat or four seat, and what
+              else gets built while it is apart. A cage, doors and a roof in
+              one visit costs less than three separate visits.
             </p>
             <p class="text-shop">
               Time in the shop: {terms.leadTime.toLowerCase()}.
@@ -344,17 +343,13 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Doors</h2>
           <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
-              Factory half doors leave the opening half open. A full door closes
-              it, which keeps most of the dust out.
+              Factory half doors leave half the opening open. A full door
+              closes it and keeps most of the dust out.
             </p>
             <p>
-              Doors are built to the cage on your machine, so the hinge side and
-              the latch side are set against the actual tube rather than to a
-              standard measurement.
-            </p>
-            <p class="text-bone">
-              Cheaper at the same time as a cage, since the machine is already
-              apart. {terms.servicePricing}.
+              Built to the cage on your machine. The hinge side and the latch
+              side are set against the actual tube, not to a standard
+              measurement.
             </p>
           </div>
         </div>
@@ -370,9 +365,9 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           <h2 class="max-w-[18ch] text-[clamp(1.875rem,4.5vw,3rem)]">Roofs</h2>
           <div class="text-slate mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
-              A bolt-on roof mounts to whatever it can reach and rattles. One
-              built to the cage picks up the tube where the tube actually runs,
-              so it stays tight and stays quiet.
+              A bolt-on roof mounts wherever it can reach, and it rattles. One
+              built to the cage picks up the tube where the tube runs, so it
+              stays tight.
             </p>
             <p>
               Roofs go on with a new cage or onto one already built. {
@@ -383,8 +378,12 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
         </div>
 
         <div class="space-y-4">
-          <Shot shot="svc-roofs" light class="w-full" />
           <Shot shot="roof-edge" light class="w-full" />
+          <!-- A whole-machine roof shot belongs above this one. The photo that
+               was there showed a FACTORY roof, so it is gone and not
+               placeheld: one honest detail shot beats two photos where the
+               lead one credits the shop for a part it did not build.
+               reserved-shot: svc-roofs -->
         </div>
       </div>
     </div>
@@ -402,8 +401,8 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           </h2>
           <div class="text-steel mt-6 max-w-[52ch] space-y-4 text-lg">
             <p>
-              Bumpers, mounts, brackets and repairs. Anything steel that goes on
-              an off-road machine and does not come as a part you can buy.
+              Bumpers, mounts, brackets and repairs. Steel work for off-road
+              machines that you cannot buy off a shelf.
             </p>
 
             <!-- Bumpers get their own heading because "custom UTV bumper" is a
@@ -411,13 +410,13 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                  photographs on the site to back it up. -->
             <h3 class="text-bone pt-2 text-2xl">Custom bumpers</h3>
             <p>
-              Tube bumpers built to the machine rather than bolted on from a
+              Tube bumpers built to the machine, not bolted on from a
               catalogue. Same MIG welding as the cages.
             </p>
 
             <p>
-              Quoted per job, since the price depends on the part. If it is not
-              something the shop can do, you will be told that on the phone.
+              Quoted per job. If it is not something Mike can do, he will tell
+              you on the phone.
             </p>
             <p class="text-bone">
               <a
@@ -425,7 +424,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                 data-analytics="text-fab-inline"
                 class="font-semibold underline decoration-1 underline-offset-4"
                 >Text a photo to {phone.display}</a
-              > — usually the fastest way.
+              >. Usually the fastest way.
             </p>
           </div>
         </div>
@@ -465,16 +464,16 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 
         <div class="max-w-[52ch] space-y-5 text-lg">
           <p>
-            The price depends on the machine, the seat count, and what else gets
-            built while it is apart: doors, a roof, mounts.
+            What it costs depends on the machine, the seat count, and what
+            else gets built while it is apart.
           </p>
           <p class="text-steel">
-            Call with the year, make and model and you will get a number on the
-            phone. You do not need an appointment to ask what something costs.
+            Call with the year, make and model and you will get a number on
+            the phone. You do not need an appointment to ask a price.
           </p>
           <p class="text-steel">
             Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
-            Either way you are not without the machine long — {terms.leadTime.toLowerCase()}.
+            Time in the shop is {terms.leadTime.toLowerCase()}.
           </p>
           <div class="flex flex-col gap-3 pt-2 sm:flex-row">
             <a
@@ -508,17 +507,9 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
   <section id="gallery" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-24">
       <BendRule class="mb-8 max-w-xs" />
-      <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
-        Machines that have been through the Tucson shop
+      <h2 class="max-w-[22ch] text-[clamp(2rem,5vw,3.25rem)]">
+        Machines that have been through the shop
       </h2>
-      <!-- "photos" not "builds": some of these are detail shots of the same
-           machine, and a count of builds would be a number we cannot stand
-           behind. -->
-      <p class="text-slate mt-5 max-w-[52ch] text-lg">
-        {galleryCount} photos, grouped by platform — because the first thing
-        anyone wants to know is whether a machine like theirs has been done
-        before.
-      </p>
     </div>
 
     {
@@ -551,9 +542,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 
     <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
       <p class="text-slate max-w-[54ch] text-lg">
-        A wide range of machines has come through here. If yours is not in
-        these, call with the year, make and model and you will get a straight
-        answer.
+        If yours is not here, call with the year, make and model.
       </p>
     </div>
   </section>
@@ -574,13 +563,13 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 
           <div class="text-steel mt-6 space-y-5 text-lg">
             <p>
-              M1 Off-Road is a custom fabrication shop in {business.city},{' '}
-              {business.stateCode}, geared to off-road vehicles. Cages, doors
-              and roofs, mostly for UTVs.
+              M1 Off-Road is a fabrication shop in {business.city},{' '}
+              {business.stateCode}. Cages, doors, roofs and custom steel for
+              off-road machines.
             </p>
             <p>
               Mike quotes the job, builds it and welds it. You deal with him
-              directly.
+              directly, start to finish.
             </p>
             <p>
               Most of what comes through is side-by-sides, though other machines
@@ -591,10 +580,13 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               MIG welding here, powder coating out
             </h3>
             <p>
-              All welding is MIG and done in this shop. Powder coating is not
-              done here; it goes out to a coater.
+              All welding is MIG, done in this shop. Powder coating goes out
+              to a coater.
             </p>
-            <p>A typical full cage is {pricing.cageStartingAtDisplay}.</p>
+            <!-- The cage price used to sit here, under a heading about welding
+                 and coating, where it had nothing to do with either. It is in
+                 the price section, in the panel beside this one, and in the
+                 hero chip already. -->
 
             <h3 class="text-bone pt-4 text-2xl">Getting a job booked</h3>
             <p>
@@ -670,13 +662,8 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       <div class="grid gap-12 lg:grid-cols-[1fr_minmax(0,22rem)] lg:gap-16">
         <div>
           <h2 class="max-w-[20ch] text-[clamp(2rem,5vw,3.25rem)]">
-            Tell me the machine and what you want done
+            Tell Mike the machine and what you want done
           </h2>
-          <p class="text-slate mt-5 max-w-[52ch] text-lg">
-            Five things, and one of them is optional. It goes straight to Mike,
-            who will call you back on the number you leave. Year, make and model
-            is enough to start — photos help if you have them.
-          </p>
 
           <div class="mt-8 flex flex-col gap-3 sm:flex-row">
             <a
@@ -757,8 +744,11 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               A typical full cage runs {pricing.cageStartingAtDisplay}. Doors,
               roofs and custom work are {terms.servicePricing.toLowerCase()}.
             </p>
+            <!-- Not "time in the shop" again: the roll cages section already
+                 uses that exact sentence, and the two are close enough on a
+                 phone to read as a copy-paste. -->
             <p class="text-steel mt-3 text-[0.9375rem]">
-              {terms.leadTime} for time in the shop.
+              In and out in {terms.leadTime.toLowerCase()}.
             </p>
             <p class="text-steel mt-3 text-[0.9375rem]">
               All welding is MIG and done in house. Powder coating is sent out.
