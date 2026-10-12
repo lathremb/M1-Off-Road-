@@ -165,15 +165,21 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       }
 
       <!-- Two hero-wide scrims, one per crop, because one curve cannot serve
-           both. The phone hero is a taller box holding the same amount of
-           text, so the words start higher up the gradient than they do on the
-           wide crop, and the night frame has a lit whip and fireworks in its
-           upper half — the brightest things in either photograph. Both are
-           lighter than they would need to be alone, because the block holding
-           the text carries a third gradient of its own. -->
+           both. Both are lighter than they would need to be alone, because
+           the block holding the text carries a third gradient of its own.
+
+           The phone curve was rebuilt once the badge, the buttons and the
+           hours line came off below sm. It used to reach 92% of the hero,
+           because the text stack it was protecting reached 90% — that is why
+           the photograph was not visible. The stack is now a headline and one
+           line under it, so the curve ends at 64% and the upper two thirds of
+           the frame is clear. The lit whip and the fireworks in the top half
+           of the night frame are the brightest things in either photograph
+           and they are now unscrimmed, which is fine: there is no text up
+           there any more, and the sticky header carries its own background. -->
       <div
         class="absolute inset-0 sm:hidden"
-        style="background:linear-gradient(to top, rgb(17 17 17 / .86) 0%, rgb(17 17 17 / .70) 28%, rgb(17 17 17 / .42) 52%, rgb(17 17 17 / .14) 74%, rgb(17 17 17 / 0) 92%)"
+        style="background:linear-gradient(to top, rgb(17 17 17 / .70) 0%, rgb(17 17 17 / .50) 16%, rgb(17 17 17 / .26) 32%, rgb(17 17 17 / .06) 48%, rgb(17 17 17 / 0) 58%)"
         aria-hidden="true"
       >
       </div>
@@ -189,7 +195,25 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
          the box keeps roughly the photograph's own proportions instead of
          holding one height while the width runs away. min-height rather than
          aspect-ratio, because aspect-ratio is a fixed height and the text
-         would overflow it on a phone. -->
+         would overflow it on a phone.
+
+         WHY THE PHONE HERO CARRIES LESS THAN THE DESKTOP ONE
+
+         On a 390px phone this resolves to 133vw = 519px, which is the night
+         frame's own 3:4 ratio, so the photograph is shown whole and uncropped.
+         The box cannot be made taller to show more of it — it already shows
+         all of it, and more height would start cropping.
+
+         Which means the only variable is how much of those 519px the words
+         sit on top of. Carrying the full desktop stack — price chip, headline,
+         sub-line, two stacked full-width buttons, hours — came to about 467px
+         of 519. The hero was a photograph in name only.
+
+         So below sm the stack is the headline and one line under it, and the
+         chip, the buttons and the hours are hidden with the reasons noted at
+         each one. Nothing was deleted and nothing moved off the page; every
+         one of those facts appears further down, and Call and Text are pinned
+         to the bottom of the viewport by StickyBar the whole time. -->
     <div
       class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
     >
@@ -198,9 +222,20 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
            hero's height comes from the viewport and the text stack's does
            not, so as the window narrows the words ride up into the thin end
            of the curve. Painting it on the block that holds the text makes
-           its height the text's height at every viewport. -->
+           its height the text's height at every viewport.
+
+           Two values, because the phone and the desktop are no longer holding
+           the same amount of text. The sm+ figure is the original and is
+           unchanged. The phone figure is lighter, and the number came from
+           measuring rather than from taste: with only a headline and one line
+           sitting on the frame, the glyph-level contrast at 0.64/0.56 was
+           11.0:1 against a 3:1 floor — margin that was being paid for in
+           photograph. At 0.44/0.36 the worst case across 320, 360, 375 and
+           430 CSS px is 4.8:1 on the headline and 6.2:1 on the sub-line, so
+           both still clear AA with room, and the text zone carries about half
+           again as much of the picture. -->
       <div
-        class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.64)_0%,rgb(17_17_17/0.56)_80%,rgb(17_17_17/0)_100%)]"
+        class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.44)_0%,rgb(17_17_17/0.36)_80%,rgb(17_17_17/0)_100%)] sm:bg-[linear-gradient(to_top,rgb(17_17_17/0.64)_0%,rgb(17_17_17/0.56)_80%,rgb(17_17_17/0)_100%)]"
       >
         <div class="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:py-16">
           <!-- The one number that stops people calling, set as a chip above
@@ -209,9 +244,14 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                this clear of it is that it carries a fact rather than a
                category label, and appears once rather than above every
                heading. Its own translucent fill, because a hairline border
-               alone disappears against a photograph. -->
+               alone disappears against a photograph.
+
+               Off below sm. See the note on the sizer above: on a phone this
+               chip, the buttons and the hours line took the text stack to 90%
+               of the hero and there was no photograph left to see. The price
+               is still the biggest number on the page, one section down. -->
           <p
-            class="border-shop-line bg-shop/90 bend mb-4 inline-flex items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px]"
+            class="border-shop-line bg-shop/90 bend hidden items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px] sm:mb-4 sm:inline-flex"
           >
             <span class="text-steel text-[0.8125rem]">Full cages from</span>
             <span class="font-display text-[0.9375rem] font-bold"
@@ -242,8 +282,17 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
 
                steel/75 on the ghost border, not steel/50: on a ghost button
                the border IS the control's boundary, so it answers to the 3:1
-               non-text contrast floor rather than to taste. -->
-          <div class="mt-7 flex flex-col gap-3 sm:mt-8 sm:flex-row sm:items-center">
+               non-text contrast floor rather than to taste.
+
+               Off below sm, where they were the single biggest thing standing
+               between the visitor and the photograph: two full-width buttons
+               stacked is 134px of a 519px hero. Nothing is lost, because
+               StickyBar is pinned to the bottom of every phone viewport with
+               Call and Text, and Text opens a message pre-filled with "I'd
+               like a quote on my" — so both paths this pair offered are
+               already on screen, below the fold line rather than on top of
+               the machine. -->
+          <div class="hidden gap-3 sm:mt-8 sm:flex sm:flex-row sm:items-center">
             <a
               href="#contact"
               data-analytics="quote-hero"
@@ -260,7 +309,12 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             </a>
           </div>
 
-          <p class="text-bone/75 mt-6 text-[0.8125rem] tracking-[0.01em]">
+          <!-- Also off below sm. The least load-bearing line in the hero: the
+               hours are in the contact panel, in the footer of every page and
+               in the opening-hours schema. Worth 42px of photograph. -->
+          <p
+            class="text-bone/75 hidden text-[0.8125rem] tracking-[0.01em] sm:mt-6 sm:block"
+          >
             {business.hours.display}
           </p>
         </div>

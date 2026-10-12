@@ -58,9 +58,19 @@ export const business = {
      removes it from both.
      --------------------------------------------------------- */
   serviceArea: ['Tucson', 'Marana', 'Oro Valley'],
-  /** The same list as a sentence fragment: "Tucson, Marana and Oro Valley". */
+  /** The displayed sentence fragment: "Tucson, Marana, Oro Valley and
+   *  surrounding areas".
+   *
+   *  "surrounding areas" is appended HERE and not to `serviceArea` itself,
+   *  because that array becomes schema.org `areaServed` as a list of `City`
+   *  objects and "surrounding areas" is not a city — emitting it as one would
+   *  be a made-up place name in the structured data. The schema already
+   *  carries the wider catchment honestly, as an `AdministrativeArea` named
+   *  Southern Arizona (see Schema.astro). So this covers the towns nobody
+   *  thinks to search for on the page, where a human reads it, and the
+   *  machine-readable list stays three real cities plus a real region. */
   get serviceAreaLine() {
-    const a = this.serviceArea;
+    const a = [...this.serviceArea, 'surrounding areas'];
     return `${a.slice(0, -1).join(', ')} and ${a[a.length - 1]}`;
   },
 
