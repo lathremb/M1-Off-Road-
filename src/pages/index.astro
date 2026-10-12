@@ -376,9 +376,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               else gets built while it is apart. A cage, doors and a roof in
               one visit costs less than three separate visits.
             </p>
-            <p class="text-shop">
-              Time in the shop: {terms.leadTime.toLowerCase()}.
-            </p>
           </div>
 
           <dl class="border-bone-line mt-8 grid gap-px border-t">
@@ -394,16 +391,15 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               <dt class="font-semibold">Finish</dt>
               <dd class="text-slate">Powder coating is sent out to a coater.</dd>
             </div>
-            <div
-              class="border-bone-line grid gap-1 border-b py-4 sm:grid-cols-[12rem_1fr]"
-            >
-              <dt class="font-semibold">Time in the shop</dt>
-              <dd class="text-slate">{terms.leadTime}.</dd>
-            </div>
             <!-- Tubing spec and warranty are still open questions and are
                  tracked in NEEDS-INPUT.md. A spec table showing a row with
                  nothing in it reads worse than one that only lists what is
-                 known, so they are added back when there is an answer. -->
+                 known, so they are added back when there is an answer.
+
+                 A "Time in the shop" row used to sit here. It is not an open
+                 question waiting on an answer — it was removed on purpose and
+                 is not coming back as a published figure. See the note on
+                 the terms object in config/site.ts. -->
           </dl>
         </div>
 
@@ -560,7 +556,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
           </p>
           <p class="text-steel">
             Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
-            Time in the shop is {terms.leadTime.toLowerCase()}.
           </p>
           <div class="flex flex-col gap-3 pt-2 sm:flex-row">
             <a
@@ -726,10 +721,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                 <dd class="font-semibold">{terms.servicePricing}</dd>
               </div>
               <div>
-                <dt class="text-steel">Time in the shop</dt>
-                <dd class="font-semibold">{terms.leadTime}</dd>
-              </div>
-              <div>
                 <dt class="text-steel">Serving</dt>
                 <dd class="font-semibold">{business.serviceAreaLine}</dd>
               </div>
@@ -830,12 +821,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             <p class="text-steel mt-3 text-[0.9375rem]">
               A typical full cage runs {pricing.cageStartingAtDisplay}. Doors,
               roofs and custom work are {terms.servicePricing.toLowerCase()}.
-            </p>
-            <!-- Not "time in the shop" again: the roll cages section already
-                 uses that exact sentence, and the two are close enough on a
-                 phone to read as a copy-paste. -->
-            <p class="text-steel mt-3 text-[0.9375rem]">
-              In and out in {terms.leadTime.toLowerCase()}.
             </p>
             <p class="text-steel mt-3 text-[0.9375rem]">
               All welding is MIG and done in house. Powder coating is sent out.

@@ -123,10 +123,15 @@ export const pricing = {
    Terms. Confirmed 2026-09-14.
    --------------------------------------------------------- */
 export const terms = {
-  /* A ceiling, not a promise of exactly seven days. "At the outside" was the
-     earlier wording and read as a figure of speech rather than a fact; this
-     says the same thing in words a customer would use. */
-  leadTime: 'A week at most',
+  /* THERE IS DELIBERATELY NO leadTime HERE.
+     It read 'A week at most', and before that 'A week at the outside', and it
+     appeared in five places on the page. It is gone because the shop cannot
+     guarantee it: how long a machine is in for depends on the build, on what
+     else is on the bench and on parts, and none of that is known before the
+     job is quoted. It is settled with the customer when the work is booked.
+     Publishing a number turned a conversation into a promise.
+     Do not reintroduce it without the owner stating a figure he will stand
+     behind, and if he ever does, note here that he did. */
   /* Doors, roofs and custom work vary too much for a starting figure. Saying
      so plainly beats leaving the row blank. */
   servicePricing: 'Quoted per machine',
