@@ -191,11 +191,33 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       </div>
     </div>
 
-    <!-- A FULL-WIDTH sizer takes the hero's height from the VIEWPORT width, so
-         the box keeps roughly the photograph's own proportions instead of
-         holding one height while the width runs away. min-height rather than
-         aspect-ratio, because aspect-ratio is a fixed height and the text
-         would overflow it on a phone.
+    <!-- A FULL-WIDTH sizer. Under md the hero's height comes from the VIEWPORT
+         WIDTH, so the box keeps roughly the photograph's own proportions
+         instead of holding one height while the width runs away. min-height
+         rather than aspect-ratio, because aspect-ratio is a fixed height and
+         the text would overflow it on a phone.
+
+         FROM md UP IT FILLS THE FIRST SCREEN INSTEAD
+
+         Sizing from width left the hero short of the fold on an ordinary
+         monitor — 52vw on a 1280x860 window is 666px, plus a 58px header, so
+         132px of the next section sat at the bottom of the opening view as a
+         bone-coloured bar. Subtracting the header from the viewport height
+         closes it exactly. The header is in normal flow, not fixed, so the
+         first screen is header + hero and nothing else.
+
+         svh, not vh: vh on a tablet is the height WITHOUT the browser chrome,
+         which would overshoot and reintroduce the bar below the fold instead
+         of above it.
+
+         The 80vw ceiling is the guard that keeps this from cropping badly.
+         The wide frame is 1.6:1, so a box wider than 1.6 only ever loses sky
+         and foreground, while a box NARROWER than 1.6 starts cutting the ends
+         off the machine. 80vw stops the box going below 1.25:1, which can
+         only happen on a tall, narrow desktop window — a 1024x1366 tablet held
+         upright, say, where some bar at the bottom is much the lesser evil
+         against slicing a third off the vehicle. Every ordinary monitor shape,
+         16:9 through 5:4, fills completely and crops nothing horizontally.
 
          WHY THE PHONE HERO CARRIES LESS THAN THE DESKTOP ONE
 
@@ -215,7 +237,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
          one of those facts appears further down, and Call and Text are pinned
          to the bottom of the viewport by StickyBar the whole time. -->
     <div
-      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] lg:min-h-[max(30rem,min(52vw,90vh,60rem))]"
+      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] md:min-h-[max(30rem,min(calc(100svh-var(--header-h)),80vw))]"
     >
       <!-- A third scrim, and the only one anchored to the TEXT rather than to
            the hero box. A hero-sized gradient cannot track the words: the
