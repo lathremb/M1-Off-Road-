@@ -74,11 +74,21 @@
      only if you remembered both. */
   :root {
     --header-h: 68px;
+    /* The height of the fixed call/text bar, which only exists under md.
+       57px is what StickyBar comes to — 1px border, 2rem of padding and a
+       24px row — and the bar now declares this as its own min-height, so the
+       two cannot drift apart. That matters because the phone hero subtracts
+       this to land exactly on top of the bar: if the number here were larger
+       than the bar really is, the difference would show as a strip of the
+       next section between them, which is the whole problem this is solving.
+       Nothing may rely on it from md up, where it is 0 and the bar is gone. */
+    --stickybar-h: calc(57px + env(safe-area-inset-bottom, 0px));
   }
 
   @media (min-width: 48rem) {
     :root {
       --header-h: 58px;
+      --stickybar-h: 0px;
     }
   }
 
@@ -106,14 +116,10 @@
     font-family: var(--font-sans);
     font-size: 1rem;
     line-height: 1.6;
-    /* Clearance for the sticky call/text bar, which only exists under md. */
-    padding-bottom: calc(4.25rem + env(safe-area-inset-bottom, 0px));
-  }
-
-  @media (min-width: 48rem) {
-    body {
-      padding-bottom: 0;
-    }
+    /* Clearance for the fixed call/text bar. The variable is already 0 from
+       md up, so this needs no breakpoint of its own. It also used to reserve
+       4.25rem against a bar that measures 57px, over-reserving by 11px. */
+    padding-bottom: var(--stickybar-h);
   }
 
   h1,

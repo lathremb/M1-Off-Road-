@@ -9,9 +9,14 @@
 import { phone } from '../config/site';
 ---
 
+<!-- min-height is the same `--stickybar-h` the hero subtracts from the
+     viewport to sit exactly on top of this bar. Declaring it here rather than
+     letting the height fall out of the padding is what keeps the two from
+     drifting: if this bar grew and the variable did not, a strip of the next
+     section would appear between the hero and the bar. -->
 <div
   class="border-shop-line bg-shop fixed inset-x-0 bottom-0 z-50 grid grid-cols-2 border-t md:hidden"
-  style="padding-bottom:env(safe-area-inset-bottom,0px)"
+  style="padding-bottom:env(safe-area-inset-bottom,0px);min-height:var(--stickybar-h)"
 >
   <a
     href={phone.tel}

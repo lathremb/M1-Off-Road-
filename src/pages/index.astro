@@ -191,14 +191,30 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       </div>
     </div>
 
-    <!-- A FULL-WIDTH sizer. Under md the hero's height comes from the VIEWPORT
-         WIDTH, so the box keeps roughly the photograph's own proportions
-         instead of holding one height while the width runs away. min-height
-         rather than aspect-ratio, because aspect-ratio is a fixed height and
-         the text would overflow it on a phone.
+    <!-- A FULL-WIDTH sizer. Every breakpoint fills the first screen; what
+         differs is what has to be subtracted from it, and what each crop can
+         survive. min-height rather than aspect-ratio throughout, because
+         aspect-ratio is a fixed height and the text would overflow it.
 
-         FROM md UP IT FILLS THE FIRST SCREEN INSTEAD
+         THE PHONE: VIEWPORT MINUS THE HEADER AND THE CALL/TEXT BAR
 
+         This used to be 133vw, the night frame's own 3:4 ratio, which showed
+         the photograph whole. It also stopped 175px above the fixed call/text
+         bar on a 375x812 phone, and that gap was filled by the top of the
+         roll cages section — a bone-coloured band across the bottom of the
+         opening view. Subtracting both fixed bars closes it exactly. The bar
+         declares --stickybar-h as its own min-height, so the number here and
+         the bar's real height cannot drift and reopen the gap.
+
+         The cost is a crop, and it is the honest trade rather than a free
+         win: the box goes from 0.73:1 to about 0.55:1 against a 0.75:1
+         photograph, so roughly 27% comes off the WIDTH. Nothing comes off the
+         top or bottom. object-position carries the horizontal bias that
+         decides what is lost — see the note on the <img>.
+
+         FROM md UP, VIEWPORT MINUS THE HEADER ONLY
+
+         The call/text bar is md:hidden, so there is nothing else to subtract.
          Sizing from width left the hero short of the fold on an ordinary
          monitor — 52vw on a 1280x860 window is 666px, plus a 58px header, so
          132px of the next section sat at the bottom of the opening view as a
@@ -219,17 +235,12 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
          against slicing a third off the vehicle. Every ordinary monitor shape,
          16:9 through 5:4, fills completely and crops nothing horizontally.
 
-         WHY THE PHONE HERO CARRIES LESS THAN THE DESKTOP ONE
+         WHY THE PHONE HERO CARRIES LESS TEXT THAN THE DESKTOP ONE
 
-         On a 390px phone this resolves to 133vw = 519px, which is the night
-         frame's own 3:4 ratio, so the photograph is shown whole and uncropped.
-         The box cannot be made taller to show more of it — it already shows
-         all of it, and more height would start cropping.
-
-         Which means the only variable is how much of those 519px the words
-         sit on top of. Carrying the full desktop stack — price chip, headline,
-         sub-line, two stacked full-width buttons, hours — came to about 467px
-         of 519. The hero was a photograph in name only.
+         Separate from the sizing above. Carrying the full desktop stack —
+         price chip, headline, sub-line, two stacked full-width buttons,
+         hours — came to about 467px, which on the 519px hero of the time was
+         90% of it. The hero was a photograph in name only.
 
          So below sm the stack is the headline and one line under it, and the
          chip, the buttons and the hours are hidden with the reasons noted at
@@ -237,7 +248,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
          one of those facts appears further down, and Call and Text are pinned
          to the bottom of the viewport by StickyBar the whole time. -->
     <div
-      class="relative flex min-h-[max(32rem,min(133vw,80vh))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] md:min-h-[max(30rem,min(calc(100svh-var(--header-h)),80vw))]"
+      class="relative flex min-h-[max(32rem,calc(100svh-var(--header-h)-var(--stickybar-h)))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] md:min-h-[max(30rem,min(calc(100svh-var(--header-h)),80vw))]"
     >
       <!-- A third scrim, and the only one anchored to the TEXT rather than to
            the hero box. A hero-sized gradient cannot track the words: the
