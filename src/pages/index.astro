@@ -516,7 +516,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
        the filter labels, and every photograph names its machine in alt text,
        which is where image search reads them from anyway.
        ========================================================== -->
-  <section id="gallery" class="bg-bone">
+  <section id="gallery" class="bg-bone pb-16 sm:pb-24">
     <div class="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-24">
       <BendRule class="mb-8 max-w-xs" />
       <h2 class="max-w-[22ch] text-[clamp(2rem,5vw,3.25rem)]">
@@ -597,28 +597,16 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       }
     </div>
 
-    <!-- The ONLY ask between the hero and the contact form, now that the
-         service sections carry none: someone who has just looked through the
-         sheet is as warm as they are going to get.
+    <!-- The gallery ends on the photographs. A closing line and a Get a quote
+         button both sat here and both were removed on request; the section
+         deliberately makes no ask. Anyone who wants to act has the number in
+         the sticky header, and Call and Text fixed to the bottom of every
+         phone, the whole way down the page.
 
-         It goes to the form on purpose. Call and Text are already permanent —
-         the fixed bar on every phone, the number in the sticky header on
-         every desktop — so repeating them here would be noise. The form is
-         the only path that is not already on screen.
-
-         The line that sat beside it, "If yours is not here, call with the
-         year, make and model", is gone; the button says the same thing
-         without asking anyone to pick up a phone. Full width on a phone so it
-         is a proper target, content width from sm up. -->
-    <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
-      <a
-        href="#contact"
-        data-analytics="quote-gallery"
-        class="font-display bg-shop text-bone bend border-shop hover:text-shop block w-full border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent sm:inline-block sm:w-auto"
-      >
-        Get a quote
-      </a>
-    </div>
+         The bottom padding moved onto the section when that block went, so
+         the grid still clears the about section by the same 4rem / 6rem every
+         other section uses. Without it the last row of photos butts straight
+         into the dark band below. -->
   </section>
 
   <script>
