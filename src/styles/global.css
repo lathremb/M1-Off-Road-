@@ -3,21 +3,44 @@
 /* =========================================================
    M1 Off-Road — design tokens
 
-   Monochrome. Black, white, grey, and nothing else — no hue anywhere on
-   the site, including the warm cast the off-white used to carry.
+   Neutral, with exactly one hue.
 
-   With no accent colour, emphasis is carried by VALUE instead of hue: the
-   loudest thing available on a black section is pure bone, and on a bone
-   section it is pure black. Primary buttons are solid and invert on hover.
-   Links are underlined rather than coloured, because underline is the only
-   affordance left once colour is gone — do not remove it.
+   Everything structural is black, white and grey. VALUE carries emphasis:
+   the loudest thing available on a black section is pure bone, and on a bone
+   section it is pure black. Links are underlined rather than coloured,
+   because underline is the only affordance left once colour is gone — do not
+   remove it.
+
+   HUE CARRIES ACTION, AND NOTHING ELSE
+
+   `signal` is the single accent. It means "this is how you reach Mike" and
+   it appears on three controls: the hero quote button, the quote button that
+   closes the gallery, and the form's submit. That is the whole budget. The
+   moment it also marks a heading, an active filter chip, a rule or an icon,
+   it stops meaning anything and the page just has a red in it. Emphasis that
+   is not an action goes back to value — black, bone, or a grey.
 
    Measured contrast (WCAG 2.1, normal text):
-     shop  on bone   17.3 : 1
-     bone  on shop   17.3 : 1
-     steel on shop    5.8 : 1
-     slate on bone    6.1 : 1
-     focus on shop    4.4 : 1   (and 3.9 : 1 on bone — one ring, both grounds)
+     shop   on bone     17.3 : 1
+     bone   on shop     17.3 : 1
+     steel  on shop      5.8 : 1
+     slate  on bone      6.1 : 1
+     focus  on shop      4.4 : 1  (and 3.9 : 1 on bone — one ring, both grounds)
+     shop   on signal    5.1 : 1
+     shop   on signal-lift 5.8 : 1
+     signal on shop      5.1 : 1
+
+   Two things about `signal` that are easy to get wrong:
+
+   1. Its label is SHOP BLACK, never white or bone. White on this red is
+      3.7 : 1 and bone is 3.4 : 1 — both fail at button size. Only darkening
+      the red to about #e32727 would fix white, and that is a different,
+      duller colour. Black on red passes at 5.1 : 1 and looks sharper.
+   2. Hover LIGHTENS to signal-lift. The instinct is to darken, but black
+      text needs a light ground: #e52424 drops to 4.1 : 1 and fails.
+
+   It must not be used as text on a light ground — signal on bone is 3.4 : 1.
+   As a solid block it clears the 3 : 1 non-text floor on both grounds.
    ========================================================= */
 
 @theme {
@@ -38,6 +61,10 @@
   /* Focus ring. Deliberately mid-grey: it is the one value that clears 3:1
      against BOTH grounds, so focus looks identical everywhere. */
   --color-focus: #7a7a7a;
+
+  /* the one hue — see the note at the top of this file before using it */
+  --color-signal: #ff2c2c;
+  --color-signal-lift: #ff4d4d; /* hover. LIGHTER, so black text still passes */
 
   --font-display: 'Archivo Variable', ui-sans-serif, system-ui, sans-serif;
   --font-sans:

@@ -72,21 +72,33 @@
     let current = 0;
     let opener: HTMLElement | null = null;
 
+    /* Paging runs over the tiles that are actually on screen, not over every
+       tile that exists. The gallery filter hides tiles, and a Next that
+       walked into a hidden one would show a machine the visitor had just
+       filtered out — and the counter would promise more photos than the
+       filter is showing. Recomputed on open, because the filter can change
+       between openings. A hidden element reports no client rects. */
+    let active: HTMLButtonElement[] = tiles;
+    const onScreen = () => tiles.filter((t) => t.getClientRects().length > 0);
+
     const show = (i: number) => {
-      current = (i + tiles.length) % tiles.length;
-      const tile = tiles[current];
+      if (!active.length) return;
+      current = (i + active.length) % active.length;
+      const tile = active[current];
       img.src = tile.dataset.full ?? '';
       /* No visible caption, but the alt stays: it is what a screen reader
          announces for the enlarged photo, and it is the only description
          of the image once the tile behind the dialog is inert. */
       img.alt = tile.dataset.alt ?? '';
-      if (count) count.textContent = `${current + 1} / ${tiles.length}`;
+      if (count) count.textContent = `${current + 1} / ${active.length}`;
     };
 
-    tiles.forEach((tile, i) =>
+    tiles.forEach((tile) =>
       tile.addEventListener('click', () => {
+        active = onScreen();
+        const i = active.indexOf(tile);
         opener = tile;
-        show(i);
+        show(i === -1 ? 0 : i);
         dialog.showModal();
       })
     );

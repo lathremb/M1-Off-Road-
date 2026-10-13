@@ -42,7 +42,7 @@ import {
   platforms,
   terms,
 } from '../config/site';
-import { gallery } from '../config/gallery';
+import { gallery, galleryCount } from '../config/gallery';
 import { getImage } from 'astro:assets';
 import type { ImageMetadata } from 'astro';
 import { shots } from '../config/shots';
@@ -312,7 +312,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             <a
               href="#contact"
               data-analytics="quote-hero"
-              class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
+              class="font-display bg-signal text-shop bend hover:bg-signal-lift hover:border-signal-lift border border-signal px-6 py-3.5 text-center font-bold transition-colors"
             >
               Get a quote
             </a>
@@ -511,12 +511,18 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
        #contact, so no anchor was orphaned. -->
 
   <!-- ==========================================================
-       GALLERY — dense, square, no gaps. The contact-sheet grid.
+       GALLERY — dense, square, no gaps. One contact sheet, filtered.
 
-       Grouped by platform because the first thing anyone wants to know is
-       whether a machine like theirs has been done before. The platform
-       headings are h3 under this section's h2, so the outline still says
-       these are subdivisions of the gallery rather than peers of it.
+       It was four headed groups, because the first thing anyone wants to know
+       is whether a machine like theirs has been done before. The grouping
+       answered that but the counts would not carry it: 23 / 2 / 4 / 4. Only
+       the RZR group ever filled a row.
+
+       A filter answers the same question without cutting the sheet up. The
+       cost is the outline: the four h3s are gone, so "Polaris RZR", "Can-Am"
+       and "Kawasaki" are no longer headings. They are still on the page as
+       the filter labels, and every photograph names its machine in alt text,
+       which is where image search reads them from anyway.
        ========================================================== -->
   <section id="gallery" class="bg-bone">
     <div class="mx-auto max-w-6xl px-5 pt-16 sm:px-8 sm:pt-24">
@@ -524,42 +530,139 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       <h2 class="max-w-[22ch] text-[clamp(2rem,5vw,3.25rem)]">
         Machines that have been through the shop
       </h2>
-    </div>
 
-    {
-      platforms.map((p) => {
-        const photos = gallery[p.slug] ?? [];
-        if (!photos.length) return null;
-        return (
-          <div>
-            <div class="mx-auto max-w-6xl px-5 pt-12 sm:px-8">
-              <div class="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <h3 class="text-[clamp(1.5rem,3.5vw,2rem)]">{p.name}</h3>
-                <p class="text-slate">{p.note}</p>
-              </div>
-            </div>
+      <!-- The filter, not four headed blocks. Grouping put 23 photos under
+           Polaris RZR and 2 under Can-Am, and in a five-wide grid a group of
+           two is three empty cells under a large heading — it read as missing
+           work rather than as a short list. One sheet always fills its rows,
+           and the brand question is answered on demand instead of by cutting
+           the sheet into pieces.
 
-            {/* Full bleed, no gutters, strict squares. */}
-            <div class="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
-              {photos.map((photo) => (
-                <GalleryTile
-                  photo={photo}
-                  full={fullUrls.get(photo.file)}
-                  index={indexOf.get(photo.file)}
-                />
-              ))}
-            </div>
-          </div>
-        );
-      })
-    }
+           The chips are NOT the accent colour. Red means "contact Mike" on
+           this site and nothing else; an active filter is emphasis, so it is
+           carried by value — black fill, bone label. -->
+      <div
+        class="mt-8 flex flex-wrap gap-2"
+        role="group"
+        aria-label="Filter photos by machine brand"
+      >
+        <button
+          type="button"
+          data-filter="all"
+          aria-pressed="true"
+          class="bend border-bone-line text-slate hover:border-shop hover:text-shop aria-pressed:bg-shop aria-pressed:text-bone aria-pressed:border-shop border px-4 py-2.5 text-[0.9375rem] font-semibold transition-colors"
+        >
+          All <span class="ml-1 font-normal tabular-nums">{galleryCount}</span>
+        </button>
+        {
+          platforms.map((p) => {
+            const n = (gallery[p.slug] ?? []).length;
+            return n ? (
+              <button
+                type="button"
+                data-filter={p.slug}
+                data-note={p.note}
+                aria-pressed="false"
+                class="bend border-bone-line text-slate hover:border-shop hover:text-shop aria-pressed:bg-shop aria-pressed:text-bone aria-pressed:border-shop border px-4 py-2.5 text-[0.9375rem] font-semibold transition-colors"
+              >
+                {p.name} <span class="ml-1 font-normal tabular-nums">{n}</span>
+              </button>
+            ) : null;
+          })
+        }
+      </div>
 
-    <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
-      <p class="text-slate max-w-[54ch] text-lg">
-        If yours is not here, call with the year, make and model.
+      <!-- The per-brand note that used to sit beside each group heading. It
+           is real detail — which models have actually been through — so it
+           survives the merge rather than being dropped with the headings.
+           Empty on "All", because a line there would be the generic blurb
+           that was deliberately cut from above this grid. -->
+      <p
+        id="gallery-note"
+        class="text-slate mt-4 min-h-[1.5rem] text-[0.9375rem]"
+        aria-live="polite"
+      >
       </p>
     </div>
+
+    {/* Full bleed, no gutters, strict squares. */}
+    <div
+      id="gallery-grid"
+      class="mt-8 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5"
+    >
+      {
+        platforms.flatMap((p) =>
+          (gallery[p.slug] ?? []).map((photo) => (
+            <GalleryTile
+              photo={photo}
+              full={fullUrls.get(photo.file)}
+              index={indexOf.get(photo.file)}
+              platform={p.slug}
+            />
+          ))
+        )
+      }
+    </div>
+
+    <!-- The one ask between the hero and the contact form. Someone who has
+         just looked through the sheet is as warm as they will get, and before
+         this there was nothing to act on for roughly 4,900px.
+
+         ONE button, and it goes to the form on purpose. Call and Text are
+         already permanent — the fixed bar on every phone, the number in the
+         sticky header on every desktop — so repeating them here would be
+         noise. The form is the only path that is not already on screen. -->
+    <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
+      <div
+        class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+      >
+        <p class="text-slate max-w-[42ch] text-lg">
+          If yours is not here, call with the year, make and model.
+        </p>
+        <a
+          href="#contact"
+          data-analytics="quote-gallery"
+          class="font-display bg-signal text-shop bend border-signal hover:bg-signal-lift hover:border-signal-lift shrink-0 border px-6 py-3.5 text-center font-bold transition-colors"
+        >
+          Get a quote
+        </a>
+      </div>
+    </div>
   </section>
+
+  <script>
+    /* Gallery brand filter.
+       Tiles are hidden with an inline style, not a class and not the `hidden`
+       attribute. GalleryTile's button carries Tailwind's `block`, and both
+       `[hidden]` (a zero-specificity :where() rule in preflight) and the
+       `hidden` utility lose to it depending on source order. An inline
+       display beats all of them, so the tile actually disappears. The `hidden`
+       property is set too, which is what takes it out of the a11y tree. */
+    const chips = Array.from(
+      document.querySelectorAll<HTMLButtonElement>('[data-filter]')
+    );
+    const tiles = Array.from(
+      document.querySelectorAll<HTMLElement>('#gallery-grid > [data-platform]')
+    );
+    const note = document.getElementById('gallery-note');
+
+    if (chips.length && tiles.length) {
+      chips.forEach((chip) =>
+        chip.addEventListener('click', () => {
+          const want = chip.dataset.filter;
+          chips.forEach((c) =>
+            c.setAttribute('aria-pressed', String(c === chip))
+          );
+          tiles.forEach((tile) => {
+            const hide = want !== 'all' && tile.dataset.platform !== want;
+            tile.hidden = hide;
+            tile.style.display = hide ? 'none' : '';
+          });
+          if (note) note.textContent = want === 'all' ? '' : (chip.dataset.note ?? '');
+        })
+      );
+    }
+  </script>
 
   <!-- ==========================================================
        ABOUT — how the shop works.

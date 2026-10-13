@@ -24,9 +24,11 @@ interface Props {
   index?: number;
   /** Makes the tile a plain link instead (home page teaser). */
   href?: string;
+  /** Platform slug, so the gallery filter can show and hide this tile. */
+  platform?: string;
 }
 
-const { photo, eager = false, full, index, href } = Astro.props;
+const { photo, eager = false, full, index, href, platform } = Astro.props;
 
 const photos = import.meta.glob<{ default: ImageMetadata }>(
   '../assets/photos/*.{jpg,jpeg,png,webp,avif}',
@@ -49,6 +51,7 @@ const imgClass =
         data-full={full}
         data-alt={photo.alt}
         data-index={index}
+        data-platform={platform}
       >
         <Image
           src={src}
