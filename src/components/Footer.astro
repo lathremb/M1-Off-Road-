@@ -1,6 +1,6 @@
 ---
 import Logo from './Logo.astro';
-import { business, phone, services, pricing } from '../config/site';
+import { business, services } from '../config/site';
 
 const year = new Date().getFullYear();
 ---
@@ -15,18 +15,6 @@ const year = new Date().getFullYear();
         <p class="mt-4 max-w-sm text-[0.9375rem]">
           Custom fabrication for off-road machines. Roll cages, doors and roofs,
           MIG welded in {business.city}, {business.stateCode} by {business.owner}.
-        </p>
-        <p class="mt-4 text-[0.9375rem]">
-          <a
-            href={phone.tel}
-            data-analytics="call-footer"
-            class="font-display text-bone hover:text-bone text-xl font-bold transition-colors"
-          >
-            {phone.display}
-          </a>
-        </p>
-        <p class="mt-1 text-sm">
-          Full cages start at {pricing.cageStartingAtDisplay}.
         </p>
       </div>
 

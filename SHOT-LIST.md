@@ -68,4 +68,4 @@ if a better frame turns up — nothing else needs to change.
 
 ---
 
-_Last generated 2026-10-12._
+_Last generated 2026-10-13._

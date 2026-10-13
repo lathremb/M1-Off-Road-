@@ -242,11 +242,11 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
          hours — came to about 467px, which on the 519px hero of the time was
          90% of it. The hero was a photograph in name only.
 
-         So below sm the stack is the headline and one line under it, and the
-         chip, the buttons and the hours are hidden with the reasons noted at
-         each one. Nothing was deleted and nothing moved off the page; every
-         one of those facts appears further down, and Call and Text are pinned
-         to the bottom of the viewport by StickyBar the whole time. -->
+         So below sm the stack is the headline and one line under it. The
+         buttons and the hours are hidden there with the reasons noted at each
+         one, and the price chip was later dropped from every width. Call and
+         Text are pinned to the bottom of the viewport by StickyBar the whole
+         time, and the facts those elements carried all appear further down. -->
     <div
       class="relative flex min-h-[max(32rem,calc(100svh-var(--header-h)-var(--stickybar-h)))] items-end sm:min-h-[max(28rem,min(56vw,88vh,46rem))] md:min-h-[max(30rem,min(calc(100svh-var(--header-h)),80vw))]"
     >
@@ -271,27 +271,10 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
         class="w-full bg-[linear-gradient(to_top,rgb(17_17_17/0.44)_0%,rgb(17_17_17/0.36)_80%,rgb(17_17_17/0)_100%)] sm:bg-[linear-gradient(to_top,rgb(17_17_17/0.64)_0%,rgb(17_17_17/0.56)_80%,rgb(17_17_17/0)_100%)]"
       >
         <div class="mx-auto w-full max-w-6xl px-5 py-10 sm:px-8 sm:py-14 lg:py-16">
-          <!-- The one number that stops people calling, set as a chip above
-               the headline. Sentence case on purpose: an all-caps eyebrow
-               over a heading is the pattern this site avoids, and what keeps
-               this clear of it is that it carries a fact rather than a
-               category label, and appears once rather than above every
-               heading. Its own translucent fill, because a hairline border
-               alone disappears against a photograph.
-
-               Off below sm. See the note on the sizer above: on a phone this
-               chip, the buttons and the hours line took the text stack to 90%
-               of the hero and there was no photograph left to see. The price
-               is still the biggest number on the page, one section down. -->
-          <p
-            class="border-shop-line bg-shop/90 bend hidden items-baseline gap-2 border px-3 py-1.5 backdrop-blur-[2px] sm:mb-4 sm:inline-flex"
-          >
-            <span class="text-steel text-[0.8125rem]">Full cages from</span>
-            <span class="font-display text-[0.9375rem] font-bold"
-              >{pricing.cageStartingAtDisplay}</span
-            >
-          </p>
-
+          <!-- A "Full cages from $2,500" chip used to sit above the headline.
+               It is gone from the hero entirely, not hidden at a breakpoint.
+               The figure is still on the page twice, in the roll cages heading
+               and in the short-version panel in the about section. -->
           <!-- The city belongs in the h1: "roll cages Tucson" is the search
                this page has to win, and on a single-page site this is the
                only h1 there is. -->
@@ -515,68 +498,17 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
     </div>
   </section>
 
-  <!-- ==========================================================
-       PRICE
-       Not knowing what a cage costs is what stops people calling,
-       so the number gets a section to itself.
-       ========================================================== -->
-  <!-- The one hairline in the section rhythm, and it earns its place.
+  <!-- The price section stood here: "A typical full cage runs", the figure
+       set large, and a Call / Send the details pair. Removed whole.
 
-       Removing "what comes out of the shop" cost the page a light section
-       directly under the hero, so the four service blocks were flipped to put
-       one back: light, dark, light, dark. That leaves custom fabrication and
-       this section both dark and touching — the only two adjacent tones on
-       the page. Carrying the inversion further would mean flipping the
-       contact section too, and the quote form is styled for a light ground.
+       It took the page's only hairline rule with it. That rule existed because
+       this section and custom fabrication were both dark and touching, the one
+       place the light/dark alternation broke. With it gone the run is light,
+       dark, light, dark, then gallery — so the seam has nothing left to patch
+       and no border was moved onto the gallery to replace it.
 
-       So the seam gets a rule instead of a tone change. A hairline is how
-       every other boundary on this site is drawn. -->
-  <section id="price" class="bg-shop text-bone border-shop-line border-t">
-    <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
-      <div class="grid gap-10 lg:grid-cols-[auto_1fr] lg:gap-16">
-        <div>
-          <h2 class="text-steel text-lg font-normal tracking-normal">
-            A typical full cage runs
-          </h2>
-          <p
-            class="font-display text-bone mt-1 text-[clamp(4rem,14vw,8rem)] leading-[0.85] font-extrabold tracking-[-0.04em]"
-          >
-            {pricing.cageStartingAtDisplay}
-          </p>
-        </div>
-
-        <div class="max-w-[52ch] space-y-5 text-lg">
-          <p>
-            What it costs depends on the machine, the seat count, and what
-            else gets built while it is apart.
-          </p>
-          <p class="text-steel">
-            Call with the year, make and model and you will get a number on
-            the phone. You do not need an appointment to ask a price.
-          </p>
-          <p class="text-steel">
-            Doors, roofs and custom work are {terms.servicePricing.toLowerCase()}.
-          </p>
-          <div class="flex flex-col gap-3 pt-2 sm:flex-row">
-            <a
-              href={phone.tel}
-              data-analytics="call-price"
-              class="font-display bg-bone text-shop bend border border-bone hover:bg-transparent hover:text-bone px-6 py-3.5 text-center font-bold transition-colors"
-            >
-              Call {phone.display}
-            </a>
-            <a
-              href="#contact"
-              data-analytics="quote-price"
-              class="font-display border-steel/50 bend hover:border-bone border px-6 py-3.5 text-center font-bold transition-colors"
-            >
-              Send the details
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+       Nothing links here. The nav is #roll-cages, #gallery, #about and
+       #contact, so no anchor was orphaned. -->
 
   <!-- ==========================================================
        GALLERY — dense, square, no gaps. The contact-sheet grid.
@@ -778,16 +710,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                 </dd>
               </div>
               <div>
-                <dt class="text-slate">Text</dt>
-                <dd class="mt-0.5 font-semibold">
-                  <a
-                    href={phone.sms}
-                    data-analytics="text-contact-aside"
-                    class="hover:text-slate transition-colors">Same number</a
-                  >
-                </dd>
-              </div>
-              <div>
                 <dt class="text-slate">Owner</dt>
                 <dd class="mt-0.5 font-semibold">{business.owner}</dd>
               </div>
@@ -814,17 +736,6 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
                 <dd class="mt-0.5 font-semibold">{business.serviceAreaLine}</dd>
               </div>
             </dl>
-          </div>
-
-          <div class="bg-shop text-bone bend p-6">
-            <h3 class="text-xl">Before you ask</h3>
-            <p class="text-steel mt-3 text-[0.9375rem]">
-              A typical full cage runs {pricing.cageStartingAtDisplay}. Doors,
-              roofs and custom work are {terms.servicePricing.toLowerCase()}.
-            </p>
-            <p class="text-steel mt-3 text-[0.9375rem]">
-              All welding is MIG and done in house. Powder coating is sent out.
-            </p>
           </div>
         </aside>
       </div>
