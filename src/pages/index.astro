@@ -312,7 +312,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             <a
               href="#contact"
               data-analytics="quote-hero"
-              class="font-display bg-signal text-shop bend hover:bg-signal-lift hover:border-signal-lift border border-signal px-6 py-3.5 text-center font-bold transition-colors"
+              class="font-display bg-bone text-shop bend hover:bg-bone-lift hover:border-bone-lift border border-bone px-6 py-3.5 text-center font-bold transition-colors"
             >
               Get a quote
             </a>
@@ -538,9 +538,10 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
            and the brand question is answered on demand instead of by cutting
            the sheet into pieces.
 
-           The chips are NOT the accent colour. Red means "contact Mike" on
-           this site and nothing else; an active filter is emphasis, so it is
-           carried by value — black fill, bone label. -->
+           The active chip is a black fill with a bone label, which on a bone
+           ground is the loudest thing the palette has. There is no accent
+           colour on this site to reach for instead — see the note at the top
+           of global.css. -->
       <div
         class="mt-8 flex flex-wrap gap-2"
         role="group"
@@ -622,7 +623,7 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
         <a
           href="#contact"
           data-analytics="quote-gallery"
-          class="font-display bg-signal text-shop bend border-signal hover:bg-signal-lift hover:border-signal-lift shrink-0 border px-6 py-3.5 text-center font-bold transition-colors"
+          class="font-display bg-shop text-bone bend border-shop hover:text-shop shrink-0 border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
         >
           Get a quote
         </a>
@@ -701,9 +702,10 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
               to a coater.
             </p>
             <!-- The cage price used to sit here, under a heading about welding
-                 and coating, where it had nothing to do with either. It is in
-                 the price section, in the panel beside this one, and in the
-                 hero chip already. -->
+                 and coating, where it had nothing to do with either. It still
+                 appears twice: the roll cages heading, and the panel beside
+                 this one. The price section and the hero chip this note used
+                 to point at have both since been removed. -->
 
             <h3 class="text-bone pt-4 text-2xl">Getting a job booked</h3>
             <p>
@@ -778,23 +780,11 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
             Tell Mike the machine and what you want done
           </h2>
 
-          <div class="mt-8 flex flex-col gap-3 sm:flex-row">
-            <a
-              href={phone.tel}
-              data-analytics="call-contact"
-              class="font-display bg-shop text-bone bend border-shop hover:text-shop border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
-            >
-              Call {phone.display}
-            </a>
-            <a
-              href={phone.sms}
-              data-analytics="text-contact"
-              class="font-display border-bone-line bend hover:border-shop border px-6 py-3.5 text-center font-bold transition-colors"
-            >
-              Text {phone.display}
-            </a>
-          </div>
-
+          <!-- No Call / Text pair above the form. This section IS the form,
+               and the number is never more than a glance away: the fixed bar
+               on every phone, the sticky header on every desktop, and the
+               shop details panel immediately beside this. A pair of buttons
+               here mostly gave people a reason not to fill the form in. -->
           <QuoteForm />
         </div>
 
