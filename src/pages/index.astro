@@ -597,29 +597,27 @@ const indexOf = new Map(flat.map((p, i) => [p.file, i]));
       }
     </div>
 
-    <!-- The one ask between the hero and the contact form. Someone who has
-         just looked through the sheet is as warm as they will get, and before
-         this there was nothing to act on for roughly 4,900px.
+    <!-- The ONLY ask between the hero and the contact form, now that the
+         service sections carry none: someone who has just looked through the
+         sheet is as warm as they are going to get.
 
-         ONE button, and it goes to the form on purpose. Call and Text are
-         already permanent — the fixed bar on every phone, the number in the
-         sticky header on every desktop — so repeating them here would be
-         noise. The form is the only path that is not already on screen. -->
+         It goes to the form on purpose. Call and Text are already permanent —
+         the fixed bar on every phone, the number in the sticky header on
+         every desktop — so repeating them here would be noise. The form is
+         the only path that is not already on screen.
+
+         The line that sat beside it, "If yours is not here, call with the
+         year, make and model", is gone; the button says the same thing
+         without asking anyone to pick up a phone. Full width on a phone so it
+         is a proper target, content width from sm up. -->
     <div class="mx-auto max-w-6xl px-5 pt-10 pb-16 sm:px-8 sm:pb-24">
-      <div
-        class="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between"
+      <a
+        href="#contact"
+        data-analytics="quote-gallery"
+        class="font-display bg-shop text-bone bend border-shop hover:text-shop block w-full border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent sm:inline-block sm:w-auto"
       >
-        <p class="text-slate max-w-[42ch] text-lg">
-          If yours is not here, call with the year, make and model.
-        </p>
-        <a
-          href="#contact"
-          data-analytics="quote-gallery"
-          class="font-display bg-shop text-bone bend border-shop hover:text-shop shrink-0 border px-6 py-3.5 text-center font-bold transition-colors hover:bg-transparent"
-        >
-          Get a quote
-        </a>
-      </div>
+        Get a quote
+      </a>
     </div>
   </section>
 
